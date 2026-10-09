@@ -236,5 +236,12 @@ window.BrowserExcel = (() => {
     }
     throw new Error('Action inconnue.');
   }
-  return {request,profiles,importProfiles(saved){const merged={...profiles(),...validProfiles(saved)};saveProfiles(merged);return merged;},demoFile(name){const bytes=Uint8Array.from(atob(window.SEMIN_DEMO[name]),c=>c.charCodeAt(0));return new File([bytes],name,{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});}};
+  async function openCatalogue(file){
+    const book=await load(file);
+    return {sheets:book.sheets.map(s=>({name:s.name,rows:s.maxRow})),read(name,header,kinds={}){
+      const selected=sheet(book,name),source=columns(book,selected,header).map(c=>({...c,kind:kinds[c.id]||c.kind}));
+      return {source,rows:catalog(book,selected,header,source)};
+    }};
+  }
+  return {openCatalogue,request,profiles,importProfiles(saved){const merged={...profiles(),...validProfiles(saved)};saveProfiles(merged);return merged;},demoFile(name){const bytes=Uint8Array.from(atob(window.SEMIN_DEMO[name]),c=>c.charCodeAt(0));return new File([bytes],name,{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});}};
 })();

@@ -102,3 +102,19 @@ applicatif et la licence, jamais les fichiers Excel, les profils ou les tests. L
 est fournie par le résultat du déploiement GitHub, à vérifier avant de la partager.
 
 Le workflow vérifie aussi que la page HTTPS servie est identique à la page auditée et exécute les tests tactiles directement sur ce site avec les seuls exemples fictifs.
+
+## V2 — Premier lot : catalogue maître (version à valider)
+
+La V2 ajoute un catalogue local persistant. La version actuellement hébergée n’est pas mise à jour automatiquement : la V2 doit être validée avant un déploiement manuel.
+
+1. Ouvrez **Catalogue maître**. Touchez **Charger un exemple fictif** pour préparer une démonstration sans importer de vraies données.
+2. Examinez les ajouts, changements et conflits. Touchez **Enregistrer les lignes cochées** pour confirmer. Pour un réimport, les modifications existantes sont décochées : elles ne seront jamais appliquées silencieusement. Les valeurs vides proposées sont visibles et peuvent effacer une valeur si vous confirmez la ligne.
+3. Recherchez et filtrez les références, puis touchez **Ouvrir** pour modifier une fiche.
+4. Dans **Paramètres**, ajoutez des attributs et téléchargez régulièrement une sauvegarde du catalogue JSON. Cette sauvegarde contient vos produits : ne la mettez pas sur GitHub.
+5. Pour restaurer, choisissez la sauvegarde, examinez ses comptes, puis cochez la confirmation du remplacement. Le catalogue précédent reste intact si le fichier est invalide ou l’écriture échoue.
+
+Les données sont stockées dans IndexedDB sur cet appareil et ce profil Chrome uniquement. Elles ne sont pas partagées automatiquement avec un autre appareil, la version Windows ou un autre domaine. Effacer le stockage Chrome peut les supprimer. Les correspondances V1 restent conservées séparément ; leur sauvegarde JSON n’est pas une sauvegarde du catalogue maître.
+
+Ce premier lot ne relie pas encore la sélection du catalogue maître aux exports marketplace. Les versions de templates, déclinaisons et exports du maître seront développés progressivement. Le parcours V1 est conservé dans **Exports V1**. Les statuts du catalogue sont manuels et ne certifient aucune règle officielle de marketplace.
+
+Voir [l’architecture et le périmètre V2](ARCHITECTURE-V2.md) pour les détails techniques.

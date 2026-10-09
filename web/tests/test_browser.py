@@ -44,6 +44,8 @@ class BrowserTests(unittest.TestCase):
         self.page.on('pageerror', lambda error: self.errors.append(str(error)))
         self.page.on('request', lambda request: self.requests.append(request.url))
         self.page.goto(self.url)
+        if self.page.locator('[data-studio-view="exports"]').count():
+            self.page.locator('[data-studio-view="exports"]').tap()
     def tearDown(self):
         self.assertFalse(self.errors)
         self.context.close()

@@ -2,6 +2,10 @@
 
 Prototype local en français pour remplir des templates Excel à partir d’un catalogue. Aucun appel à une API externe, aucune donnée confidentielle et aucun remplissage inventé. Les fichiers de démonstration sont explicitement fictifs.
 
+## V2 — Premier lot catalogue maître (à valider avant déploiement)
+
+Le catalogue maître local IndexedDB est ajouté à la version navigateur, avec fiches modifiables, attributs extensibles, reimports prévisualisés, détection de doublons et sauvegardes JSON. Le parcours V1 et le projet Windows sont conservés. Voir [l’architecture V2 et son périmètre](web/ARCHITECTURE-V2.md). Les autres modules marketplace seront développés par lots ; aucune mise à jour Pages n’est déployée sans validation de cette version.
+
 ## Version navigateur Android / Windows (sans Python)
 
 Une version distincte traite les fichiers entièrement dans Chrome. Voir le [guide tablette et navigateur](web/GUIDE-ANDROID-WINDOWS.md). Le fichier autonome est `web/SEMIN-Marketplace.html` ; le workflow **Version navigateur** teste et prépare son ZIP téléchargeable, sans publier de site. L’hébergement HTTPS recommandé pour Android exige un accord explicite ; le workflow de publication est manuel et ne se déclenche pas lors des pushes. Les correspondances sont enregistrées dans Chrome, avec sauvegarde/restauration JSON. Le projet Windows ci-dessous est conservé.

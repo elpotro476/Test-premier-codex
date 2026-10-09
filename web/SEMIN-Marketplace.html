@@ -12,12 +12,40 @@ button,input:not([type=checkbox]),select,summary{min-height:46px}input[type=chec
 @media(max-width:1050px){aside{position:static;width:auto;padding:18px 24px}.brand{font-size:28px}.brand span{font-size:9px}.nav,.aside-note{display:none}main{margin:0;padding:26px 24px}.toolbar label{flex:1}.steps{font-size:12px}}
 @media(max-width:700px){main{padding:18px 12px}.upload-grid{grid-template-columns:1fr}.settings label:first-child{min-width:100%}.settings input{width:110px}.toolbar{align-items:stretch}.toolbar>input{max-width:none;width:100%}.toolbar button,.toolbar .restore-button{flex:1}.action-row button{width:100%}.stats{gap:8px}.stats>div{padding:14px}.stats small{font-size:10px}.steps{gap:14px}.drop>span:not(.upload-icon){font-size:14px}footer{line-height:1.8}}
 
+.storage-warning{border-left:4px solid #b28c39;background:#fff9ea;padding:12px 16px;margin:0 0 20px;font-size:13px;color:#785e29;line-height:1.6}
+nav .nav{width:100%;text-align:left;background:transparent;white-space:normal;font-weight:500;margin-top:8px;font-size:13px}nav .nav.active{margin-top:8px;background:#2a504b}nav .nav:disabled{opacity:.5}.studio-view>.card{margin-top:20px}.studio-view .stats{margin-bottom:20px}.editor-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}textarea{display:block;width:100%;min-height:90px;padding:10px;border:1px solid #dae3dd;border-radius:6px;font:inherit;font-size:16px;resize:vertical}dialog{width:min(900px,95vw);max-height:90vh;border:1px solid #d6e2da;border-radius:12px;padding:24px;color:#213a3d;overflow:auto}dialog::backdrop{background:#153b3a99}dialog .section-head{position:sticky;top:-24px;background:white;padding-top:12px;z-index:1}#master-import-plan{margin-top:22px;border-top:1px solid #dce5df;padding-top:12px}#master-columns,#master-plan-table{margin:18px 0}.change-list{white-space:normal;min-width:250px;max-width:550px}.change-list p{color:#385d48;white-space:normal;overflow-wrap:anywhere}.tag{display:inline-block;background:#edf4ee;padding:6px 9px;border-radius:5px;color:#4c6b59}.conflict{color:#a14b35}.studio-view .toolbar label{min-width:160px}
+@media(max-width:1050px){aside nav{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}nav .nav{display:block;width:auto;color:#d3e4dc;font-size:12px;border:1px solid #52756b;margin:0!important;min-height:44px;padding:9px 12px}nav .nav.active{background:#386255}nav .nav:disabled{display:none}.editor-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:650px){.editor-grid{grid-template-columns:1fr}dialog{padding:18px}.studio-view .toolbar label{flex:1;min-width:140px}nav .nav{font-size:11px}.change-list{min-width:210px}}
+
+@media(max-width:1050px){nav .nav:disabled{display:inline-flex}}
+
 </style></head>
 <body>
-<aside><a class="brand" href="#">SEMIN<span>MARKETPLACE STUDIO</span></a><div class="nav active">▦ &nbsp; Tableau de bord</div><a class="nav" href="#mapping-card">↔ &nbsp; Correspondances</a><div class="aside-note"><span class="dot"></span> 100 % dans votre navigateur<p>Vos fichiers restent sur cet appareil. Aucun envoi de données.</p></div></aside>
-<main><header><div><span class="eyebrow">VOTRE CATALOGUE, PRÊT POUR CHAQUE MARKETPLACE</span><h1>Template Manager</h1><p>Transformez vos données produits en fichiers prêts à vérifier.</p></div><button id="demo" class="secondary">Charger la démonstration ↗</button></header>
+<aside><a class="brand" href="#">SEMIN<span>MARKETPLACE STUDIO</span></a><nav aria-label="Navigation Studio"><button class="nav" data-studio-view="dashboard">Tableau de bord</button><button class="nav" data-studio-view="catalogue">Catalogue maître</button><button class="nav" data-studio-view="sheets">Fiches produits</button><button class="nav" data-studio-view="marketplaces" disabled>Marketplaces · prochain lot</button><button class="nav" data-studio-view="mappings">Correspondances V1</button><button class="nav" data-studio-view="exports">Exports V1</button><button class="nav" data-studio-view="parameters">Paramètres</button></nav><div class="aside-note"><span class="dot"></span> Stockage sur cet appareil<p>Vos données ne sont pas partagées automatiquement. Sauvegardez-les régulièrement.</p></div></aside>
+<main><header><div><span class="eyebrow">VOTRE CATALOGUE, PRÊT POUR CHAQUE MARKETPLACE</span><h1>Marketplace Studio</h1><p>Transformez vos données produits en fichiers prêts à vérifier.</p></div><button id="demo" class="secondary">Charger la démonstration ↗</button></header>
 <div class="privacy-note">Traitement local dans Chrome · Aucun fichier envoyé · Formats .xlsx standard</div>
+<div class="storage-warning">Catalogue stocké dans Chrome sur cet appareil uniquement. Effacer le stockage du navigateur peut supprimer les données ; utilisez les sauvegardes JSON.</div>
 <div id="notice" role="status" aria-live="polite" hidden></div>
+<section id="studio-dashboard" class="studio-view" hidden>
+  <div class="section-head"><div><h2>Catalogue maître — Vue d’ensemble</h2><p>Complétude selon vos attributs locaux. Aucune règle officielle de marketplace n’est présumée.</p></div><button data-open-catalogue>Ouvrir le catalogue maître</button></div>
+  <div class="stats"><div><span>Références enregistrées</span><strong id="master-total">0</strong></div><div><span>Fiches complètes</span><strong id="master-complete">0</strong></div><div><span>À compléter / corriger</span><strong id="master-incomplete">0</strong></div><div><span>Prêtes (statut manuel)</span><strong id="master-ready">0</strong></div></div>
+  <section class="card"><h2>Dernières opérations locales</h2><div id="master-history" class="table-wrap"></div><p class="muted">Le suivi des exports et la préparation par marketplace seront ajoutés dans un prochain lot.</p></section>
+</section>
+<section id="studio-catalogue" class="studio-view" hidden>
+  <section class="card"><div class="section-head"><div><h2 id="master-heading">Catalogue maître</h2><p>Importez un catalogue, examinez les changements, puis confirmez les lignes à enregistrer.</p></div><button id="master-demo" class="secondary">Charger un exemple fictif</button></div>
+    <label class="drop"><input id="master-file" type="file" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"><strong>Importer un catalogue Excel</strong><span id="master-file-name">Touchez pour choisir un fichier · aucune donnée envoyée</span></label>
+    <div id="master-import-settings" hidden><div class="settings"><label>Feuille<select id="master-sheet"></select></label><label>Ligne d’en-tête<input id="master-header" type="number" min="1" value="1"></label></div><button id="master-read" class="secondary">Lire les colonnes</button><div id="master-columns" class="table-wrap"></div><button id="master-plan" hidden>Prévisualiser les changements</button></div>
+    <div id="master-import-plan" hidden><h3>Réimport : modifications proposées</h3><p>Les ajouts sont présélectionnés. Les mises à jour restent décochées : vous décidez explicitement de leur application. Une cellule vide peut effacer une valeur existante si vous confirmez cette ligne.</p><div id="master-plan-summary"></div><div id="master-plan-table" class="table-wrap"></div><button id="master-apply">Enregistrer les lignes cochées</button><button id="master-cancel" class="secondary">Annuler la prévisualisation</button></div>
+  </section>
+  <section class="card"><div class="section-head"><h2>Références enregistrées</h2><button id="master-refresh" class="secondary">Actualiser les données locales</button></div><div class="toolbar"><input id="master-search" type="search" placeholder="SKU, EAN, désignation ou famille…" aria-label="Rechercher dans le catalogue maître"><label>Famille<select id="master-family"><option value="">Toutes les familles</option></select></label><label>Complétude<select id="master-completeness"><option value="">Toutes les fiches</option><option value="complete">Complètes</option><option value="incomplete">À compléter / corriger</option></select></label><label>Préparation manuelle<select id="master-status"><option value="">Tous les statuts</option></select></label></div><button id="master-select" class="secondary">Sélectionner les résultats</button><button id="master-deselect" class="secondary">Tout désélectionner</button><p id="master-list-count" class="muted"></p><div id="master-products" class="table-wrap"></div><p class="muted">La sélection est locale à ce catalogue. L’export depuis le catalogue maître sera relié aux marketplaces dans un prochain lot. Le parcours Excel V1 reste accessible dans « Exports ».</p></section>
+</section>
+<section id="studio-parameters" class="studio-view" hidden>
+  <section class="card"><h2>Attributs extensibles</h2><p>Ajoutez un attribut sans modifier le code. Un attribut requis s’applique à toutes les fiches de ce prototype ; les règles par catégorie viendront dans un prochain lot.</p><div class="toolbar"><label>Libellé<input id="attribute-name" maxlength="100" placeholder="Ex. Résistance thermique"></label><label>Type<select id="attribute-type"><option value="text">Texte</option><option value="number">Nombre</option></select></label><label class="required-label"><input id="attribute-required" type="checkbox">Requis dans le catalogue</label><button id="attribute-add">Ajouter l’attribut</button></div><div id="master-attributes" class="table-wrap"></div></section>
+  <section class="card"><h2>Sauvegarde du catalogue maître</h2><p>Cette sauvegarde contient vos données commerciales : conservez-la dans un emplacement sûr et ne l’ajoutez jamais à GitHub. Elle n’inclut pas les profils de correspondance V1, qui disposent de leur sauvegarde JSON séparée.</p><div class="toolbar"><button id="master-backup">Télécharger la sauvegarde JSON</button><label class="restore-button">Choisir une sauvegarde JSON<input id="master-restore-file" type="file" accept=".json,application/json"></label></div><div id="master-restore-preview" hidden><p id="master-restore-summary"></p><label class="required-label"><input id="master-restore-consent" type="checkbox">Je souhaite remplacer mon catalogue local par cette sauvegarde.</label><button id="master-restore" disabled>Restaurer et remplacer le catalogue</button><button id="master-restore-cancel" class="secondary">Annuler</button></div></section>
+</section>
+<dialog id="master-editor" aria-labelledby="master-editor-title"><div class="section-head"><h2 id="master-editor-title">Fiche produit</h2><button id="master-editor-close" class="secondary">Fermer</button></div><p>Les URLs restent du texte : aucune image ni aucun document distant n’est chargé automatiquement.</p><div id="master-editor-issues" class="review-note"></div><div id="master-editor-fields" class="editor-grid"></div><label>Préparation manuelle<select id="master-editor-status"></select></label><p class="muted">Ce statut décrit la fiche maître, pas une validation officielle de marketplace. Les déclinaisons marketplace seront ajoutées dans un prochain lot.</p><button id="master-editor-save">Enregistrer la fiche</button><div id="master-editor-message" role="status"></div></dialog>
+
+<section id="studio-exports" class="studio-view">
 <section class="stats"><div><span>Produits catalogue</span><strong id="stat-products">—</strong><small>Dans la feuille sélectionnée</small></div><div><span>Produits sélectionnés</span><strong id="stat-selected">0</strong><small>Pour votre prochain export</small></div><div><span>Erreurs détectées</span><strong id="stat-errors">—</strong><small>Après contrôle des données</small></div><div><span>Correspondances</span><strong id="stat-mapping">—</strong><small>Colonnes reliées au catalogue</small></div></section>
 <div class="steps"><span class="active">01 &nbsp; Importer</span><span>02 &nbsp; Sélectionner</span><span>03 &nbsp; Faire correspondre</span><span>04 &nbsp; Contrôler et exporter</span></div>
 <section class="card"><div class="section-head"><div><h2>1. Préparez vos fichiers</h2><p>Importez votre catalogue et le template vierge de votre marketplace.</p></div><span class="badge">Excel .xlsx · 15 Mo max.</span></div>
@@ -28,7 +56,8 @@ button,input:not([type=checkbox]),select,summary{min-height:46px}input[type=chec
 <section id="products-card" class="card" hidden><div class="section-head"><div><h2>2. Sélectionnez vos produits</h2><p>Recherchez une référence SKU ou un EAN, puis cochez les produits à exporter.</p></div></div><div class="toolbar"><input id="search" type="search" placeholder="Rechercher un SKU ou un EAN…" aria-label="Rechercher les produits"><button id="select-all" class="secondary">Sélectionner les résultats</button><button id="select-none" class="secondary">Tout désélectionner</button></div><div id="products" class="table-wrap"></div><p class="muted" id="product-count"></p></section>
 <section id="mapping-card" class="card" hidden><div class="section-head"><div><h2>3. Vérifiez les correspondances</h2><p>Confirmez les suggestions et les champs obligatoires. Aucun contenu manquant n’est inventé.</p></div><span class="badge">Vous gardez le contrôle</span></div><div class="toolbar"><label>Marketplace<input id="marketplace" value="Marketplace démo" maxlength="100"></label><label>Correspondance enregistrée<select id="profiles"><option value="">Choisir un profil…</option></select></label><button id="save-profile" class="secondary">Enregistrer les correspondances</button><button id="backup-profiles" class="secondary">Sauvegarder les profils JSON</button><label class="restore-button">Importer des profils JSON<input id="restore-profiles" type="file" accept=".json,application/json"></label></div><div id="mapping" class="table-wrap"></div></section>
 <section id="review-card" class="card" hidden><div class="section-head"><div><h2>4. Contrôlez avant export</h2><p>Vérifiez les valeurs, les identifiants et les champs obligatoires avant de générer le fichier.</p></div><button id="check" class="secondary">Contrôler les données</button></div><div id="review-message" class="review-note">Lancez un contrôle après avoir sélectionné vos produits.</div><div id="errors" class="table-wrap"></div><div id="review" class="table-wrap"></div><div class="action-row"><span class="muted">Conservez une vérification humaine avant l’import marketplace.</span><button id="export" disabled>↓ &nbsp; Exporter le fichier Excel</button></div></section>
-<footer>SEMIN Marketplace Template Manager · Version navigateur <span>Compatible Chrome · Android et Windows</span></footer>
+</section>
+<footer>SEMIN Marketplace Studio · V2 — Catalogue maître <span>Compatible Chrome · Android et Windows</span></footer>
 </main><script>
 /*!
 
@@ -287,7 +316,159 @@ window.BrowserExcel = (() => {
     }
     throw new Error('Action inconnue.');
   }
-  return {request,profiles,importProfiles(saved){const merged={...profiles(),...validProfiles(saved)};saveProfiles(merged);return merged;},demoFile(name){const bytes=Uint8Array.from(atob(window.SEMIN_DEMO[name]),c=>c.charCodeAt(0));return new File([bytes],name,{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});}};
+  async function openCatalogue(file){
+    const book=await load(file);
+    return {sheets:book.sheets.map(s=>({name:s.name,rows:s.maxRow})),read(name,header,kinds={}){
+      const selected=sheet(book,name),source=columns(book,selected,header).map(c=>({...c,kind:kinds[c.id]||c.kind}));
+      return {source,rows:catalog(book,selected,header,source)};
+    }};
+  }
+  return {openCatalogue,request,profiles,importProfiles(saved){const merged={...profiles(),...validProfiles(saved)};saveProfiles(merged);return merged;},demoFile(name){const bytes=Uint8Array.from(atob(window.SEMIN_DEMO[name]),c=>c.charCodeAt(0));return new File([bytes],name,{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});}};
+})();
+
+</script>
+<script>
+/* Domain model, independent of IndexedDB and DOM: replaceable repository boundary. */
+'use strict';
+window.CatalogueModel = (() => {
+  const FIELDS = [
+    ['sku','SKU',true],['ean','EAN',false],['brand','Marque',true],['family','Famille',false],
+    ['designation','Désignation',true],['commercialTitle','Titre commercial',false],
+    ['shortDescription','Description courte',false],['longDescription','Description longue',false],
+    ['technical','Caractéristiques techniques',false],['packaging','Conditionnement',false],
+    ['weight','Poids',false],['dimensions','Dimensions',false],['images','URLs images',false],
+    ['manuals','Notices',false],['datasheets','Fiches techniques',false],['productStatus','Statut produit',false]
+  ].map(([id,label,required])=>({id,label,required,type:'text',group:'Principal'}));
+  const STATUSES=['À compléter','À contrôler','Prêt à exporter','Exporté'];
+  const normalize=value=>String(value??'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,' ').trim();
+  const text=value=>value===null||value===undefined?'':String(value);
+  const present=value=>text(value).trim()!=='';
+  const uid=()=>globalThis.crypto.randomUUID ? crypto.randomUUID() : 'id-'+Date.now().toString(36)+'-'+Array.from(crypto.getRandomValues(new Uint32Array(4)),n=>n.toString(16)).join('');
+  function empty(){return {schemaVersion:1,revision:0,products:[],attributes:structuredClone(FIELDS),history:[]};}
+  function clone(data){return structuredClone(data);}
+  function eanValid(v){const s=text(v);return /^\d{13}$/.test(s)&&(Array.from(s.slice(0,12)).reduce((n,c,i)=>n+Number(c)*(i%2?3:1),0)+Number(s[12]))%10===0;}
+  function index(data){const result={sku:new Map(),ean:new Map()};for(const p of data.products)for(const k of ['sku','ean'])if(present(p.values[k])){const value=text(p.values[k]).trim();if(!result[k].has(value))result[k].set(value,[]);result[k].get(value).push(p);}return result;}
+  function issues(product,data,lookup){
+    const result=[];
+    for(const field of data.attributes){const v=product.values[field.id];if(field.required&&!present(v))result.push({field:field.label,message:'Information requise pour le catalogue maître'});
+      if(present(v)&&field.type==='number'&&!Number.isFinite(Number(text(v).replace(',','.'))))result.push({field:field.label,message:'Nombre attendu'});
+    }
+    if(present(product.values.ean)&&!eanValid(product.values.ean))result.push({field:'EAN',message:'EAN-13 invalide'});
+    for(const key of ['sku','ean'])if(present(product.values[key])&&(lookup?lookup[key].get(text(product.values[key]).trim())||[]:data.products.filter(p=>text(p.values[key]).trim()===text(product.values[key]).trim())).some(p=>p.id!==product.id))result.push({field:key.toUpperCase(),message:'Identifiant dupliqué'});
+    return result;
+  }
+  function guess(label,attributes){
+    const n=normalize(label);
+    const match=attributes.filter(a=>normalize(a.label)===n);if(match.length===1)return match[0].id;
+    const aliases={sku:['reference','reference produit','seller sku','ref'],ean:['gtin','ean13','code barre','barcode'],designation:['nom','nom produit','product name','item name'],brand:['brand','brand name'],family:['categorie','category','gamme'],commercialTitle:['titre','title'],shortDescription:['description'],longDescription:['product description'],weight:['weight','poids kg'],images:['images','image url']};
+    return Object.keys(aliases).find(k=>aliases[k].includes(n))||'';
+  }
+  function journal(data,type,count){data.history.unshift({id:uid(),at:new Date().toISOString(),type,count});data.history=data.history.slice(0,100);}
+  function planImport(data,rows,mapping,extraAttributes=[]){
+    const attributes=[...data.attributes,...extraAttributes];const ids=new Set(attributes.map(a=>a.id));
+    const mapped=Object.values(mapping).filter(Boolean);if(!mapped.length)throw new Error('Associez au moins une colonne.');
+    if(new Set(mapped).size!==mapped.length)throw new Error('Deux colonnes ne peuvent pas alimenter le même attribut.');
+    if(mapped.some(id=>!ids.has(id)))throw new Error('Attribut de destination inconnu.');
+    const incoming=rows.map(row=>{const values={};for(const [column,field] of Object.entries(mapping))if(field)values[field]=text(row.values[column]);return {row:row.id,values};});
+    const duplicates=new Set();
+    for(const key of ['sku','ean']){const groups=new Map();for(const row of incoming)if(present(row.values[key])){const v=text(row.values[key]).trim();if(!groups.has(v))groups.set(v,[]);groups.get(v).push(row.row);}for(const group of groups.values())if(group.length>1)group.forEach(id=>duplicates.add(id));}
+    const lookup=index(data);
+    const items=incoming.map(row=>{
+      let reason='';const matches=[...new Set(['sku','ean'].flatMap(k=>present(row.values[k])?lookup[k].get(text(row.values[k]).trim())||[]:[]))];
+      if(!present(row.values.sku)&&!present(row.values.ean))reason='SKU ou EAN nécessaire pour identifier le produit';
+      else if(duplicates.has(row.row))reason='SKU ou EAN dupliqué dans le fichier importé';
+      else if(matches.length>1)reason='SKU et EAN correspondent à plusieurs fiches existantes';
+      else if(matches.length===1&&present(matches[0].values.sku)&&present(row.values.sku)&&text(matches[0].values.sku).trim()!==text(row.values.sku).trim())reason='Cet EAN appartient déjà à une autre référence SKU';
+      if(reason)return {...row,action:'conflict',reason,changes:[]};
+      const existing=matches[0];
+      const changes=Object.entries(row.values).filter(([key,v])=>!existing||text(existing.values[key])!==v).map(([field,after])=>({field,label:attributes.find(a=>a.id===field).label,before:existing?text(existing.values[field]):'',after}));
+      return {...row,action:existing?(changes.length?'update':'unchanged'):'add',productId:existing?.id,changes};
+    });
+    const targets=items.filter(i=>i.action==='update'||i.action==='unchanged');
+    const counts=new Map();targets.forEach(i=>counts.set(i.productId,(counts.get(i.productId)||0)+1));
+    items.forEach(i=>{if(i.productId&&counts.get(i.productId)>1){i.action='conflict';i.reason='Plusieurs lignes tentent de modifier la même fiche';}});
+    return {baseRevision:data.revision,items,extraAttributes,mapping:{...mapping}};
+  }
+  function applyImport(data,plan,selectedRows){
+    if(plan.baseRevision!==data.revision)throw new Error('Le catalogue a changé. Recommencez la prévisualisation.');
+    const items=plan.items.filter(i=>selectedRows.includes(i.row)&&['add','update'].includes(i.action));
+    if(!items.length)throw new Error('Sélectionnez au moins un ajout ou une modification.');
+    const next=clone(data),used=new Set(items.flatMap(i=>Object.keys(i.values)));
+    next.attributes.push(...plan.extraAttributes.filter(a=>used.has(a.id)));
+    const productMap=new Map(next.products.map(p=>[p.id,p])),modified=[];
+    for(const item of items){
+      let product=productMap.get(item.productId);
+      if(!product){product={id:uid(),values:{},status:'À compléter',updatedAt:''};next.products.push(product);}
+      product.values={...product.values,...item.values};product.updatedAt=new Date().toISOString();
+      modified.push(product);
+    }
+    const lookup=index(next);modified.forEach(p=>p.status=issues(p,next,lookup).length?'À compléter':'À contrôler');
+    if(next.products.length>20000)throw new Error('Catalogue limité à 20 000 références.');
+    journal(next,'Import catalogue confirmé',items.length);return next;
+  }
+  function editProduct(data,id,values,status){
+    if(!STATUSES.includes(status))throw new Error('Statut inconnu.');
+    const next=clone(data),product=next.products.find(p=>p.id===id);if(!product)throw new Error('Fiche introuvable.');
+    for(const field of next.attributes)product.values[field.id]=text(values[field.id]);
+    product.status=status;product.updatedAt=new Date().toISOString();
+    const errors=issues(product,next);if(errors.some(e=>e.message==='Identifiant dupliqué'))throw new Error('Ce SKU ou cet EAN est déjà utilisé par une autre fiche.');
+    if(errors.length&&['Prêt à exporter','Exporté'].includes(status))throw new Error('Corrigez les informations manquantes ou invalides avant de choisir ce statut.');
+    journal(next,'Fiche modifiée',1);return next;
+  }
+  function addAttribute(data,label,type,required){
+    label=label.trim();if(!label||label.length>100)throw new Error('Libellé requis (100 caractères maximum).');
+    if(data.attributes.some(a=>normalize(a.label)===normalize(label)))throw new Error('Cet attribut existe déjà.');
+    if(!['text','number'].includes(type))throw new Error('Type d’attribut invalide.');
+    if(data.attributes.length>=250)throw new Error('250 attributs maximum.');
+    const next=clone(data);next.attributes.push({id:'custom_'+uid(),label,type,required:!!required,group:'Attributs techniques'});journal(next,'Attribut ajouté',1);return next;
+  }
+  function validateSnapshot(data){
+    const fail=()=>{throw new Error('Sauvegarde catalogue invalide ou version non prise en charge.');};
+    if(!data||data.schemaVersion!==1||!Number.isInteger(data.revision)||data.revision<0||!Array.isArray(data.products)||data.products.length>20000||!Array.isArray(data.attributes)||data.attributes.length>250||!Array.isArray(data.history))fail();
+    const attrIds=new Set();for(const a of data.attributes){if(!a||typeof a.id!=='string'||!a.id||attrIds.has(a.id)||['__proto__','prototype','constructor'].includes(a.id)||typeof a.label!=='string'||!a.label.trim()||a.label.length>100||!['text','number'].includes(a.type)||typeof a.required!=='boolean'||typeof a.group!=='string')fail();attrIds.add(a.id);}
+    if(FIELDS.some(a=>!attrIds.has(a.id)))fail();
+    const productIds=new Set();for(const p of data.products){if(!p||typeof p.id!=='string'||!p.id||productIds.has(p.id)||!p.values||Array.isArray(p.values)||typeof p.values!=='object'||!STATUSES.includes(p.status)||typeof p.updatedAt!=='string')fail();productIds.add(p.id);for(const [k,v] of Object.entries(p.values))if(!attrIds.has(k)||typeof v!=='string'||v.length>100000)fail();}
+    if(data.history.length>100||data.history.some(h=>!h||typeof h.id!=='string'||typeof h.at!=='string'||typeof h.type!=='string'||!Number.isInteger(h.count)||h.count<0))fail();
+    return clone(data);
+  }
+  function backup(data){return {format:'SEMIN-MASTER-CATALOGUE',version:1,createdAt:new Date().toISOString(),catalogue:validateSnapshot(data)};}
+  function restore(data,backup){
+    if(!backup||backup.format!=='SEMIN-MASTER-CATALOGUE'||backup.version!==1)throw new Error('Ce fichier n’est pas une sauvegarde du catalogue maître.');
+    const next=validateSnapshot(backup.catalogue);next.revision=data.revision;journal(next,'Sauvegarde restaurée',next.products.length);return next;
+  }
+  return {FIELDS,STATUSES,index,empty,normalize,text,present,uid,issues,guess,planImport,applyImport,editProduct,addAttribute,validateSnapshot,backup,restore};
+})();
+
+</script>
+<script>
+/* Repository API: a future authenticated repository can implement read/save without changing the domain. */
+'use strict';
+window.CatalogueStore = (() => {
+  let connection;
+  function open(){if(connection)return connection;connection=new Promise((resolve,reject)=>{
+    if(!window.indexedDB){reject(new Error('IndexedDB indisponible. Le catalogue ne peut pas être sauvegardé sur cet appareil.'));return;}
+    const request=indexedDB.open('semin-marketplace-studio',1);
+    request.onupgradeneeded=()=>request.result.createObjectStore('workspace');
+    request.onsuccess=()=>{request.result.onversionchange=()=>{request.result.close();connection=null;};resolve(request.result);};
+    request.onerror=()=>{connection=null;reject(new Error('Impossible d’ouvrir le stockage local. Vérifiez les autorisations Chrome.'));};
+    request.onblocked=()=>reject(new Error('Fermez les autres onglets SEMIN pour ouvrir le catalogue.'));
+  });return connection;}
+  async function read(){const db=await open();return new Promise((resolve,reject)=>{const tx=db.transaction('workspace','readonly'),req=tx.objectStore('workspace').get('catalogue');req.onsuccess=()=>{try{resolve(req.result?CatalogueModel.validateSnapshot(req.result):CatalogueModel.empty());}catch(e){reject(e);}};req.onerror=()=>reject(new Error('Lecture du catalogue local impossible.'));});}
+  async function save(next,expectedRevision){
+    const safe=CatalogueModel.validateSnapshot(next),db=await open();
+    return new Promise((resolve,reject)=>{
+      const tx=db.transaction('workspace','readwrite'),store=tx.objectStore('workspace');let saved,error;
+      const req=store.get('catalogue');
+      req.onsuccess=()=>{
+        const current=req.result?.revision||0;
+        if(current!==expectedRevision){error=new Error('Le catalogue a été modifié dans un autre onglet. Actualisez les données puis recommencez.');tx.abort();return;}
+        saved={...safe,revision:current+1};store.put(saved,'catalogue');
+      };
+      tx.oncomplete=()=>resolve(saved);
+      tx.onabort=tx.onerror=()=>reject(error||new Error('Enregistrement impossible (stockage plein ou refusé). Les données précédentes sont conservées.'));
+    });
+  }
+  return {read,save};
 })();
 
 </script>
@@ -402,5 +583,128 @@ try { state.profiles=BrowserExcel.profiles();renderProfiles(); } catch(error){ n
 function downloadLocal(blob,name){const url=URL.createObjectURL(blob);const a=el('a');a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),3000);}
 action('backup-profiles',()=>{downloadLocal(new Blob([JSON.stringify(BrowserExcel.profiles(),null,2)],{type:'application/json'}),'semin-correspondances.json');notify('Sauvegarde des correspondances téléchargée. Aucun produit n’est inclus.');});
 $('restore-profiles').addEventListener('change',async event=>{const file=event.target.files[0];if(!file)return;try{if(file.size>1024*1024)throw new Error('Fichier JSON trop volumineux.');state.profiles=BrowserExcel.importProfiles(JSON.parse(await file.text()));renderProfiles();notify('Correspondances importées sur cet appareil. Les profils de même nom sont remplacés.');}catch(error){notify(error.message,true);}finally{event.target.value='';}});
+
+</script>
+<script>
+'use strict';
+(() => {
+  const M=CatalogueModel,repo=CatalogueStore;
+  let data=M.empty(),handle=null,importSource=null,plan=null,restoreCandidate=null,editingId=null,editorRevision=null,restoreRevision=null,fileGeneration=0;
+  const selected=new Set(),mapping={};let duplicateIndex=M.index(data),planPage=0,planSelected=new Set();
+  const labels={add:'Ajout',update:'Modification',unchanged:'Identique',conflict:'Conflit — bloqué'};
+  function announce(message,error=false){notify(message,error);}
+  function nav(view){
+    if(view==='mappings')view='exports';
+    if(view==='sheets'){$('master-heading').textContent='Fiches produits';view='catalogue';}else if(view==='catalogue')$('master-heading').textContent='Catalogue maître';
+    document.querySelectorAll('.studio-view').forEach(n=>n.hidden=n.id!=='studio-'+view);
+    document.querySelectorAll('[data-studio-view]').forEach(n=>n.classList.toggle('active',n.dataset.studioView===view));
+  }
+  document.querySelectorAll('[data-studio-view]').forEach(n=>n.addEventListener('click',()=>nav(n.dataset.studioView)));
+  document.querySelectorAll('[data-open-catalogue]').forEach(n=>n.addEventListener('click',()=>nav('catalogue')));
+  $('demo').addEventListener('click',()=>nav('exports'),true);
+  function actionMaster(id,fn){$(id).addEventListener('click',async()=>{const button=$(id);button.disabled=true;try{await fn();}catch(error){announce(error.message,true);if(id==='master-editor-save')$('master-editor-message').textContent=error.message;}finally{button.disabled=id==='master-restore'&&!$('master-restore-consent').checked;}});}
+  async function commit(next,revision=data.revision){data=await repo.save(next,revision);render();}
+  function filtered(){const query=M.normalize($('master-search').value),family=$('master-family').value,status=$('master-status').value,complete=$('master-completeness').value;
+    return data.products.filter(p=>(!query||['sku','ean','designation','family'].some(k=>M.normalize(p.values[k]).includes(query)))&&(!family||p.values.family===family)&&(!status||p.status===status)&&(!complete||(M.issues(p,data,duplicateIndex).length===0)===(complete==='complete')));
+  }
+  function renderList(){const rows=filtered();$('master-list-count').textContent=`${rows.length} résultat(s) · ${selected.size} sélectionné(s). Aperçu limité à 200 fiches.`;
+    $('master-products').replaceChildren(table(['Sélection','SKU','EAN','Désignation','Famille','Préparation','Informations manquantes / erreurs','Fiche'],rows.slice(0,200).map(p=>{
+      const checkbox=el('input');checkbox.type='checkbox';checkbox.checked=selected.has(p.id);checkbox.setAttribute('aria-label',`Sélectionner la fiche ${p.values.sku||p.id}`);checkbox.addEventListener('change',()=>{checkbox.checked?selected.add(p.id):selected.delete(p.id);renderList();});
+      const button=el('button','Ouvrir');button.className='secondary';button.setAttribute('aria-label',`Ouvrir la fiche ${p.values.sku||p.id}`);button.addEventListener('click',()=>openEditor(p.id));
+      return [checkbox,p.values.sku,p.values.ean,p.values.designation,p.values.family,p.status,M.issues(p,data,duplicateIndex).map(e=>e.field+' : '+e.message).join(' ; ')||'Aucune',button];
+    })));
+  }
+  function render(){
+    duplicateIndex=M.index(data);
+    const valid=data.products.filter(p=>!M.issues(p,data,duplicateIndex).length);
+    $('master-total').textContent=data.products.length;$('master-complete').textContent=valid.length;$('master-incomplete').textContent=data.products.length-valid.length;$('master-ready').textContent=valid.filter(p=>p.status==='Prêt à exporter').length;
+    const current=$('master-family').value;$('master-family').replaceChildren(new Option('Toutes les familles',''));
+    [...new Set(data.products.map(p=>p.values.family).filter(M.present))].sort().forEach(f=>$('master-family').append(new Option(f,f)));$('master-family').value=current;
+    $('master-history').replaceChildren(table(['Date','Opération','Nombre'],data.history.slice(0,10).map(h=>[new Date(h.at).toLocaleString('fr-FR'),h.type,h.count])));
+    $('master-attributes').replaceChildren(table(['Attribut','Type','Règle locale'],data.attributes.map(a=>[a.label,a.type==='number'?'Nombre':'Texte',a.required?'Requis pour le catalogue maître':'Facultatif'])));
+    const ids=new Set(data.products.map(p=>p.id));for(const id of selected)if(!ids.has(id))selected.delete(id);
+    renderList();
+  }
+  function clearPlan(){plan=null;$('master-import-plan').hidden=true;}
+  async function chooseFile(file){
+    const generation=++fileGeneration;clearPlan();importSource=null;$('master-plan').hidden=true;$('master-columns').replaceChildren();
+    const opened=await BrowserExcel.openCatalogue(file);if(generation!==fileGeneration)return;
+    handle=opened;$('master-file-name').textContent=file.name;$('master-sheet').replaceChildren(...opened.sheets.map(s=>new Option(s.name,s.name)));$('master-import-settings').hidden=false;
+    announce('Catalogue lu dans le navigateur. Choisissez la feuille et la ligne des en-têtes.');
+  }
+  function readColumns(){if(!handle)throw new Error('Choisissez un catalogue Excel.');
+    clearPlan();importSource=handle.read($('master-sheet').value,Number($('master-header').value));
+    for(const key of Object.keys(mapping))delete mapping[key];
+    for(const c of importSource.source)mapping[c.id]=M.guess(c.label,data.attributes)||'__new__';renderImportColumns();
+    $('master-plan').hidden=false;announce('Vérifiez les associations avant de prévisualiser les changements.');
+  }
+  function renderImportColumns(){
+    $('master-columns').replaceChildren(table(['Colonne Excel','Attribut du catalogue maître'],importSource.source.map(c=>{
+      const select=el('select');select.setAttribute('aria-label','Attribut maître pour '+c.label);select.append(new Option('Ignorer cette colonne',''),new Option('Créer un nouvel attribut','__new__'));
+      data.attributes.forEach(a=>select.append(new Option(a.label,a.id)));select.value=mapping[c.id];
+      select.addEventListener('change',()=>{mapping[c.id]=select.value;clearPlan();});return [c.label,select];
+    })));
+  }
+  function previewImport(){if(!importSource)throw new Error('Lisez les colonnes avant de continuer.');
+    const resolved={},extra=[],kinds={};const labelsUsed=new Set(data.attributes.map(a=>M.normalize(a.label)));
+    for(const c of importSource.source){let destination=mapping[c.id];if(destination==='__new__'){
+      let label=c.label.trim();if(label.length>100)label=label.slice(0,85)+' (col. '+c.id+')';if(labelsUsed.has(M.normalize(label)))label=label.slice(0,80)+' (col. '+c.id+')';labelsUsed.add(M.normalize(label));
+      destination='custom_'+M.uid();extra.push({id:destination,label,required:false,type:['price','weight','stock'].includes(c.kind)?'number':'text',group:'Attributs techniques'});
+    }resolved[c.id]=destination;if(['sku','ean'].includes(destination))kinds[c.id]=destination;}
+    const rows=handle.read($('master-sheet').value,Number($('master-header').value),kinds).rows;
+    plan=M.planImport(data,rows,resolved,extra);
+    planPage=0;planSelected=new Set(plan.items.filter(i=>i.action==='add').map(i=>i.row));renderPlan();$('master-import-plan').hidden=false;announce('Prévisualisation prête. Aucun changement n’a encore été enregistré.');
+  }
+  function renderPlan(){
+    $('master-plan-summary').textContent=Object.entries(labels).map(([key,label])=>label+' : '+plan.items.filter(i=>i.action===key).length).join(' · ');
+    $('master-plan-table').replaceChildren(table(['Appliquer','Ligne Excel','SKU / EAN','Action','Détail des changements'],plan.items.slice(planPage*200,(planPage+1)*200).map(item=>{
+      const checkbox=el('input');checkbox.type='checkbox';checkbox.checked=planSelected.has(item.row);checkbox.disabled=!['add','update'].includes(item.action);checkbox.dataset.importRow=item.row;checkbox.setAttribute('aria-label','Appliquer la ligne '+item.row);checkbox.addEventListener('change',()=>{checkbox.checked?planSelected.add(item.row):planSelected.delete(item.row);renderPlan();});
+      const detail=el('div',undefined,'change-list');
+      if(item.reason)detail.append(el('p',item.reason,'conflict'));
+      else for(const change of item.changes)detail.append(el('p',`${change.label} : ${change.before||'∅'} → ${change.after||'∅'}`));
+      return [checkbox,item.row,item.values.sku||item.values.ean||'Sans identifiant',labels[item.action],detail];
+    })));
+    const paging=el('div',undefined,'toolbar');const previous=el('button','Page précédente'),next=el('button','Page suivante');previous.className=next.className='secondary';previous.disabled=planPage===0;next.disabled=(planPage+1)*200>=plan.items.length;previous.addEventListener('click',()=>{planPage--;renderPlan();});next.addEventListener('click',()=>{planPage++;renderPlan();});paging.append(previous,el('span',`Page ${planPage+1} · ${planSelected.size} lignes cochées sur ${plan.items.length} · 200 lignes par page`),next);$('master-plan-table').append(paging);
+  }
+  function openEditor(id){const p=data.products.find(p=>p.id===id);if(!p)return;
+    editingId=id;editorRevision=data.revision;$('master-editor-title').textContent='Fiche produit — '+(p.values.sku||p.values.ean||'Sans référence');
+    $('master-editor-fields').replaceChildren(...data.attributes.map(a=>{const label=el('label',a.label+(a.required?' *':''));const input=el(a.id.includes('Description')||['technical','images','manuals','datasheets'].includes(a.id)?'textarea':'input');input.dataset.attribute=a.id;input.value=M.text(p.values[a.id]);input.maxLength=100000;input.setAttribute('aria-label',a.label);label.append(input);return label;}));
+    $('master-editor-status').value=p.status;$('master-editor-message').textContent='';
+    const errors=M.issues(p,data,duplicateIndex);$('master-editor-issues').textContent=errors.length?errors.map(e=>e.field+' : '+e.message).join(' · '):'Aucune erreur selon les règles du catalogue maître.';
+    $('master-editor').showModal();
+  }
+  $('master-editor-close').addEventListener('click',()=>$('master-editor').close());
+  actionMaster('master-editor-save',async()=>{
+    if(editorRevision!==data.revision)throw new Error('Le catalogue a changé. Fermez puis rouvrez la fiche.');
+    const values={};$('master-editor-fields').querySelectorAll('[data-attribute]').forEach(n=>values[n.dataset.attribute]=n.value);
+    await commit(M.editProduct(data,editingId,values,$('master-editor-status').value),editorRevision);
+    $('master-editor').close();announce('Fiche enregistrée dans le stockage local.');
+  });
+  $('master-file').addEventListener('change',async event=>{if(event.target.files[0])try{await chooseFile(event.target.files[0]);}catch(error){announce(error.message,true);}});
+  for(const id of ['master-sheet','master-header'])$(id).addEventListener('change',()=>{clearPlan();importSource=null;$('master-plan').hidden=true;$('master-columns').replaceChildren();});
+  actionMaster('master-read',readColumns);actionMaster('master-plan',previewImport);
+  actionMaster('master-demo',async()=>{await chooseFile(BrowserExcel.demoFile('catalogue-demo.xlsx'));$('master-header').value=1;readColumns();previewImport();announce('Exemple fictif prêt à importer : cochez les lignes à enregistrer. Aucune donnée existante n’est remplacée automatiquement.');});
+  actionMaster('master-apply',async()=>{if(!plan)throw new Error('Prévisualisez les modifications.');const rows=[...planSelected];const resolved={...plan.mapping};await commit(M.applyImport(data,plan,rows),plan.baseRevision);for(const c of importSource.source)mapping[c.id]=data.attributes.some(a=>a.id===resolved[c.id])?resolved[c.id]:(resolved[c.id]?'__new__':'');clearPlan();renderImportColumns();announce('Import confirmé et enregistré dans IndexedDB sur cet appareil.');});
+  actionMaster('master-cancel',()=>{clearPlan();announce('Prévisualisation annulée. Aucune donnée modifiée.');});
+  actionMaster('master-refresh',async()=>{data=await repo.read();clearPlan();render();announce('Catalogue local actualisé.');});
+  for(const id of ['master-search','master-family','master-completeness','master-status'])$(id).addEventListener(id==='master-search'?'input':'change',renderList);
+  actionMaster('master-select',()=>{filtered().forEach(p=>selected.add(p.id));renderList();});
+  actionMaster('master-deselect',()=>{selected.clear();renderList();});
+  actionMaster('attribute-add',async()=>{await commit(M.addAttribute(data,$('attribute-name').value,$('attribute-type').value,$('attribute-required').checked));$('attribute-name').value='';clearPlan();announce('Attribut ajouté. Il est disponible dans les fiches et les prochains imports.');});
+  actionMaster('master-backup',()=>{downloadLocal(new Blob([JSON.stringify(M.backup(data),null,2)],{type:'application/json'}),'semin-catalogue-maitre.json');announce('Sauvegarde préparée pour téléchargement. Conservez-la hors de GitHub.');});
+  $('master-restore-file').addEventListener('change',async event=>{const file=event.target.files[0];if(!file)return;
+    restoreCandidate=null;$('master-restore-preview').hidden=true;$('master-restore-consent').checked=false;$('master-restore').disabled=true;
+    try{if(file.size>20*1024*1024)throw new Error('Sauvegarde limitée à 20 Mo.');const parsed=JSON.parse(await file.text());const candidate=M.restore(data,parsed);restoreCandidate=parsed;restoreRevision=data.revision;
+      $('master-restore-summary').textContent=`La sauvegarde contient ${candidate.products.length} produits et ${candidate.attributes.length} attributs. Elle remplacera les ${data.products.length} produits locaux, sans modifier les correspondances V1.`;
+      $('master-restore-preview').hidden=false;announce('Sauvegarde vérifiée. Aucune donnée n’a encore été remplacée.');
+    }catch(error){announce(error.message,true);}finally{event.target.value='';}
+  });
+  $('master-restore-consent').addEventListener('change',()=>$('master-restore').disabled=!$('master-restore-consent').checked);
+  actionMaster('master-restore',async()=>{if(!restoreCandidate||!$('master-restore-consent').checked)throw new Error('Confirmez le remplacement du catalogue.');if(data.revision!==restoreRevision)throw new Error('Le catalogue a changé. Choisissez à nouveau la sauvegarde.');await commit(M.restore(data,restoreCandidate),restoreRevision);restoreCandidate=null;$('master-restore-preview').hidden=true;clearPlan();announce('Sauvegarde restaurée localement.');});
+  actionMaster('master-restore-cancel',()=>{restoreCandidate=null;$('master-restore-preview').hidden=true;});
+  M.STATUSES.forEach(status=>{$('master-status').append(new Option(status,status));$('master-editor-status').append(new Option(status,status));});
+  nav('dashboard');
+  repo.read().then(saved=>{data=saved;render();}).catch(error=>announce(error.message+' Les fonctions Excel V1 restent accessibles dans Exports.',true));
+})();
 
 </script></body></html>
