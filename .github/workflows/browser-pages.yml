@@ -1,7 +1,11 @@
-# Manual only: no site is deployed when code is pushed.
+# Publication initiale autorisée explicitement par le propriétaire le 2026-10-09.
+# Le push déclenche le déploiement uniquement si ce workflow est modifié.
 name: Publier la version navigateur (accord requis)
 
 on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/browser-pages.yml']
   workflow_dispatch:
     inputs:
       publish_approved:
@@ -21,7 +25,7 @@ concurrency:
 
 jobs:
   publish:
-    if: inputs.publish_approved == true
+    if: github.event_name == 'push' || inputs.publish_approved == true
     runs-on: ubuntu-latest
     environment:
       name: github-pages
@@ -37,6 +41,13 @@ jobs:
           mkdir -p _site
           cp web/SEMIN-Marketplace.html _site/index.html
           cp web/vendor/LICENSE-JSZip.txt _site/LICENSE-JSZip.txt
+      - name: Vérifier la liste exacte des fichiers à publier
+        run: |
+          test "$(find _site -type f | wc -l)" -eq 2
+          test -f _site/index.html
+          test -f _site/LICENSE-JSZip.txt
+          grep -q "connect-src 'none'" _site/index.html
+          echo 'Publication : interface autonome et licence uniquement ; exemples fictifs intégrés.' >> "$GITHUB_STEP_SUMMARY"
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
@@ -44,3 +55,6 @@ jobs:
       - name: Publier après accord explicite
         id: deployment
         uses: actions/deploy-pages@v4
+
+      - name: Confirmer le lien publié
+        run: echo 'URL déployée — ${{ steps.deployment.outputs.page_url }}' >> "$GITHUB_STEP_SUMMARY"
