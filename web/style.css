@@ -16,3 +16,4 @@ nav .nav{width:100%;text-align:left;background:transparent;white-space:normal;fo
 @media(max-width:650px){.editor-grid{grid-template-columns:1fr}dialog{padding:18px}.studio-view .toolbar label{flex:1;min-width:140px}nav .nav{font-size:11px}.change-list{min-width:210px}}
 
 @media(max-width:1050px){nav .nav:disabled{display:inline-flex}}
+.source-evidence{white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px}#ob-raw{min-height:240px}#ob-confirm-panel{margin-top:20px;border-top:1px solid #d6e2da;padding-top:15px}.cast-mapping{max-height:650px}.cast-mapping td input{min-width:200px}.cast-mapping small{display:block;white-space:normal;margin:8px 0}#ob-castorama input[type=checkbox]{display:inline-block}#ob-castorama label>span{display:inline-block;margin:8px}#cast-review-message{white-space:normal}#cast-errors td{white-space:normal;min-width:170px}#ob-changes td{white-space:pre-wrap;overflow-wrap:anywhere;min-width:160px;max-width:420px}

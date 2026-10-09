@@ -118,4 +118,5 @@
   M.STATUSES.forEach(status=>{$('master-status').append(new Option(status,status));$('master-editor-status').append(new Option(status,status));});
   nav('dashboard');
   repo.read().then(saved=>{data=saved;storageReady=true;render();}).catch(error=>announce(error.message+' Les fonctions Excel V1 restent accessibles dans Exports.',true));
+  window.addEventListener('semin-catalogue-saved',()=>{repo.read().then(saved=>{data=saved;storageReady=true;render();}).catch(error=>announce(error.message,true));});
 })();

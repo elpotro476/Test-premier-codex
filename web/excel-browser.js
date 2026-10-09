@@ -60,7 +60,7 @@ window.BrowserExcel = (() => {
       pos+=46+view.getUint16(pos+28,true)+view.getUint16(pos+30,true)+view.getUint16(pos+32,true);
     }
   }
-  async function load(file){
+  async function load(file,{maxReferenceRows=20000}={}){
     if(!file || !/\.xlsx$/i.test(file.name))throw new Error('Choisissez un fichier .xlsx, sans macro.');
     if(file.size>15*1024*1024)throw new Error('Fichier trop volumineux (15 Mo maximum).');
     const bytes=new Uint8Array(await file.arrayBuffer());verifyZip(bytes);
@@ -86,7 +86,7 @@ window.BrowserExcel = (() => {
         const ref=cell.getAttribute('r');const a=address(ref);maxRow=Math.max(maxRow,a.row);maxCol=Math.max(maxCol,a.col);cells.set(ref,cell);
       }
       for(const row of direct(sheetData,'row'))maxRow=Math.max(maxRow,Number(row.getAttribute('r')));
-      if(maxRow>20000 || maxCol>250)throw new Error('Version tablette limitée à 20 000 lignes et 250 colonnes par feuille.');
+      if(maxRow>maxReferenceRows || maxCol>250)throw new Error('Classeur au-delà des limites : '+maxReferenceRows+' lignes et 250 colonnes par feuille.');
       const comments=Object.create(null);
       const slash=path.lastIndexOf('/');const sheetRels=await relationships(zip,path.slice(0,slash+1)+'_rels/'+path.slice(slash+1)+'.rels');
       for(const rel of Object.values(sheetRels).filter(r=>r.type.endsWith('/comments'))){
@@ -96,7 +96,7 @@ window.BrowserExcel = (() => {
       sheets.push({name:node.getAttribute('name'),path,doc,sheetData,cells,maxRow,maxCol,comments});
     }
     if(!sheets.length)throw new Error('Aucune feuille de calcul trouvée.');
-    return {zip,sheets,strings,formats,xfs};
+    return {zip,bytes,sheets,strings,formats,xfs,definedNames:all(book,'definedName').map(n=>({name:n.getAttribute('name'),scope:n.getAttribute('localSheetId'),formula:n.textContent}))};
   }
   function value(book,cell,identifier=false){
     if(!cell)return null;
@@ -243,5 +243,6 @@ window.BrowserExcel = (() => {
       return {source,rows:catalog(book,selected,header,source)};
     }};
   }
-  return {openCatalogue,request,profiles,importProfiles(saved){const merged={...profiles(),...validProfiles(saved)};saveProfiles(merged);return merged;},demoFile(name){const bytes=Uint8Array.from(atob(window.SEMIN_DEMO[name]),c=>c.charCodeAt(0));return new File([bytes],name,{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});}};
+  async function openTemplate(file){const book=await load(file,{maxReferenceRows:100000});return {book,file,headers(name,row){return columns(book,sheet(book,name),row);},cellValue(s,ref,identifier=false){return value(book,s.cells.get(ref),identifier);},all,direct,range,colLetter,address,NS};}
+  return {openCatalogue,openTemplate,request,profiles,importProfiles(saved){const merged={...profiles(),...validProfiles(saved)};saveProfiles(merged);return merged;},demoFile(name){const bytes=Uint8Array.from(atob(window.SEMIN_DEMO[name]),c=>c.charCodeAt(0));return new File([bytes],name,{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});}};
 })();

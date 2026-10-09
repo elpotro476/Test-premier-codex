@@ -98,6 +98,7 @@ window.CatalogueModel = (() => {
     const attrIds=new Set();for(const a of data.attributes){if(!a||typeof a.id!=='string'||!a.id||attrIds.has(a.id)||['__proto__','prototype','constructor'].includes(a.id)||typeof a.label!=='string'||!a.label.trim()||a.label.length>100||!['text','number'].includes(a.type)||typeof a.required!=='boolean'||typeof a.group!=='string')fail();attrIds.add(a.id);}
     if(FIELDS.some(a=>!attrIds.has(a.id)))fail();
     const productIds=new Set();for(const p of data.products){if(!p||typeof p.id!=='string'||!p.id||productIds.has(p.id)||!p.values||Array.isArray(p.values)||typeof p.values!=='object'||!STATUSES.includes(p.status)||typeof p.updatedAt!=='string')fail();productIds.add(p.id);for(const [k,v] of Object.entries(p.values))if(!attrIds.has(k)||typeof v!=='string'||v.length>100000)fail();}
+    for(const p of data.products)if(p.dossier!==undefined)ProductWorkflow.validate(p.dossier);
     if(data.history.length>100||data.history.some(h=>!h||typeof h.id!=='string'||typeof h.at!=='string'||typeof h.type!=='string'||!Number.isInteger(h.count)||h.count<0))fail();
     return clone(data);
   }

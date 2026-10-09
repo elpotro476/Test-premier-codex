@@ -18,10 +18,11 @@ nav .nav{width:100%;text-align:left;background:transparent;white-space:normal;fo
 @media(max-width:650px){.editor-grid{grid-template-columns:1fr}dialog{padding:18px}.studio-view .toolbar label{flex:1;min-width:140px}nav .nav{font-size:11px}.change-list{min-width:210px}}
 
 @media(max-width:1050px){nav .nav:disabled{display:inline-flex}}
+.source-evidence{white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px}#ob-raw{min-height:240px}#ob-confirm-panel{margin-top:20px;border-top:1px solid #d6e2da;padding-top:15px}.cast-mapping{max-height:650px}.cast-mapping td input{min-width:200px}.cast-mapping small{display:block;white-space:normal;margin:8px 0}#ob-castorama input[type=checkbox]{display:inline-block}#ob-castorama label>span{display:inline-block;margin:8px}#cast-review-message{white-space:normal}#cast-errors td{white-space:normal;min-width:170px}#ob-changes td{white-space:pre-wrap;overflow-wrap:anywhere;min-width:160px;max-width:420px}
 
 </style></head>
 <body>
-<aside><a class="brand" href="#">SEMIN<span>MARKETPLACE STUDIO</span></a><nav aria-label="Navigation Studio"><button class="nav" data-studio-view="dashboard">Tableau de bord</button><button class="nav" data-studio-view="catalogue">Catalogue maître</button><button class="nav" data-studio-view="sheets">Fiches produits</button><button class="nav" data-studio-view="marketplaces" disabled>Marketplaces · prochain lot</button><button class="nav" data-studio-view="mappings">Correspondances V1</button><button class="nav" data-studio-view="exports">Exports V1</button><button class="nav" data-studio-view="parameters">Paramètres</button></nav><div class="aside-note"><span class="dot"></span> Stockage sur cet appareil<p>Vos données ne sont pas partagées automatiquement. Sauvegardez-les régulièrement.</p></div></aside>
+<aside><a class="brand" href="#">SEMIN<span>MARKETPLACE STUDIO</span></a><nav aria-label="Navigation Studio"><button class="nav" data-studio-view="dashboard">Tableau de bord</button><button class="nav" data-studio-view="catalogue">Catalogue maître</button><button class="nav" data-studio-view="sheets">Fiches produits</button><button class="nav" data-studio-view="onebase">Nouveau produit · OneBase</button><button class="nav" data-studio-view="castorama">Castorama · Contrôle et export</button><button class="nav" data-studio-view="mappings">Correspondances V1</button><button class="nav" data-studio-view="exports">Exports V1</button><button class="nav" data-studio-view="parameters">Paramètres</button></nav><div class="aside-note"><span class="dot"></span> Stockage sur cet appareil<p>Vos données ne sont pas partagées automatiquement. Sauvegardez-les régulièrement.</p></div></aside>
 <main><header><div><span class="eyebrow">VOTRE CATALOGUE, PRÊT POUR CHAQUE MARKETPLACE</span><h1>Marketplace Studio</h1><p>Transformez vos données produits en fichiers prêts à vérifier.</p></div><button id="demo" class="secondary">Charger la démonstration ↗</button></header>
 <div class="privacy-note">Traitement local dans Chrome · Aucun fichier envoyé · Formats .xlsx standard</div>
 <div class="storage-warning">Catalogue stocké dans Chrome sur cet appareil uniquement. Effacer le stockage du navigateur peut supprimer les données ; utilisez les sauvegardes JSON.</div>
@@ -37,8 +38,12 @@ nav .nav{width:100%;text-align:left;background:transparent;white-space:normal;fo
     <div id="master-import-settings" hidden><div class="settings"><label>Feuille<select id="master-sheet"></select></label><label>Ligne d’en-tête<input id="master-header" type="number" min="1" value="1"></label></div><button id="master-read" class="secondary">Lire les colonnes</button><div id="master-columns" class="table-wrap"></div><button id="master-plan" hidden>Prévisualiser les changements</button></div>
     <div id="master-import-plan" hidden><h3>Réimport : modifications proposées</h3><p>Les ajouts sont présélectionnés. Les mises à jour restent décochées : vous décidez explicitement de leur application. Une cellule vide peut effacer une valeur existante si vous confirmez cette ligne.</p><div id="master-plan-summary"></div><div id="master-plan-table" class="table-wrap"></div><button id="master-apply">Enregistrer les lignes cochées</button><button id="master-cancel" class="secondary">Annuler la prévisualisation</button></div>
   </section>
-  <section class="card"><div class="section-head"><h2>Références enregistrées</h2><button id="master-refresh" class="secondary">Actualiser les données locales</button></div><div class="toolbar"><input id="master-search" type="search" placeholder="SKU, EAN, désignation ou famille…" aria-label="Rechercher dans le catalogue maître"><label>Famille<select id="master-family"><option value="">Toutes les familles</option></select></label><label>Complétude<select id="master-completeness"><option value="">Toutes les fiches</option><option value="complete">Complètes</option><option value="incomplete">À compléter / corriger</option></select></label><label>Préparation manuelle<select id="master-status"><option value="">Tous les statuts</option></select></label></div><button id="master-select" class="secondary">Sélectionner les résultats</button><button id="master-deselect" class="secondary">Tout désélectionner</button><p id="master-list-count" class="muted"></p><div id="master-products" class="table-wrap"></div><p class="muted">La sélection est locale à ce catalogue. L’export depuis le catalogue maître sera relié aux marketplaces dans un prochain lot. Le parcours Excel V1 reste accessible dans « Exports ».</p></section>
+  <section class="card"><div class="section-head"><h2>Références enregistrées</h2><button id="master-refresh" class="secondary">Actualiser les données locales</button></div><div class="toolbar"><input id="master-search" type="search" placeholder="SKU, EAN, désignation ou famille…" aria-label="Rechercher dans le catalogue maître"><label>Famille<select id="master-family"><option value="">Toutes les familles</option></select></label><label>Complétude<select id="master-completeness"><option value="">Toutes les fiches</option><option value="complete">Complètes</option><option value="incomplete">À compléter / corriger</option></select></label><label>Préparation manuelle<select id="master-status"><option value="">Tous les statuts</option></select></label></div><button id="master-select" class="secondary">Sélectionner les résultats</button><button id="master-deselect" class="secondary">Tout désélectionner</button><p id="master-list-count" class="muted"></p><div id="master-products" class="table-wrap"></div><p class="muted">La sélection est locale à ce catalogue. Le parcours Castorama permet d’exporter une fiche enregistrée depuis le catalogue maître. Le parcours Excel V1 reste accessible dans « Exports ».</p></section>
 </section>
+<section id="studio-onebase" class="studio-view" hidden>
+<section class="card"><div class="section-head"><div><h2>Nouveau produit — OneBase</h2><p>Collez le texte brut. Extraction locale par règles, sans IA ni connexion à OneBase.</p></div><button id="ob-demo" class="secondary">Exemple OneBase fictif</button></div><div class="toolbar"><button id="ob-new" class="secondary">Nouvelle fiche</button><label>Fiche existante<select id="ob-existing"></select></label></div><p id="ob-editing"></p><label>Texte OneBase original<textarea id="ob-raw" maxlength="200000" rows="12" placeholder="Collez ici le texte OneBase, sans retaper les champs…"></textarea></label><button id="ob-analyse">Analyser le texte OneBase</button><p id="ob-warnings" class="source-evidence conflict"></p><details><summary>Passages non associés à un champ</summary><p id="ob-unclassified" class="source-evidence"></p></details></section>
+<div id="ob-form" hidden><section class="card"><h2>1. Données sources — vérification et corrections</h2><p>Le texte original et les valeurs extraites restent conservés. Les corrections ci-dessous alimentent le catalogue maître ; aucune information manquante n’est inventée.</p><div id="ob-source-fields" class="editor-grid"></div></section><section class="card"><div class="section-head"><div><h2>2. Enrichissement commun</h2><p>Titre, HTML et cinq arguments. Le contenu préparé reprend uniquement les faits renseignés ; relisez chaque proposition.</p></div><button id="ob-suggest" class="secondary">Préparer le contenu depuis les sources</button></div><div id="ob-enrichment" class="editor-grid"></div><p>HTML autorisé : p, br, ul, ol, li, strong, em, b et i, sans attribut ni lien distant.</p></section><section class="card"><h2>3. Contenu spécifique Castorama</h2><p>Sans personnalisation, le contenu commun sera utilisé. Une personnalisation vide signifie laisser ce champ vide pour Castorama.</p><div id="ob-castorama" class="editor-grid"></div></section><section class="card"><button id="ob-preview">Prévisualiser l’enregistrement</button><div id="ob-confirm-panel" hidden><h3 id="ob-confirm-title"></h3><div id="ob-changes" class="table-wrap"></div><label class="required-label"><input id="ob-consent" type="checkbox">Je confirme les changements affichés, y compris les éventuels effacements.</label><button id="ob-confirm" disabled>Confirmer et enregistrer la fiche</button></div></section></div></section>
+<section id="studio-castorama" class="studio-view" hidden><section class="card"><div class="section-head"><h2>Castorama — Template et correspondances</h2><button id="cast-demo-template" class="secondary">Télécharger un template fictif</button></div><p>Le template peut déjà contenir des produits. Ils seront conservés ; l’export utilise une zone vierge vérifiée. Aucune donnée des anciennes lignes n’est copiée vers une nouvelle fiche.</p><label>Produit du catalogue maître<select id="cast-product"></select></label><label class="drop"><input id="cast-file" type="file" accept=".xlsx"><strong>Importer le template Castorama .xlsx</strong><span id="cast-file-name">Choisir le fichier — traitement dans Chrome uniquement</span></label><div id="cast-settings" hidden><div class="settings"><label>Feuille produits<select id="cast-sheet"></select></label><label>En-têtes · ligne<input id="cast-header" type="number" min="1" value="1"></label><label>Destination · ligne<input id="cast-start" type="number" min="2" value="2"></label></div><button id="cast-analyse">Identifier les colonnes du template</button></div></section><div id="cast-prepared" hidden><section class="card"><h2>Mapping et valeurs spécifiques</h2><p id="cast-template-note"></p><p>« Saisie Castorama » conserve une valeur pour ce produit et ce format de template : catégorie, contenance choisie en ml, prix, stock, EAN, etc. Confirmez la variante exacte avant de renseigner la contenance. Un ancien produit du template ne fournit aucune valeur par défaut.</p><div class="toolbar"><label>Profil Castorama<select id="cast-profile"></select></label><label>Nom du mapping<input id="cast-profile-name" value="Castorama" maxlength="100"></label><button id="cast-save-profile" class="secondary">Enregistrer le mapping Castorama</button><button id="cast-backup-profiles" class="secondary">Sauvegarder les mappings Castorama</button><label class="restore-button">Importer des mappings<input id="cast-import-profiles" type="file" accept=".json"></label></div><div id="cast-mapping" class="table-wrap cast-mapping"></div><label class="required-label"><input id="cast-values-consent" type="checkbox">Je confirme l’enregistrement des saisies Castorama pour ce produit, après vérification de sa variante.</label><button id="cast-save-values">Enregistrer les valeurs Castorama dans la fiche</button></section><section class="card"><div class="section-head"><h2>Contrôle avant export</h2><button id="cast-check" class="secondary">Contrôler Castorama</button></div><p id="cast-review-message" class="review-note"></p><div id="cast-errors" class="table-wrap conflict"></div><div id="cast-review" class="table-wrap"></div><div class="action-row"><p>Les règles non évaluables bloquent l’export. Vérifiez le fichier avant import sur Castorama.</p><button id="cast-export" disabled>Exporter la copie Excel Castorama</button></div></section></div></section>
 <section id="studio-parameters" class="studio-view" hidden>
   <section class="card"><h2>Attributs extensibles</h2><p>Ajoutez un attribut sans modifier le code. Un attribut requis s’applique à toutes les fiches de ce prototype ; les règles par catégorie viendront dans un prochain lot.</p><div class="toolbar"><label>Libellé<input id="attribute-name" maxlength="100" placeholder="Ex. Résistance thermique"></label><label>Type<select id="attribute-type"><option value="text">Texte</option><option value="number">Nombre</option></select></label><label class="required-label"><input id="attribute-required" type="checkbox">Requis dans le catalogue</label><button id="attribute-add">Ajouter l’attribut</button></div><div id="master-attributes" class="table-wrap"></div></section>
   <section class="card"><h2>Sauvegarde du catalogue maître</h2><p>Cette sauvegarde contient vos données commerciales : conservez-la dans un emplacement sûr et ne l’ajoutez jamais à GitHub. Elle n’inclut pas les profils de correspondance V1, qui disposent de leur sauvegarde JSON séparée.</p><div class="toolbar"><button id="master-backup">Télécharger la sauvegarde JSON</button><label class="restore-button">Choisir une sauvegarde JSON<input id="master-restore-file" type="file" accept=".json,application/json"></label></div><div id="master-restore-preview" hidden><p id="master-restore-summary"></p><label class="required-label"><input id="master-restore-consent" type="checkbox">Je souhaite remplacer mon catalogue local par cette sauvegarde.</label><button id="master-restore" disabled>Restaurer et remplacer le catalogue</button><button id="master-restore-cancel" class="secondary">Annuler</button></div></section>
@@ -57,7 +62,7 @@ nav .nav{width:100%;text-align:left;background:transparent;white-space:normal;fo
 <section id="mapping-card" class="card" hidden><div class="section-head"><div><h2>3. Vérifiez les correspondances</h2><p>Confirmez les suggestions et les champs obligatoires. Aucun contenu manquant n’est inventé.</p></div><span class="badge">Vous gardez le contrôle</span></div><div class="toolbar"><label>Marketplace<input id="marketplace" value="Marketplace démo" maxlength="100"></label><label>Correspondance enregistrée<select id="profiles"><option value="">Choisir un profil…</option></select></label><button id="save-profile" class="secondary">Enregistrer les correspondances</button><button id="backup-profiles" class="secondary">Sauvegarder les profils JSON</button><label class="restore-button">Importer des profils JSON<input id="restore-profiles" type="file" accept=".json,application/json"></label></div><div id="mapping" class="table-wrap"></div></section>
 <section id="review-card" class="card" hidden><div class="section-head"><div><h2>4. Contrôlez avant export</h2><p>Vérifiez les valeurs, les identifiants et les champs obligatoires avant de générer le fichier.</p></div><button id="check" class="secondary">Contrôler les données</button></div><div id="review-message" class="review-note">Lancez un contrôle après avoir sélectionné vos produits.</div><div id="errors" class="table-wrap"></div><div id="review" class="table-wrap"></div><div class="action-row"><span class="muted">Conservez une vérification humaine avant l’import marketplace.</span><button id="export" disabled>↓ &nbsp; Exporter le fichier Excel</button></div></section>
 </section>
-<footer>SEMIN Marketplace Studio · V2 — Catalogue maître <span>Compatible Chrome · Android et Windows</span></footer>
+<footer>SEMIN Marketplace Studio · V3.1 locale — OneBase / Castorama <span>Compatible Chrome · Android et Windows</span></footer>
 </main><script>
 /*!
 
@@ -140,7 +145,7 @@ window.BrowserExcel = (() => {
       pos+=46+view.getUint16(pos+28,true)+view.getUint16(pos+30,true)+view.getUint16(pos+32,true);
     }
   }
-  async function load(file){
+  async function load(file,{maxReferenceRows=20000}={}){
     if(!file || !/\.xlsx$/i.test(file.name))throw new Error('Choisissez un fichier .xlsx, sans macro.');
     if(file.size>15*1024*1024)throw new Error('Fichier trop volumineux (15 Mo maximum).');
     const bytes=new Uint8Array(await file.arrayBuffer());verifyZip(bytes);
@@ -166,7 +171,7 @@ window.BrowserExcel = (() => {
         const ref=cell.getAttribute('r');const a=address(ref);maxRow=Math.max(maxRow,a.row);maxCol=Math.max(maxCol,a.col);cells.set(ref,cell);
       }
       for(const row of direct(sheetData,'row'))maxRow=Math.max(maxRow,Number(row.getAttribute('r')));
-      if(maxRow>20000 || maxCol>250)throw new Error('Version tablette limitée à 20 000 lignes et 250 colonnes par feuille.');
+      if(maxRow>maxReferenceRows || maxCol>250)throw new Error('Classeur au-delà des limites : '+maxReferenceRows+' lignes et 250 colonnes par feuille.');
       const comments=Object.create(null);
       const slash=path.lastIndexOf('/');const sheetRels=await relationships(zip,path.slice(0,slash+1)+'_rels/'+path.slice(slash+1)+'.rels');
       for(const rel of Object.values(sheetRels).filter(r=>r.type.endsWith('/comments'))){
@@ -176,7 +181,7 @@ window.BrowserExcel = (() => {
       sheets.push({name:node.getAttribute('name'),path,doc,sheetData,cells,maxRow,maxCol,comments});
     }
     if(!sheets.length)throw new Error('Aucune feuille de calcul trouvée.');
-    return {zip,sheets,strings,formats,xfs};
+    return {zip,bytes,sheets,strings,formats,xfs,definedNames:all(book,'definedName').map(n=>({name:n.getAttribute('name'),scope:n.getAttribute('localSheetId'),formula:n.textContent}))};
   }
   function value(book,cell,identifier=false){
     if(!cell)return null;
@@ -323,7 +328,1192 @@ window.BrowserExcel = (() => {
       return {source,rows:catalog(book,selected,header,source)};
     }};
   }
-  return {openCatalogue,request,profiles,importProfiles(saved){const merged={...profiles(),...validProfiles(saved)};saveProfiles(merged);return merged;},demoFile(name){const bytes=Uint8Array.from(atob(window.SEMIN_DEMO[name]),c=>c.charCodeAt(0));return new File([bytes],name,{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});}};
+  async function openTemplate(file){const book=await load(file,{maxReferenceRows:100000});return {book,file,headers(name,row){return columns(book,sheet(book,name),row);},cellValue(s,ref,identifier=false){return value(book,s.cells.get(ref),identifier);},all,direct,range,colLetter,address,NS};}
+  return {openCatalogue,openTemplate,request,profiles,importProfiles(saved){const merged={...profiles(),...validProfiles(saved)};saveProfiles(merged);return merged;},demoFile(name){const bytes=Uint8Array.from(atob(window.SEMIN_DEMO[name]),c=>c.charCodeAt(0));return new File([bytes],name,{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});}};
+})();
+
+</script>
+<script>
+/* Deterministic, local extraction. No service, inference of missing values or AI. */
+"use strict";
+window.OneBase = (() => {
+  const fields = [
+    [
+      "sku",
+      "Référence article / SKU",
+      [
+        "reference article",
+        "ref article",
+        "sku",
+        "sku semin",
+        "reference produit",
+        "reference",
+      ],
+    ],
+    [
+      "onebaseRef",
+      "Référence OneBase",
+      [
+        "reference onebase",
+        "ref onebase",
+        "identifiant onebase",
+        "onebase",
+        "code produit",
+      ],
+    ],
+    ["ean", "EAN", ["ean", "ean13", "ean 13", "gtin", "code barre"]],
+    ["brand", "Marque", ["marque", "brand"]],
+    [
+      "designation",
+      "Désignation",
+      ["designation", "nom produit", "produit", "nom commercial"],
+    ],
+    ["family", "Famille", ["famille", "categorie"]],
+    [
+      "technical",
+      "Caractéristiques techniques",
+      [
+        "caracteristiques",
+        "caracteristiques techniques",
+        "fiche technique",
+        "definition technique",
+      ],
+    ],
+    [
+      "composition",
+      "Nature / composition",
+      ["nature", "composition", "type de produit"],
+    ],
+    ["finish", "Aspect / finition", ["aspect", "finition"]],
+    ["usage", "Usage", ["usage", "destination", "interieur exterieur"]],
+    ["support", "Supports", ["supports", "support", "support admis"]],
+    ["drying", "Séchage", ["sechage", "temps de sechage"]],
+    ["recoat", "Recouvrable", ["recouvrable", "temps de recouvrement"]],
+    [
+      "abrasion",
+      "Résistance à l’abrasion humide",
+      ["resistance a l abrasion humide", "abrasion humide", "classe abrasion"],
+    ],
+    ["packaging", "Conditionnement", ["conditionnement", "emballage"]],
+    ["capacity", "Contenance", ["contenance", "volume", "capacite"]],
+    ["coverage", "Rendement", ["rendement", "pouvoir couvrant"]],
+    ["weight", "Poids", ["poids", "poids kg"]],
+    ["price", "Prix", ["prix", "prix ttc"]],
+    ["stock", "Stock", ["stock", "quantite disponible"]],
+    ["shortDescription", "Descriptif", ["descriptif", "description courte"]],
+    ["storage", "Stockage", ["stockage"]],
+    ["storageMonths", "Stockage en mois", ["stockage en mois"]],
+    ["preparation", "Préparation des supports", ["preparation des supports"]],
+    [
+      "precautions",
+      "Précautions d’emploi",
+      ["precaution d emploi", "precautions d emploi"],
+    ],
+    ["vocClass", "COV (valeur source)", ["cov"]],
+    ["density", "Masse volumique", ["masse volumique"]],
+    ["dryExtract", "Extrait sec", ["extrait sec"]],
+    ["gloss", "Brillant spéculaire", ["brillant speculaire"]],
+    [
+      "arguments",
+      "Arguments sources",
+      [
+        "arguments",
+        "arguments commerciaux",
+        "arguments marketing",
+        "avantages",
+      ],
+    ],
+  ].map(([id, label, aliases]) => ({ id, label, aliases }));
+  const norm = (s) =>
+    String(s)
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, " ")
+      .trim();
+  function parse(raw) {
+    if (typeof raw !== "string" || !raw.trim())
+      throw Error("Collez le texte OneBase avant de l’analyser.");
+    if (raw.length > 200000)
+      throw Error("Texte OneBase limité à 200 000 caractères.");
+    const candidates = Object.fromEntries(fields.map((f) => [f.id, []])),
+      unclassified = [],
+      warnings = [];
+    function add(id, value, evidence) {
+      value = value.trim();
+      if (value) candidates[id].push({ value, evidence });
+    }
+    let active = null,
+      block = [];
+    const flush = () => {
+      if (active && block.length)
+        add(active, block.join("\n"), block.join("\n"));
+      active = null;
+      block = [];
+    };
+    const sections = new Set([
+      "argumentaire",
+      "infos complementaires",
+      "reglementaire",
+      "infos techniques",
+    ]);
+    let first = true;
+    for (const original of raw.split(/\r\n?|\n/)) {
+      const line = original
+        .trim()
+        .replace(/^\*+|\*+$/g, "")
+        .trim();
+      if (!line) {
+        continue;
+      }
+      const labelled = /^([^:：=]{1,90})\s*[:：=]\s*(.*)$/.exec(line);
+      const label = labelled ? labelled[1] : line;
+      let field = fields.find((f) => f.aliases.includes(norm(label)));
+      if (/^les produits [1-5]$/.test(norm(label)))
+        field = fields.find((f) => f.id === "arguments");
+      if (field) {
+        flush();
+        active = field.id;
+        if (labelled && labelled[2]) block.push(labelled[2]);
+        first = false;
+        continue;
+      }
+      if (sections.has(norm(line)) || /^\*.*\*$/.test(original.trim())) {
+        flush();
+        unclassified.push(original);
+        first = false;
+        continue;
+      }
+      if (/^A\d{5}\.?$/.test(line)) {
+        flush();
+        add("sku", line.replace(/\.$/, ""), original);
+        warnings.push(
+          "Référence article isolée reconnue : confirmez son association au produit.",
+        );
+        first = false;
+        continue;
+      }
+      if (
+        first &&
+        !labelled &&
+        line.length < 250 &&
+        !/https?:|\[image\]/i.test(line)
+      ) {
+        add("designation", line, original);
+        first = false;
+        continue;
+      }
+      first = false;
+      if (active) {
+        block.push(line);
+      } else unclassified.push(original);
+    }
+    flush();
+    // Conservative extraction of explicitly written paint characteristics from the original text.
+    const patterns = {
+      composition: /\bpeinture\s+acrylique(?:\s+mate)?\b/giu,
+      finish: /\b(?:mate|mat|satinée|satiné|brillante|brillant)\b/giu,
+      usage: /\bintérieure?\s*(?:\/|et|-|–)\s*extérieure?\b/giu,
+      support: /\bmurs\s+et\s+plafonds\b/giu,
+      drying:
+        /\b(?:séchage|sec)\s*[:：]?\s*(\d+(?:[.,]\d+)?\s*(?:h(?:eures?)?|min(?:utes?)?))\b/giu,
+      recoat:
+        /\brecouvrable(?:\s+(?:après|en))?\s*[:：]?\s*(\d+(?:[.,]\d+)?\s*(?:h(?:eures?)?|min(?:utes?)?))\b/giu,
+      abrasion:
+        /\b(?:résistance\s+à\s+l['’]abrasion\s+humide\s*[:：]?\s*(?:Norme[^\n]*?:\s*)?)(classe\s+[1-5])\b/giu,
+    };
+    for (const [id, regex] of Object.entries(patterns)) {
+      const context =
+        ["finish", "composition", "usage"].includes(id) &&
+        candidates.technical.length
+          ? candidates.technical.map((c) => c.value).join("\n")
+          : raw;
+      if (!candidates[id].length)
+        for (const match of context.matchAll(regex))
+          add(id, match[1] || match[0], match[0]);
+    }
+    const extracted = {},
+      evidence = {};
+    for (const field of fields) {
+      let entries = candidates[field.id];
+      if (["technical", "arguments"].includes(field.id) && entries.length) {
+        extracted[field.id] = entries.map((e) => e.value).join("\n");
+        evidence[field.id] = entries.map((e) => e.evidence);
+        continue;
+      }
+      const distinct = [...new Set(entries.map((e) => norm(e.value)))];
+      if (distinct.length > 1) {
+        warnings.push(
+          field.label +
+            " : plusieurs valeurs possibles, à choisir manuellement.",
+        );
+        extracted[field.id] = "";
+      } else extracted[field.id] = entries[0]?.value || "";
+      evidence[field.id] = entries.map((e) => e.evidence);
+    }
+    if (extracted.brand) {
+      const m = /^Marque\s+(.+?)\s*-\s*(.+)$/i.exec(extracted.brand);
+      if (m && norm(m[1]) === norm(m[2])) extracted.brand = m[2];
+    }
+    if (extracted.drying && /\bsec\s*:/i.test(extracted.drying)) {
+      const sec = /Sec\s*:\s*([^\n.]+)/i.exec(extracted.drying);
+      if (sec) extracted.drying = sec[1].trim();
+    }
+    if (
+      extracted.packaging &&
+      /\d+\s*(?:et|ou|\/)\s*\d+\s*L\b/i.test(extracted.packaging)
+    )
+      warnings.push(
+        "Plusieurs contenances dans la source : confirmer le conditionnement associé au SKU, aucune contenance choisie automatiquement.",
+      );
+    if (
+      norm(extracted.family) === "enduit" &&
+      /peinture/i.test(extracted.technical || extracted.designation)
+    )
+      warnings.push(
+        "Incohérence source : catégorie Enduit pour une peinture. Choisir une catégorie Castorama adaptée.",
+      );
+    if (!extracted.sku)
+      warnings.push(
+        "Référence article / SKU non identifiée : ne pas utiliser automatiquement la référence OneBase.",
+      );
+    if (!extracted.designation)
+      warnings.push(
+        "Désignation non identifiée : à renseigner depuis la source.",
+      );
+    return { raw, extracted, evidence, warnings, unclassified };
+  }
+  const escape = (s) =>
+    String(s)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  function htmlIssues(text) {
+    if (!text) return [];
+    const doc = new DOMParser().parseFromString(text, "text/html"),
+      allowed = new Set([
+        "P",
+        "BR",
+        "UL",
+        "OL",
+        "LI",
+        "STRONG",
+        "EM",
+        "B",
+        "I",
+      ]);
+    return [...doc.head.children, ...doc.body.querySelectorAll("*")].some(
+      (n) => !allowed.has(n.tagName) || n.attributes.length,
+    )
+      ? [
+          "HTML : seules les balises p, br, ul, ol, li, strong, em, b et i sans attribut sont autorisées.",
+        ]
+      : [];
+  }
+  function suggestions(values) {
+    const title = [values.brand, values.designation]
+      .filter(Boolean)
+      .filter((v, i, a) => i === 0 || !norm(v).startsWith(norm(a[0]) + " "))
+      .join(" ");
+    const argumentLines = String(values.arguments || "")
+      .split("\n")
+      .map((v) => v.replace(/^[-•*]\s*/, "").trim())
+      .filter(Boolean);
+    const facts = fields
+      .filter(
+        (f) =>
+          [
+            "composition",
+            "finish",
+            "usage",
+            "support",
+            "drying",
+            "recoat",
+            "abrasion",
+            "packaging",
+            "capacity",
+            "coverage",
+          ].includes(f.id) && values[f.id],
+      )
+      .map((f) => f.label + " : " + values[f.id]);
+    const arguments5 = argumentLines.length
+      ? argumentLines.slice(0, 5)
+      : facts.slice(0, 5);
+    return {
+      title:
+        values.designation &&
+        norm(values.designation).startsWith(norm(values.brand) + " ")
+          ? values.designation
+          : title,
+      html: [
+        values.designation,
+        values.technical || values.shortDescription,
+        values.packaging,
+      ]
+        .filter(Boolean)
+        .map((v) => "<p>" + escape(v).replace(/\n/g, "<br>") + "</p>")
+        .join("\n"),
+      ...Object.fromEntries(
+        Array.from({ length: 5 }, (_, i) => [
+          "argument" + (i + 1),
+          arguments5[i] || "",
+        ]),
+      ),
+    };
+  }
+  return { fields, norm, parse, suggestions, htmlIssues };
+})();
+
+window.ProductWorkflow = (() => {
+  const enriched = [
+    "title",
+    "html",
+    "argument1",
+    "argument2",
+    "argument3",
+    "argument4",
+    "argument5",
+  ];
+  function validate(d) {
+    const fail = () => {
+      throw Error("Dossier OneBase / Castorama invalide dans la sauvegarde.");
+    };
+    if (
+      !d ||
+      d.version !== 1 ||
+      !d.source ||
+      typeof d.source.raw !== "string" ||
+      d.source.raw.length > 200000 ||
+      typeof d.source.importedAt !== "string"
+    )
+      fail();
+    for (const key of ["extracted", "evidence"])
+      if (
+        !d.source[key] ||
+        typeof d.source[key] !== "object" ||
+        Array.isArray(d.source[key])
+      )
+        fail();
+    const ids = new Set(OneBase.fields.map((f) => f.id));
+    for (const [k, v] of Object.entries(d.source.extracted))
+      if (!ids.has(k) || typeof v !== "string" || v.length > 100000) fail();
+    for (const [k, v] of Object.entries(d.source.evidence))
+      if (
+        !ids.has(k) ||
+        !Array.isArray(v) ||
+        v.length > 20000 ||
+        v.some((s) => typeof s !== "string" || s.length > 200000)
+      )
+        fail();
+    for (const key of ["enrichment", "castorama"]) {
+      const obj = d[key];
+      if (
+        !obj ||
+        typeof obj !== "object" ||
+        Array.isArray(obj) ||
+        Object.entries(obj).some(
+          ([k, v]) =>
+            !enriched.includes(k) || typeof v !== "string" || v.length > 100000,
+        )
+      )
+        fail();
+    }
+    if (
+      d.variantConfirmed !== undefined &&
+      typeof d.variantConfirmed !== "boolean"
+    )
+      fail();
+    if (d.templateValues !== undefined) {
+      if (
+        !d.templateValues ||
+        typeof d.templateValues !== "object" ||
+        Array.isArray(d.templateValues) ||
+        Object.keys(d.templateValues).length > 10
+      )
+        fail();
+      for (const [signature, values] of Object.entries(d.templateValues)) {
+        if (
+          signature.length > 30000 ||
+          !values ||
+          Array.isArray(values) ||
+          typeof values !== "object" ||
+          Object.keys(values).length > 250 ||
+          Object.entries(values).some(
+            ([k, v]) =>
+              !/^\d+$/.test(k) || typeof v !== "string" || v.length > 100000,
+          )
+        )
+          fail();
+      }
+    }
+    return structuredClone(d);
+  }
+  function plan(data, parsed, values, enrichment, castorama, productId = null) {
+    const M = CatalogueModel,
+      extra = OneBase.fields
+        .filter((f) => !data.attributes.some((a) => a.id === f.id))
+        .map((f) => ({
+          id: f.id,
+          label: f.label,
+          type: ["price", "stock"].includes(f.id) ? "number" : "text",
+          required: false,
+          group: "Source OneBase",
+        }));
+    let p = productId ? data.products.find((p) => p.id === productId) : null;
+    const matches = data.products.filter(
+      (p) =>
+        (values.sku && p.values.sku?.trim() === values.sku.trim()) ||
+        (values.ean && p.values.ean?.trim() === values.ean.trim()),
+    );
+    if (matches.length > 1 || (p && matches.some((m) => m.id !== p.id)))
+      throw Error(
+        "Ces identifiants correspondent à plusieurs fiches : corrigez le conflit.",
+      );
+    p = p || matches[0];
+    if (
+      !productId &&
+      p &&
+      values.sku &&
+      p.values.sku &&
+      p.values.sku !== values.sku
+    )
+      throw Error(
+        "Un identifiant appartient à un autre SKU. Vérifiez les références avant mise à jour.",
+      );
+    if (!values.sku?.trim())
+      throw Error(
+        "Référence article / SKU nécessaire pour enregistrer la fiche.",
+      );
+    const mapped = {};
+    for (const a of [...data.attributes, ...extra])
+      if (Object.hasOwn(values, a.id)) mapped[a.id] = String(values[a.id]);
+    const source = parsed
+      ? {
+          raw: parsed.raw,
+          extracted: structuredClone(parsed.extracted),
+          evidence: structuredClone(parsed.evidence),
+          importedAt: new Date().toISOString(),
+        }
+      : p?.dossier?.source || {
+          raw: "",
+          extracted: {},
+          evidence: {},
+          importedAt: new Date().toISOString(),
+        };
+    const dossier = validate({
+      version: 1,
+      source,
+      enrichment,
+      castorama,
+      templateValues: p?.dossier?.templateValues || {},
+      variantConfirmed:
+        !!p?.dossier?.variantConfirmed &&
+        p.values.packaging === values.packaging &&
+        p.values.sku === values.sku,
+    });
+    const changes = Object.entries(mapped)
+      .filter(([k, v]) => String(p?.values[k] ?? "") !== v)
+      .map(([field, after]) => ({
+        field,
+        before: String(p?.values[field] ?? ""),
+        after,
+      }));
+    for (const group of ["enrichment", "castorama"])
+      for (const key of enriched)
+        if (
+          (p?.dossier?.[group]?.[key] ?? null) !== (dossier[group][key] ?? null)
+        )
+          changes.push({
+            field: group + "." + key,
+            before: p?.dossier?.[group]?.[key] ?? "(hérité)",
+            after: dossier[group][key] ?? "(hérité)",
+          });
+    if (parsed && parsed.raw !== p?.dossier?.source.raw)
+      changes.push({
+        field: "Texte OneBase original",
+        before: p?.dossier?.source.raw ? "Texte source existant" : "Aucun",
+        after: "Nouveau texte collé (" + parsed.raw.length + " caractères)",
+      });
+    return {
+      revision: data.revision,
+      productId: p?.id || null,
+      values: mapped,
+      dossier,
+      extra,
+      changes,
+    };
+  }
+  function apply(data, plan) {
+    const M = CatalogueModel;
+    if (data.revision !== plan.revision)
+      throw Error(
+        "Catalogue modifié depuis la prévisualisation. Actualisez et recommencez.",
+      );
+    const next = M.clone ? M.clone(data) : structuredClone(data);
+    next.attributes.push(...plan.extra);
+    let p = next.products.find((p) => p.id === plan.productId);
+    if (!p) {
+      p = { id: M.uid(), values: {}, status: "À compléter", updatedAt: "" };
+      next.products.push(p);
+    }
+    p.values = { ...p.values, ...plan.values };
+    p.dossier = validate(plan.dossier);
+    p.updatedAt = new Date().toISOString();
+    p.status = M.issues(p, next).length ? "À compléter" : "À contrôler";
+    if (M.issues(p, next).some((i) => i.message === "Identifiant dupliqué"))
+      throw Error("SKU ou EAN déjà utilisé.");
+    next.history.unshift({
+      id: M.uid(),
+      at: p.updatedAt,
+      type: plan.productId ? "Fiche OneBase modifiée" : "Fiche OneBase créée",
+      count: 1,
+    });
+    next.history = next.history.slice(0, 100);
+    return M.validateSnapshot(next);
+  }
+  function destinations(data) {
+    return [
+      ...data.attributes.map((a) => ({
+        id: "master." + a.id,
+        label: "Catalogue · " + a.label,
+      })),
+      ...enriched.map((k) => ({
+        id: "content." + k,
+        label:
+          "Castorama / enrichissement · " +
+          ({ title: "Titre", html: "Description HTML" }[k] ||
+            "Argument " + k.slice(-1)),
+      })),
+    ];
+  }
+  function value(product, key) {
+    const [group, field] = key.split(".");
+    if (group === "master") return product.values[field] ?? "";
+    if (group === "content")
+      return Object.hasOwn(product.dossier?.castorama || {}, field)
+        ? product.dossier.castorama[field]
+        : product.dossier?.enrichment?.[field] || "";
+    return "";
+  }
+  function guess(label, data) {
+    const n = OneBase.norm(label.replace(/\*/g, ""));
+    const argument =
+      /(?:argument(?:s)?(?: marketing| commercial| commerciaux)?|bullet point|avantage|puces avantages marketing)\s*([1-5])$/.exec(
+        n,
+      );
+    if (argument) return "content.argument" + argument[1];
+    if (
+      [
+        "titre",
+        "titre produit",
+        "titre optimise",
+        "product title",
+        "nom produit",
+        "nom",
+      ].includes(n)
+    )
+      return "content.title";
+    if (
+      [
+        "description html",
+        "description produit html",
+        "description",
+        "product description",
+        "texte description",
+      ].includes(n)
+    )
+      return "content.html";
+    const aliases = {
+      "boutique sku": "sku",
+      "sku offre": "sku",
+      ean: "ean",
+      "id produit": "ean",
+      "prix offre": "price",
+      "quantite offre": "stock",
+      "marque d acquisition": "brand",
+      "rendement en m2 l": "coverage",
+      "classe d emissions de cov composes organiques volatils dans l air interieur":
+        "vocClass",
+    };
+    if (aliases[n] && data.attributes.some((a) => a.id === aliases[n]))
+      return "master." + aliases[n];
+    const matched = OneBase.fields.filter(
+      (f) => f.aliases.includes(n) || OneBase.norm(f.label) === n,
+    );
+    if (
+      matched.length === 1 &&
+      data.attributes.some((a) => a.id === matched[0].id)
+    )
+      return "master." + matched[0].id;
+    const a = data.attributes.filter((a) => OneBase.norm(a.label) === n);
+    return a.length === 1 ? "master." + a[0].id : "";
+  }
+  return { enriched, validate, plan, apply, destinations, value, guess };
+})();
+
+</script>
+<script>
+// Synthetic demonstration workbook ONLY. Never embed a user workbook here.
+window.SEMIN_CASTORAMA_DEMO="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";
+
+</script>
+<script>
+/* Independent from the V1 prepared state. Only a copy of the selected sheet is edited. */
+"use strict";
+window.CastoramaExcel = (() => {
+  async function open(file) {
+    const h = await BrowserExcel.openTemplate(file),
+      { book, all, direct, range, colLetter, NS } = h;
+    const listCache = new Map();
+    function getSheet(name) {
+      const s = book.sheets.find((s) => s.name === name);
+      if (!s) throw Error("Feuille introuvable.");
+      return s;
+    }
+    function list(formula, s) {
+      let expression = (formula || "").replace(/^=/, "").trim(),
+        cacheKey = s.name + "|" + expression;
+      if (listCache.has(cacheKey)) return listCache.get(cacheKey);
+      const named = book.definedNames.find(
+        (n) =>
+          n.name === expression &&
+          (n.scope === null || Number(n.scope) === book.sheets.indexOf(s)),
+      );
+      if (named) expression = named.formula.replace(/^=/, "");
+      let result;
+      if (/^".*"$/.test(expression))
+        result = expression.slice(1, -1).split(",");
+      else {
+        const match =
+          /^(?:'((?:[^']|'')+)'|([^'!]+))!([\$A-Z0-9]+(?::[\$A-Z0-9]+)?)$/.exec(
+            expression,
+          );
+        if (!match) return null;
+        const refSheet = getSheet((match[1] || match[2]).replace(/''/g, "'")),
+          bounds = range(match[3]);
+        if (
+          (bounds.max.row - bounds.min.row + 1) *
+            (bounds.max.col - bounds.min.col + 1) >
+          100000
+        )
+          return null;
+        result = [];
+        for (let r = bounds.min.row; r <= bounds.max.row; r++)
+          for (let c = bounds.min.col; c <= bounds.max.col; c++) {
+            const ref = colLetter(c) + r,
+              cell = refSheet.cells.get(ref);
+            if (cell && direct(cell, "f").length) return null;
+            const v = h.cellValue(refSheet, ref);
+            if (v !== null && v !== "") result.push(String(v));
+          }
+      }
+      result = [...new Set(result)];
+      listCache.set(cacheKey, result);
+      return result;
+    }
+    function validations(s, col, row) {
+      return all(s.doc, "dataValidation").filter((v) =>
+        (v.getAttribute("sqref") || "")
+          .split(/\s+/)
+          .filter(Boolean)
+          .some((ref) => {
+            const b = range(ref);
+            return (
+              col >= b.min.col &&
+              col <= b.max.col &&
+              (row === null || (row >= b.min.row && row <= b.max.row))
+            );
+          }),
+      );
+    }
+    function options(name, col, row) {
+      const s = getSheet(name),
+        v = validations(s, Number(col), row).find(
+          (v) => v.getAttribute("type") === "list",
+        );
+      return v ? list(direct(v, "formula1")[0]?.textContent, s) : null;
+    }
+    function inspect(name, header) {
+      const s = getSheet(name);
+      if (s.maxRow > 20000)
+        throw Error(
+          "Choisissez la feuille de produits ; cette feuille de référence dépasse 20 000 lignes.",
+        );
+      const target = h.headers(name, header);
+      let last = header;
+      for (const [ref, cell] of s.cells)
+        if (
+          direct(cell, "v").length ||
+          direct(cell, "is").length ||
+          direct(cell, "f").length
+        )
+          last = Math.max(last, h.address(ref).row);
+      const metadata = book.sheets.find((s) => s.name === "Columns"),
+        requirements = [];
+      if (metadata)
+        for (let r = 2; r <= metadata.maxRow; r++) {
+          const label = h.cellValue(metadata, "B" + r);
+          if (!label) continue;
+          const col = target.find((c) => c.label === String(label));
+          if (!col) continue;
+          for (let c = 5; c <= metadata.maxCol; c++)
+            if (
+              String(h.cellValue(metadata, colLetter(c) + r)).toUpperCase() ===
+              "REQUIRED"
+            )
+              requirements.push({
+                column: col.id,
+                category: String(
+                  h.cellValue(metadata, colLetter(c) + "1") || "",
+                ),
+              });
+        }
+      return {
+        target,
+        startRow: last + 1,
+        requirements,
+        signature: JSON.stringify({
+          marketplace: "Castorama",
+          sheet: name,
+          header,
+          columns: target.map((c) => [c.id, c.label]),
+        }),
+        preview: Array.from({ length: Math.min(s.maxRow, 5) }, (_, i) => [
+          i + 1,
+          ...target.map((c) =>
+            h.cellValue(
+              s,
+              colLetter(Number(c.id)) + (i + 1),
+              ["sku", "ean"].includes(c.kind),
+            ),
+          ),
+        ]),
+      };
+    }
+    function compare(value, a, b, op) {
+      return (
+        {
+          between: () => value >= a && value <= b,
+          notBetween: () => value < a || value > b,
+          equal: () => value === a,
+          notEqual: () => value !== a,
+          greaterThan: () => value > a,
+          lessThan: () => value < a,
+          greaterThanOrEqual: () => value >= a,
+          lessThanOrEqual: () => value <= a,
+        }[op || "between"]?.() ?? false
+      );
+    }
+    function check(settings, products, mapping, required, signature) {
+      const s = getSheet(settings.sheet),
+        { target, requirements } = inspect(settings.sheet, settings.header),
+        errors = [],
+        rows = [];
+      const start = Number(settings.startRow),
+        last = start + products.length - 1;
+      const add = (row, column, message) =>
+        errors.push({ row, column, message });
+      if (!products.length)
+        add(0, "Produits", "Sélectionnez au moins un produit enregistré.");
+      if (!Number.isInteger(start) || start <= settings.header || last > 20000)
+        add(
+          start,
+          "Destination",
+          "Ligne de destination invalide (après les en-têtes, maximum 20 000).",
+        );
+      if (
+        all(s.doc, "tableParts").length ||
+        all(s.doc, "sheetProtection").length
+      )
+        add(
+          start,
+          "Template",
+          "Tableau structuré ou feuille protégée : modification non prise en charge.",
+        );
+      const extended = [...s.doc.getElementsByTagName("*")].some(
+        (n) => n.localName === "dataValidation" && n.namespaceURI !== NS,
+      );
+      if (extended)
+        add(
+          start,
+          "Template",
+          "Validations Excel étendues non évaluables : export bloqué.",
+        );
+      for (let i = 0; i < products.length; i++) {
+        const p = products[i],
+          row = start + i,
+          values = {};
+        for (const col of target) {
+          const c = Number(col.id),
+            key = mapping[col.id] || "";
+          let v =
+            key === "manual"
+              ? (p.dossier?.templateValues?.[signature]?.[col.id] ?? "")
+              : ProductWorkflow.value(p, key);
+          if (typeof v === "string" && /^[=+\-@]/.test(v))
+            add(
+              row,
+              col.label,
+              "Valeur pouvant être interprétée comme une formule.",
+            );
+          const n = OneBase.norm(col.label);
+          const numeric =
+            ["price", "stock", "weight"].includes(col.kind) ||
+            [
+              "prix offre",
+              "quantite offre",
+              "contenance ml",
+              "quantite par pack",
+              "temps de sechage au toucher h",
+              "surface de couverture m2",
+            ].includes(n);
+          if (v !== "" && numeric) {
+            const number = Number(String(v).replace(",", "."));
+            if (
+              !Number.isFinite(number) ||
+              number < 0 ||
+              ((["stock"].includes(col.kind) || n === "quantite offre") &&
+                !Number.isInteger(number))
+            )
+              add(
+                row,
+                col.label,
+                "Nombre positif ou nul attendu (stock entier).",
+              );
+            else v = number;
+          }
+          const ean =
+            col.kind === "ean" ||
+            n === "ean" ||
+            (n === "id produit" && mapping[col.id] === "master.ean");
+          if (
+            v !== "" &&
+            ean &&
+            !CatalogueModel.issues(
+              {
+                id: p.id,
+                values: { sku: p.values.sku, ean: String(v) },
+                status: p.status,
+              },
+              { attributes: [], products: [] },
+            ).every((e) => e.field !== "EAN")
+          )
+            add(row, col.label, "EAN-13 invalide.");
+          values[col.id] = v;
+          const ref = colLetter(c) + row,
+            cell = s.cells.get(ref);
+          if (
+            cell &&
+            (direct(cell, "v").length ||
+              direct(cell, "is").length ||
+              direct(cell, "f").length)
+          )
+            add(
+              row,
+              col.label,
+              ref +
+                " contient déjà une valeur ou une formule. Aucune cellule existante ne sera écrasée.",
+            );
+          for (const merge of all(s.doc, "mergeCell")) {
+            const b = range(merge.getAttribute("ref"));
+            if (
+              c >= b.min.col &&
+              c <= b.max.col &&
+              row >= b.min.row &&
+              row <= b.max.row
+            )
+              add(
+                row,
+                col.label,
+                "Cellule fusionnée dans la zone de destination.",
+              );
+          }
+          const rules = validations(s, c, row),
+            columnRules = validations(s, c, null).filter(
+              (v) =>
+                v.getAttribute("type") && v.getAttribute("type") !== "none",
+            );
+          if (v !== "" && columnRules.length && !rules.length)
+            add(
+              row,
+              col.label,
+              "Destination hors de la plage de validation originale.",
+            );
+          for (const validation of rules) {
+            const type = validation.getAttribute("type") || "none",
+              blank = v === "" || v === null;
+            if (blank) {
+              if (
+                validation.getAttribute("allowBlank") !== "1" &&
+                validation.getAttribute("allowBlank") !== "true" &&
+                type !== "none"
+              )
+                add(
+                  row,
+                  col.label,
+                  "Valeur obligatoire selon la validation Excel.",
+                );
+              continue;
+            }
+            if (type === "list") {
+              const allowed = list(
+                direct(validation, "formula1")[0]?.textContent,
+                s,
+              );
+              if (!allowed)
+                add(
+                  row,
+                  col.label,
+                  "Liste Excel non évaluable : vérifier le template.",
+                );
+              else if (!allowed.includes(String(v)))
+                add(
+                  row,
+                  col.label,
+                  "Valeur absente de la liste autorisée du template.",
+                );
+            } else if (["decimal", "whole", "textLength"].includes(type)) {
+              const formulas = ["formula1", "formula2"].map(
+                (f) => direct(validation, f)[0]?.textContent || "",
+              );
+              const op = validation.getAttribute("operator") || "between";
+              if (
+                !/^-?\d+(?:\.\d+)?$/.test(formulas[0]) ||
+                (["between", "notBetween"].includes(op) &&
+                  !/^-?\d+(?:\.\d+)?$/.test(formulas[1]))
+              ) {
+                add(
+                  row,
+                  col.label,
+                  "Règle Excel calculée non prise en charge.",
+                );
+                continue;
+              }
+              const number =
+                type === "textLength" ? String(v).length : Number(v);
+              if (
+                !Number.isFinite(number) ||
+                (type === "whole" && !Number.isInteger(number)) ||
+                !compare(number, Number(formulas[0]), Number(formulas[1]), op)
+              )
+                add(
+                  row,
+                  col.label,
+                  "Valeur incompatible avec la validation Excel.",
+                );
+            } else if (type !== "none")
+              add(
+                row,
+                col.label,
+                "Validation " + type + " non prise en charge : export bloqué.",
+              );
+          }
+          if (
+            (n.includes("description") || key === "content.html") &&
+            v !== "" &&
+            typeof v === "string" &&
+            v.includes("<")
+          )
+            OneBase.htmlIssues(v).forEach((m) => add(row, col.label, m));
+        }
+        const categoryCol = target.find(
+            (c) => OneBase.norm(c.label) === "categorie",
+          ),
+          category = categoryCol ? String(values[categoryCol.id] || "") : "";
+        if (
+          /\d+\s*(?:et|ou|\/)\s*\d+\s*L\b/i.test(p.values.packaging || "") &&
+          !p.dossier?.variantConfirmed
+        )
+          add(
+            row,
+            "Conditionnement",
+            "Plusieurs contenances sources : confirmez la variante via les saisies Castorama avant export.",
+          );
+        if (
+          OneBase.norm(p.values.family || "") === "enduit" &&
+          /peinture/i.test(p.values.technical || p.values.designation || "") &&
+          (!category || /enduit/i.test(category))
+        )
+          add(
+            row,
+            "Catégorie",
+            "Catégorie source Enduit incohérente avec une peinture : vérifiez la catégorie Castorama.",
+          );
+        const req = new Set([
+          ...required,
+          ...requirements
+            .filter(
+              (r) =>
+                !requirements.some((x) => x.category === category) ||
+                r.category === category,
+            )
+            .map((r) => r.column),
+        ]);
+        for (const id of req)
+          if (values[id] === "" || values[id] === null)
+            add(
+              row,
+              target.find((c) => c.id === id)?.label || id,
+              "Champ obligatoire manquant.",
+            );
+        rows.push({ row, productId: p.id, values });
+      }
+      for (const col of target.filter(
+        (c) =>
+          ["sku", "ean"].includes(c.kind) ||
+          ["boutique sku", "sku offre", "ean"].includes(OneBase.norm(c.label)),
+      )) {
+        const seen = new Set();
+        for (const r of rows) {
+          const v = r.values[col.id];
+          if (v === "") continue;
+          if (seen.has(String(v)))
+            add(
+              r.row,
+              col.label,
+              "Identifiant dupliqué parmi les produits sélectionnés.",
+            );
+          seen.add(String(v));
+        }
+        for (const [ref, cell] of s.cells) {
+          const a = h.address(ref);
+          if (
+            a.col !== Number(col.id) ||
+            a.row <= settings.header ||
+            (a.row >= start && a.row <= last) ||
+            direct(cell, "f").length
+          )
+            continue;
+          const old = h.cellValue(s, ref, true);
+          if (seen.has(String(old)))
+            add(a.row, col.label, "Identifiant déjà présent dans le template.");
+        }
+      }
+      return { target, rows, errors };
+    }
+    async function exportFile(
+      settings,
+      products,
+      mapping,
+      required,
+      signature,
+    ) {
+      const result = check(settings, products, mapping, required, signature);
+      if (result.errors.length)
+        throw Error("Corrigez les erreurs avant export.");
+      const s = getSheet(settings.sheet),
+        doc = s.doc.cloneNode(true),
+        data = all(doc, "sheetData")[0],
+        rowMap = new Map(
+          direct(data, "row").map((r) => [Number(r.getAttribute("r")), r]),
+        );
+      const ruleRows = all(s.doc, "dataValidation")
+        .flatMap((v) =>
+          (v.getAttribute("sqref") || "")
+            .split(/\s+/)
+            .filter(Boolean)
+            .map((ref) => range(ref).min.row),
+        )
+        .filter((r) => r > settings.header);
+      const first = ruleRows.length
+        ? Math.min(...ruleRows)
+        : [...s.cells.keys()]
+            .map(h.address)
+            .filter((a) => a.row > settings.header)
+            .sort((a, b) => a.row - b.row)[0]?.row || settings.startRow;
+      const model = rowMap.get(first);
+      for (const item of result.rows) {
+        let row = rowMap.get(item.row);
+        if (!row) {
+          row = doc.createElementNS(NS, "row");
+          if (model)
+            for (const attr of model.attributes)
+              if (attr.name !== "r") row.setAttribute(attr.name, attr.value);
+          row.setAttribute("r", String(item.row));
+          data.insertBefore(
+            row,
+            direct(data, "row").find(
+              (n) => Number(n.getAttribute("r")) > item.row,
+            ) || null,
+          );
+          rowMap.set(item.row, row);
+        }
+        for (const col of result.target) {
+          const v = item.values[col.id];
+          const blank = v === "" || v === null || v === undefined;
+          const ref = colLetter(Number(col.id)) + item.row;
+          let cell = direct(row, "c").find((n) => n.getAttribute("r") === ref);
+          if (!cell) {
+            cell = doc.createElementNS(NS, "c");
+            cell.setAttribute("r", ref);
+            const style = s.cells
+              .get(colLetter(Number(col.id)) + first)
+              ?.getAttribute("s");
+            if (style) cell.setAttribute("s", style);
+            if (blank && !style) continue;
+            row.insertBefore(
+              cell,
+              direct(row, "c").find(
+                (n) => h.address(n.getAttribute("r")).col > Number(col.id),
+              ) ||
+                direct(row, "extLst")[0] ||
+                null,
+            );
+          }
+          if (blank) continue;
+          if (typeof v === "number") {
+            cell.removeAttribute("t");
+            const n = doc.createElementNS(NS, "v");
+            n.textContent = String(v);
+            cell.append(n);
+          } else {
+            cell.setAttribute("t", "inlineStr");
+            const is = doc.createElementNS(NS, "is"),
+              n = doc.createElementNS(NS, "t");
+            n.setAttributeNS(
+              "http://www.w3.org/XML/1998/namespace",
+              "xml:space",
+              "preserve",
+            );
+            n.textContent = String(v);
+            is.append(n);
+            cell.append(is);
+          }
+        }
+      }
+      const dimension = all(doc, "dimension")[0];
+      if (dimension) {
+        const b = range(dimension.getAttribute("ref"));
+        dimension.setAttribute(
+          "ref",
+          colLetter(b.min.col) +
+            b.min.row +
+            ":" +
+            colLetter(b.max.col) +
+            Math.max(b.max.row, ...result.rows.map((r) => r.row)),
+        );
+      }
+      const zip = await JSZip.loadAsync(book.bytes);
+      zip.file(s.path, new XMLSerializer().serializeToString(doc), {
+        createFolders: false,
+      });
+      return zip.generateAsync({
+        type: "blob",
+        compression: "DEFLATE",
+        mimeType:
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+    }
+    return {
+      sheets: book.sheets.map((s) => ({ name: s.name, rows: s.maxRow })),
+      inspect,
+      options,
+      check,
+      exportFile,
+    };
+  }
+  return { open };
 })();
 
 </script>
@@ -428,6 +1618,7 @@ window.CatalogueModel = (() => {
     const attrIds=new Set();for(const a of data.attributes){if(!a||typeof a.id!=='string'||!a.id||attrIds.has(a.id)||['__proto__','prototype','constructor'].includes(a.id)||typeof a.label!=='string'||!a.label.trim()||a.label.length>100||!['text','number'].includes(a.type)||typeof a.required!=='boolean'||typeof a.group!=='string')fail();attrIds.add(a.id);}
     if(FIELDS.some(a=>!attrIds.has(a.id)))fail();
     const productIds=new Set();for(const p of data.products){if(!p||typeof p.id!=='string'||!p.id||productIds.has(p.id)||!p.values||Array.isArray(p.values)||typeof p.values!=='object'||!STATUSES.includes(p.status)||typeof p.updatedAt!=='string')fail();productIds.add(p.id);for(const [k,v] of Object.entries(p.values))if(!attrIds.has(k)||typeof v!=='string'||v.length>100000)fail();}
+    for(const p of data.products)if(p.dossier!==undefined)ProductWorkflow.validate(p.dossier);
     if(data.history.length>100||data.history.some(h=>!h||typeof h.id!=='string'||typeof h.at!=='string'||typeof h.type!=='string'||!Number.isInteger(h.count)||h.count<0))fail();
     return clone(data);
   }
@@ -465,7 +1656,7 @@ window.CatalogueStore = (() => {
         if(current!==expectedRevision){error=new Error('Le catalogue a été modifié dans un autre onglet. Actualisez les données puis recommencez.');tx.abort();return;}
         saved={...safe,revision:current+1};store.put(saved,'catalogue');
       };
-      tx.oncomplete=()=>resolve(saved);
+      tx.oncomplete=()=>{window.dispatchEvent(new Event('semin-catalogue-saved'));resolve(saved);};
       tx.onabort=tx.onerror=()=>reject(error||new Error('Enregistrement impossible (stockage plein ou refusé). Les données précédentes sont conservées.'));
     });
   }
@@ -707,6 +1898,708 @@ $('restore-profiles').addEventListener('change',async event=>{const file=event.t
   M.STATUSES.forEach(status=>{$('master-status').append(new Option(status,status));$('master-editor-status').append(new Option(status,status));});
   nav('dashboard');
   repo.read().then(saved=>{data=saved;storageReady=true;render();}).catch(error=>announce(error.message+' Les fonctions Excel V1 restent accessibles dans Exports.',true));
+  window.addEventListener('semin-catalogue-saved',()=>{repo.read().then(saved=>{data=saved;storageReady=true;render();}).catch(error=>announce(error.message,true));});
+})();
+
+</script>
+<script>
+"use strict";
+(() => {
+  const M = CatalogueModel,
+    W = ProductWorkflow;
+  let data = null,
+    parsed = null,
+    editId = null,
+    plan = null,
+    template = null,
+    inspection = null,
+    review = null,
+    fileGeneration = 0;
+  const mapping = {},
+    required = new Set();
+  const profileKey = "semin.castorama.local.profiles.v1";
+  function announce(message, error = false) {
+    notify(message, error);
+  }
+  function action(id, fn) {
+    $(id).addEventListener("click", async () => {
+      const b = $(id);
+      b.disabled = true;
+      try {
+        await fn();
+      } catch (e) {
+        announce(e.message, true);
+      } finally {
+        if (id === "ob-confirm") b.disabled = !$("ob-consent").checked;
+        else if (id !== "cast-export") b.disabled = false;
+      }
+    });
+  }
+  function invalidate() {
+    review = null;
+    $("cast-values-consent").checked = false;
+    $("cast-export").disabled = true;
+    $("cast-review-message").textContent =
+      "Les données ont changé : relancez le contrôle avant export.";
+  }
+  function clearPlan() {
+    plan = null;
+    $("ob-confirm-panel").hidden = true;
+    $("ob-consent").checked = false;
+    $("ob-confirm").disabled = true;
+  }
+  function contents(container, values, overrides = false) {
+    $(container).replaceChildren(
+      ...W.enriched.map((key) => {
+        const label = el(
+            "label",
+            key === "title"
+              ? "Titre optimisé"
+              : key === "html"
+                ? "Description HTML"
+                : "Argument commercial " + key.slice(-1),
+          ),
+          input = el(key === "html" ? "textarea" : "input");
+        input.dataset.content = key;
+        input.value = values?.[key] || "";
+        input.maxLength = 100000;
+        input.setAttribute(
+          "aria-label",
+          (overrides ? "Castorama · " : "Enrichissement · ") +
+            label.textContent,
+        );
+        if (overrides) {
+          const check = el("input");
+          check.type = "checkbox";
+          check.dataset.override = key;
+          check.checked = Object.hasOwn(values || {}, key);
+          check.setAttribute("aria-label", "Personnaliser Castorama · " + key);
+          input.disabled = !check.checked;
+          check.addEventListener("change", () => {
+            input.disabled = !check.checked;
+            clearPlan();
+          });
+          label.prepend(check, el("span", "Personnaliser pour Castorama"));
+        }
+        input.addEventListener("input", clearPlan);
+        label.append(input);
+        return label;
+      }),
+    );
+  }
+  function fields(values = {}, evidence = {}) {
+    $("ob-source-fields").replaceChildren(
+      ...OneBase.fields.map((f) => {
+        const l = el("label", f.label),
+          input = el(
+            [
+              "technical",
+              "arguments",
+              "shortDescription",
+              "precautions",
+              "storage",
+              "abrasion",
+            ].includes(f.id)
+              ? "textarea"
+              : "input",
+          );
+        input.dataset.source = f.id;
+        input.value = values[f.id] || "";
+        input.maxLength = 100000;
+        input.setAttribute("aria-label", "Source corrigée · " + f.label);
+        input.addEventListener("input", clearPlan);
+        l.append(input);
+        if (evidence[f.id]?.length) {
+          const d = el("details"),
+            s = el("summary", "Voir le passage source"),
+            p = el("p", evidence[f.id].join("\n"));
+          p.className = "source-evidence";
+          d.append(s, p);
+          l.append(d);
+        }
+        return l;
+      }),
+    );
+  }
+  function values() {
+    return Object.fromEntries(
+      [...$("ob-source-fields").querySelectorAll("[data-source]")].map((n) => [
+        n.dataset.source,
+        n.value,
+      ]),
+    );
+  }
+  function enrichment(id, overrides = false) {
+    return Object.fromEntries(
+      [...$(id).querySelectorAll("[data-content]")]
+        .filter(
+          (n) =>
+            !overrides ||
+            $(id).querySelector('[data-override="' + n.dataset.content + '"]')
+              .checked,
+        )
+        .map((n) => [n.dataset.content, n.value]),
+    );
+  }
+  function showForm(product = null) {
+    editId = product?.id || null;
+    parsed = null;
+    clearPlan();
+    $("ob-raw").value = product?.dossier?.source.raw || "";
+    fields(product?.values, product?.dossier?.source.evidence);
+    contents("ob-enrichment", product?.dossier?.enrichment);
+    contents("ob-castorama", product?.dossier?.castorama, true);
+    $("ob-editing").textContent = product
+      ? "Modification de la fiche " +
+        (product.values.sku || product.id) +
+        " : les changements doivent être confirmés."
+      : "Nouvelle fiche : aucune donnée enregistrée avant confirmation.";
+    $("ob-form").hidden = false;
+    $("ob-warnings").textContent = product?.dossier?.source.raw
+      ? OneBase.parse(product.dossier.source.raw).warnings.join("\n")
+      : "";
+    $("ob-unclassified").textContent = "";
+  }
+  async function refresh() {
+    data = await CatalogueStore.read();
+    const selected = $("ob-existing").value,
+      cast = $("cast-product").value;
+    const options = data.products.map(
+      (p) =>
+        new Option(
+          (p.values.sku || "Sans SKU") +
+            " · " +
+            (p.values.designation || "Sans désignation"),
+          p.id,
+        ),
+    );
+    $("ob-existing").replaceChildren(
+      new Option("Choisir une fiche à modifier", ""),
+      ...options,
+    );
+    $("cast-product").replaceChildren(
+      new Option("Choisir un produit enregistré", ""),
+      ...options.map((n) => n.cloneNode(true)),
+    );
+    $("ob-existing").value = selected;
+    $("cast-product").value = cast;
+    if (inspection) renderMapping();
+    invalidate();
+  }
+  function currentProduct() {
+    const p = data?.products.find((p) => p.id === $("cast-product").value);
+    if (!p) throw Error("Choisissez un produit enregistré.");
+    return p;
+  }
+  function settings() {
+    return {
+      sheet: $("cast-sheet").value,
+      header: Number($("cast-header").value),
+      startRow: Number($("cast-start").value),
+    };
+  }
+  function manualValues() {
+    return Object.fromEntries(
+      [...$("cast-mapping").querySelectorAll("[data-manual]")]
+        .filter((n) => mapping[n.dataset.manual] === "manual")
+        .map((n) => [n.dataset.manual, n.value]),
+    );
+  }
+  function proposedProduct() {
+    const p = structuredClone(currentProduct());
+    p.dossier = p.dossier || {
+      version: 1,
+      source: {
+        raw: "",
+        extracted: {},
+        evidence: {},
+        importedAt: new Date().toISOString(),
+      },
+      enrichment: {},
+      castorama: {},
+    };
+    p.dossier.templateValues = {
+      ...(p.dossier.templateValues || {}),
+      [inspection.signature]: {
+        ...(p.dossier.templateValues?.[inspection.signature] || {}),
+        ...manualValues(),
+      },
+    };
+    return p;
+  }
+  function renderMapping() {
+    if (!inspection || !data) return;
+    const p = data.products.find((p) => p.id === $("cast-product").value),
+      dest = W.destinations(data);
+    $("cast-mapping").replaceChildren(
+      table(
+        [
+          "Colonne du template",
+          "Source ou saisie spécifique",
+          "Valeur Castorama pour ce produit",
+          "Requis",
+        ],
+        inspection.target.map((col) => {
+          const select = el("select");
+          select.setAttribute("aria-label", "Mapping Castorama · " + col.label);
+          select.append(
+            new Option("Ne pas renseigner", ""),
+            new Option("Saisie Castorama pour ce produit", "manual"),
+            ...dest.map((d) => new Option(d.label, d.id)),
+          );
+          select.value = mapping[col.id] || "";
+          const input = el("input");
+          input.dataset.manual = col.id;
+          input.setAttribute("aria-label", "Valeur Castorama · " + col.label);
+          input.value =
+            p?.dossier?.templateValues?.[inspection.signature]?.[col.id] || "";
+          input.maxLength = 100000;
+          input.disabled = select.value !== "manual";
+          const allowed = template.options(
+            settings().sheet,
+            col.id,
+            settings().startRow,
+          );
+          if (allowed?.length) {
+            const list = el("datalist");
+            list.id = "cast-options-" + col.id;
+            allowed.slice(0, 200).forEach((v) => list.append(new Option(v, v)));
+            input.setAttribute("list", list.id);
+            input.after(list);
+            const container = el("div");
+            container.append(input, list);
+            container.append(
+              el(
+                "small",
+                allowed.length +
+                  " valeurs autorisées (suggestions limitées à 200).",
+              ),
+            );
+            input._container = container;
+          }
+          select.addEventListener("change", () => {
+            mapping[col.id] = select.value;
+            input.disabled = select.value !== "manual";
+            invalidate();
+          });
+          input.addEventListener("input", invalidate);
+          const label = el("label", undefined, "required-label"),
+            checkbox = el("input");
+          checkbox.type = "checkbox";
+          checkbox.checked = required.has(col.id);
+          checkbox.setAttribute(
+            "aria-label",
+            "Castorama requis · " + col.label,
+          );
+          checkbox.addEventListener("change", () => {
+            checkbox.checked ? required.add(col.id) : required.delete(col.id);
+            invalidate();
+          });
+          label.append(
+            checkbox,
+            el(
+              "span",
+              inspection.requirements.some((r) => r.column === col.id)
+                ? "Requis dans Columns (selon catégorie)"
+                : "Contrôle manuel",
+            ),
+          );
+          return [col.label, select, input._container || input, label];
+        }),
+      ),
+    );
+  }
+  function validProfiles(p) {
+    if (
+      !p ||
+      typeof p !== "object" ||
+      Array.isArray(p) ||
+      Object.keys(p).length > 100
+    )
+      throw Error("Sauvegarde de mappings Castorama invalide.");
+    for (const [name, profile] of Object.entries(p)) {
+      if (
+        !name.trim() ||
+        name.length > 100 ||
+        !profile ||
+        typeof profile.signature !== "string" ||
+        profile.signature.length > 30000 ||
+        !profile.mapping ||
+        typeof profile.mapping !== "object" ||
+        Array.isArray(profile.mapping) ||
+        !Array.isArray(profile.required) ||
+        Object.entries(profile.mapping).some(
+          ([k, v]) =>
+            !/^\d+$/.test(k) ||
+            typeof v !== "string" ||
+            (v !== "" &&
+              v !== "manual" &&
+              !/^(master\.[A-Za-z0-9_-]+|content\.(title|html|argument[1-5]))$/.test(
+                v,
+              )),
+        ) ||
+        profile.required.some((k) => typeof k !== "string" || !/^\d+$/.test(k))
+      )
+        throw Error("Profil Castorama invalide.");
+    }
+    return p;
+  }
+  function profiles() {
+    try {
+      return validProfiles(
+        JSON.parse(localStorage.getItem(profileKey) || "{}"),
+      );
+    } catch {
+      throw Error(
+        "Mappings Castorama illisibles : aucun remplacement automatique.",
+      );
+    }
+  }
+  function renderProfiles() {
+    const p = profiles();
+    $("cast-profile").replaceChildren(
+      new Option("Choisir un mapping enregistré", ""),
+      ...Object.keys(p).map((n) => new Option(n, n)),
+    );
+  }
+  action("ob-new", () => showForm());
+  $("ob-existing").addEventListener("change", () => {
+    const p = data?.products.find((p) => p.id === $("ob-existing").value);
+    if (p) showForm(p);
+  });
+  $("ob-raw").addEventListener("input", () => {
+    parsed = null;
+    clearPlan();
+  });
+  action("ob-analyse", () => {
+    parsed = OneBase.parse($("ob-raw").value);
+    fields(parsed.extracted, parsed.evidence);
+    $("ob-form").hidden = false;
+    $("ob-warnings").textContent = parsed.warnings.join("\n");
+    $("ob-unclassified").textContent = parsed.unclassified.join("\n");
+    clearPlan();
+    announce(
+      "Extraction locale terminée. Vérifiez les références, les passages sources et les ambiguïtés.",
+    );
+  });
+  action("ob-demo", () => {
+    showForm();
+    $("ob-raw").value =
+      "PRODUIT FICTIF MAT\n*Code produit*\n000000000-00001\n*EAN*\n5901234123457\n*Marque*\nMarque FICTIVE - FICTIVE\n*Catégorie*\nPeinture\n*Définition technique*\nPeinture acrylique mate intérieure et extérieure\n*Support admis*\nMurs et plafonds.\n*Conditionnement*\nSeau de démonstration — contenance à renseigner\n*Temps de séchage*\nSec : 2 h.\nRecouvrable : 6 h.\n*Les + produits 1*\nArgument fictif fourni par la source\nRéférence article : FICTIF-OB-001";
+    $("ob-analyse").click();
+  });
+  action("ob-suggest", () => {
+    contents("ob-enrichment", OneBase.suggestions(values()));
+    clearPlan();
+    announce(
+      "Contenu préparé uniquement à partir des champs renseignés. Relisez-le ; les arguments absents restent vides.",
+    );
+  });
+  action("ob-preview", async () => {
+    data = await CatalogueStore.read();
+    if (
+      $("ob-raw").value &&
+      !parsed &&
+      $("ob-raw").value !==
+        data.products.find((p) => p.id === editId)?.dossier?.source.raw
+    )
+      throw Error("Analysez le nouveau texte avant de prévisualiser.");
+    plan = W.plan(
+      data,
+      parsed,
+      values(),
+      enrichment("ob-enrichment"),
+      enrichment("ob-castorama", true),
+      editId,
+    );
+    $("ob-changes").replaceChildren(
+      table(
+        ["Champ", "Avant", "Après"],
+        plan.changes.map((c) => [c.field, c.before || "∅", c.after || "∅"]),
+      ),
+    );
+    $("ob-confirm-panel").hidden = false;
+    $("ob-confirm-title").textContent = plan.productId
+      ? "Mettre à jour une fiche existante"
+      : "Créer la fiche";
+    $("ob-consent").checked = false;
+    $("ob-confirm").disabled = true;
+    announce("Prévisualisation prête. Aucun changement encore enregistré.");
+  });
+  $("ob-consent").addEventListener(
+    "change",
+    () => ($("ob-confirm").disabled = !$("ob-consent").checked),
+  );
+  action("ob-confirm", async () => {
+    if (!plan || !$("ob-consent").checked)
+      throw Error("Confirmez les changements avant enregistrement.");
+    const next = W.apply(data, plan);
+    const saved = await CatalogueStore.save(next, plan.revision);
+    const p = saved.products.find((p) => p.values.sku === plan.values.sku);
+    clearPlan();
+    await refresh();
+    if (p) {
+      $("ob-existing").value = p.id;
+      $("cast-product").value = p.id;
+      showForm(p);
+      if (inspection) renderMapping();
+    }
+    announce("Fiche OneBase enregistrée localement, texte original conservé.");
+  });
+  action("cast-demo-template", () => {
+    const bytes = Uint8Array.from(atob(window.SEMIN_CASTORAMA_DEMO), (c) =>
+      c.charCodeAt(0),
+    );
+    downloadLocal(
+      new Blob([bytes], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      }),
+      "template-castorama-FICTIF.xlsx",
+    );
+  });
+  $("cast-file").addEventListener("change", async (event) => {
+    const f = event.target.files[0];
+    if (!f) return;
+    event.target.value = "";
+    const generation = ++fileGeneration;
+    template = null;
+    inspection = null;
+    invalidate();
+    $("cast-prepared").hidden = true;
+    $("cast-settings").hidden = true;
+    $("cast-file-name").textContent = "Lecture du template en cours…";
+    try {
+      const opened = await CastoramaExcel.open(f);
+      if (generation !== fileGeneration) return;
+      template = opened;
+      $("cast-file-name").textContent = f.name;
+      $("cast-sheet").replaceChildren(
+        ...opened.sheets.map((s) => new Option(s.name, s.name)),
+      );
+      $("cast-settings").hidden = false;
+      announce(
+        "Template lu localement. Les produits existants seront conservés.",
+      );
+    } catch (e) {
+      announce(e.message, true);
+    }
+  });
+  for (const id of ["cast-sheet", "cast-header"])
+    $(id).addEventListener("change", () => {
+      inspection = null;
+      $("cast-prepared").hidden = true;
+      invalidate();
+    });
+  $("cast-start").addEventListener("change", invalidate);
+  $("cast-product").addEventListener("change", () => {
+    invalidate();
+    if (inspection) renderMapping();
+  });
+  action("cast-analyse", () => {
+    if (!template) throw Error("Importez un template .xlsx.");
+    const set = settings();
+    inspection = template.inspect(set.sheet, set.header);
+    $("cast-start").value = inspection.startRow;
+    for (const k of Object.keys(mapping)) delete mapping[k];
+    required.clear();
+    inspection.target.forEach((c) => {
+      mapping[c.id] = W.guess(c.label, data);
+      if (c.required) required.add(c.id);
+    });
+    renderMapping();
+    $("cast-prepared").hidden = false;
+    $("cast-template-note").textContent =
+      inspection.target.length +
+      " colonnes · destination proposée ligne " +
+      inspection.startRow +
+      " · champs requis lus dans Columns quand cette feuille existe.";
+    invalidate();
+    announce(
+      "Colonnes identifiées. Vérifiez le mapping et la destination ; aucun exemple produit n’est utilisé comme valeur par défaut.",
+    );
+  });
+  action("cast-save-values", async () => {
+    if (!$("cast-values-consent").checked)
+      throw Error(
+        "Confirmez les saisies Castorama et la variante avant enregistrement.",
+      );
+    if (!inspection) throw Error("Analysez le template.");
+    const p = proposedProduct();
+    p.dossier.variantConfirmed = true;
+    const current = await CatalogueStore.read();
+    if (current.revision !== data.revision)
+      throw Error("Catalogue modifié : actualisez et recommencez.");
+    current.products.find((x) => x.id === p.id).dossier = W.validate(p.dossier);
+    current.products.find((x) => x.id === p.id).updatedAt =
+      new Date().toISOString();
+    current.history.unshift({
+      id: M.uid(),
+      at: new Date().toISOString(),
+      type: "Valeurs spécifiques Castorama enregistrées",
+      count: 1,
+    });
+    current.history = current.history.slice(0, 100);
+    await CatalogueStore.save(current, data.revision);
+    await refresh();
+    announce("Valeurs Castorama enregistrées pour ce produit uniquement.");
+  });
+  action("cast-save-profile", () => {
+    if (!inspection) throw Error("Analysez le template.");
+    const name = $("cast-profile-name").value.trim();
+    const next = {
+      ...profiles(),
+      [name]: {
+        signature: inspection.signature,
+        mapping: { ...mapping },
+        required: [...required],
+      },
+    };
+    validProfiles(next);
+    localStorage.setItem(profileKey, JSON.stringify(next));
+    renderProfiles();
+    announce("Mapping Castorama enregistré localement, sans valeurs produits.");
+  });
+  $("cast-profile").addEventListener("change", () => {
+    try {
+      const p = profiles()[$("cast-profile").value];
+      if (!p) return;
+      if (!inspection || p.signature !== inspection.signature)
+        throw Error(
+          "Ce mapping ne correspond pas aux colonnes et à la feuille du template.",
+        );
+      const dest = new Set([
+        "",
+        "manual",
+        ...W.destinations(data).map((d) => d.id),
+      ]);
+      if (Object.values(p.mapping).some((v) => !dest.has(v)))
+        throw Error("Des attributs du mapping ne sont plus disponibles.");
+      for (const k of Object.keys(mapping)) delete mapping[k];
+      Object.assign(mapping, p.mapping);
+      required.clear();
+      p.required.forEach((k) => required.add(k));
+      renderMapping();
+      invalidate();
+      announce("Mapping appliqué. Relancez le contrôle.");
+    } catch (e) {
+      announce(e.message, true);
+    }
+  });
+  action("cast-backup-profiles", () =>
+    downloadLocal(
+      new Blob([JSON.stringify(profiles(), null, 2)], {
+        type: "application/json",
+      }),
+      "semin-castorama-mappings.json",
+    ),
+  );
+  $("cast-import-profiles").addEventListener("change", async (event) => {
+    try {
+      const f = event.target.files[0];
+      if (!f) return;
+      if (f.size > 2 * 1024 * 1024) throw Error("Mappings limités à 2 Mo.");
+      const imported = validProfiles(JSON.parse(await f.text())),
+        old = profiles();
+      if (Object.keys(imported).some((n) => Object.hasOwn(old, n)))
+        throw Error(
+          "Nom de mapping déjà utilisé : renommez le profil importé pour éviter un remplacement silencieux.",
+        );
+      localStorage.setItem(profileKey, JSON.stringify({ ...old, ...imported }));
+      renderProfiles();
+      announce("Mappings Castorama importés.");
+    } catch (e) {
+      announce(e.message, true);
+    } finally {
+      event.target.value = "";
+    }
+  });
+  action("cast-check", async () => {
+    if (!inspection) throw Error("Analysez le template.");
+    const current = await CatalogueStore.read();
+    if (current.revision !== data.revision) {
+      await refresh();
+      throw Error("Catalogue actualisé : relancez le contrôle.");
+    }
+    const p = proposedProduct(),
+      result = template.check(
+        settings(),
+        [p],
+        mapping,
+        [...required],
+        inspection.signature,
+      );
+    const unpersisted =
+      JSON.stringify(p.dossier.templateValues) !==
+      JSON.stringify(currentProduct().dossier?.templateValues || {});
+    if (unpersisted && Object.keys(manualValues()).length)
+      result.errors.push({
+        row: settings().startRow,
+        column: "Valeurs Castorama",
+        message:
+          "Enregistrez les saisies Castorama dans la fiche avant export.",
+      });
+    $("cast-errors").replaceChildren(
+      table(
+        ["Ligne", "Champ", "Erreur"],
+        result.errors.map((e) => [e.row, e.column, e.message]),
+      ),
+    );
+    $("cast-review").replaceChildren(
+      table(
+        result.target.map((c) => c.label),
+        result.rows.map((r) => result.target.map((c) => r.values[c.id])),
+      ),
+    );
+    $("cast-review-message").textContent = result.errors.length
+      ? result.errors.length + " erreur(s) : export bloqué."
+      : "Contrôle réussi selon les règles disponibles. Vérification humaine requise avant import marketplace.";
+    review = result.errors.length
+      ? null
+      : {
+          revision: data.revision,
+          settings: settings(),
+          product: structuredClone(p),
+          mapping: { ...mapping },
+          required: [...required],
+          signature: inspection.signature,
+        };
+    $("cast-export").disabled = !review;
+  });
+  action("cast-export", async () => {
+    if (!review) throw Error("Relancez le contrôle.");
+    const checked = review,
+      t = template;
+    const current = await CatalogueStore.read();
+    if (current.revision !== checked.revision)
+      throw Error("Catalogue modifié depuis le contrôle : actualisez.");
+    const blob = await t.exportFile(
+      checked.settings,
+      [checked.product],
+      checked.mapping,
+      checked.required,
+      checked.signature,
+    );
+    const latest = await CatalogueStore.read();
+    if (checked !== review || latest.revision !== checked.revision)
+      throw Error(
+        "Les données ont changé pendant l’export. Relancez le contrôle.",
+      );
+    downloadLocal(blob, "castorama-produits-a-verifier.xlsx");
+    invalidate();
+    announce(
+      "Copie Excel générée. Le fichier importé et les produits existants sont conservés.",
+    );
+  });
+  window.addEventListener("semin-catalogue-saved", () => {
+    refresh().catch((e) => announce(e.message, true));
+  });
+  refresh().catch((e) => announce(e.message, true));
+  try {
+    renderProfiles();
+  } catch (e) {
+    announce(e.message, true);
+  }
+  showForm();
 })();
 
 </script></body></html>

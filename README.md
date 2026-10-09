@@ -2,6 +2,10 @@
 
 Prototype local en français pour remplir des templates Excel à partir d’un catalogue. Aucun appel à une API externe, aucune donnée confidentielle et aucun remplissage inventé. Les fichiers de démonstration sont explicitement fictifs.
 
+## V3.1 locale — OneBase et Castorama (sans nouvelle publication Pages)
+
+La version navigateur ajoute **Nouveau produit · OneBase** : extraction déterministe du texte collé, fiche structurée modifiable, texte original conservé, enrichissement commun et contenu Castorama distincts. Import d'un template déjà rempli, mappings persistants et export d'une nouvelle ligne avec contrôle des exigences/lists Excel et conservation des données existantes. Voir le [guide OneBase/Castorama](web/GUIDE-ONEBASE-CASTORAMA.md) et [l'architecture et les tests](web/ARCHITECTURE-ONEBASE-CASTORAMA.md). Fonctionnement local exclusivement ; aucun Supabase ni IA. V1/V2/Windows restent disponibles. Le site publié n'est pas mis à jour par ce lot.
+
 ## V3.1 — Prototype central séparé
 
 [Le lot V3.1](v3/README.md) prépare PostgreSQL / Supabase, Auth, rôles et CRUD du catalogue central, sans modifier V1/V2 ni le site publié. [Architecture et limites](v3/ARCHITECTURE.md), [connexion manuelle à Supabase](v3/GUIDE-SUPABASE.md). Aucun service cloud ni abonnement créé. Contrairement à V1/V2, une V3 configurée transmet les fiches au projet Supabase choisi ; validation DSI requise avant données réelles. Le workflow V3 teste et prépare une démonstration fictive sans déployer Pages.

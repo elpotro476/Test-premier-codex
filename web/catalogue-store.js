@@ -22,7 +22,7 @@ window.CatalogueStore = (() => {
         if(current!==expectedRevision){error=new Error('Le catalogue a été modifié dans un autre onglet. Actualisez les données puis recommencez.');tx.abort();return;}
         saved={...safe,revision:current+1};store.put(saved,'catalogue');
       };
-      tx.oncomplete=()=>resolve(saved);
+      tx.oncomplete=()=>{window.dispatchEvent(new Event('semin-catalogue-saved'));resolve(saved);};
       tx.onabort=tx.onerror=()=>reject(error||new Error('Enregistrement impossible (stockage plein ou refusé). Les données précédentes sont conservées.'));
     });
   }
