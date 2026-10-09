@@ -2,7 +2,13 @@
 
 Prototype local en français pour remplir des templates Excel à partir d’un catalogue. Aucun appel à une API externe, aucune donnée confidentielle et aucun remplissage inventé. Les fichiers de démonstration sont explicitement fictifs.
 
-## Lancer sur Windows
+## Version Windows autonome (sans Python)
+
+La compilation automatisée est disponible dans [Actions → Application Windows](https://github.com/elpotro476/Test-premier-codex/actions/workflows/windows.yml). Le package autonome est publié **uniquement après génération et tests réussis du véritable .exe Windows**. Consultez le [guide Windows 11](GUIDE-WINDOWS-11.md) pour télécharger l’artefact, extraire le package et lancer `SEMIN-Marketplace.exe` par double-clic. Python et les dépendances sont embarqués ; le navigateur affiche la même interface locale. Les correspondances sont sauvegardées dans `%LOCALAPPDATA%\SEMIN-Marketplace\mappings.json`, hors du dossier de l’exécutable.
+
+`Code → Download ZIP` contient les sources et ne remplace pas le package autonome. Une compilation Linux ne peut pas produire ce .exe ; le workflow utilise Windows x64.
+
+## Lancer depuis les sources sur Windows (développement)
 
 1. Installez Python 3.12 ou ultérieur depuis python.org (cochez « Add Python to PATH »), puis téléchargez ou clonez ce dépôt.
 2. Vous pouvez ensuite double-cliquer sur **Lancer-SEMIN.bat** : il prépare Python et ouvre le navigateur. Gardez sa fenêtre ouverte. Le premier lancement nécessite Internet pour installer les dépendances.

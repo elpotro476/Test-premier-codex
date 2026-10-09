@@ -1,0 +1,77 @@
+name: Application Windows
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '**.py'
+      - 'static/**'
+      - 'requirements*.txt'
+      - '.github/workflows/windows.yml'
+      - 'GUIDE-WINDOWS-11.md'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  windows:
+    name: Compiler et tester Windows 11 x64
+    runs-on: windows-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          architecture: x64
+      - name: Installer les outils de compilation
+        run: python -m pip install -r requirements-build.txt
+      - name: Tester les fonctionnalités Excel et HTTP
+        run: python -m unittest discover -s tests -v
+      - name: Générer le véritable exécutable Windows
+        run: >-
+          python -m PyInstaller --noconfirm --clean --onedir --windowed
+          --name SEMIN-Marketplace --add-data "static:static" desktop.py
+      - name: Tester le binaire sans dépendre du Python installé
+        shell: python
+        run: |
+          import json, os, pathlib, subprocess
+          exe = pathlib.Path('dist/SEMIN-Marketplace/SEMIN-Marketplace.exe').resolve()
+          assert exe.is_file(), 'EXE absent'
+          assert exe.read_bytes()[:2] == b'MZ', 'Format Windows PE absent'
+          data = pathlib.Path(os.environ['RUNNER_TEMP']) / 'semin-self-test'
+          env = dict(os.environ)
+          # Remove Python and other tools from the executable process search path.
+          env['PATH'] = os.path.join(env['SystemRoot'], 'System32')
+          env.pop('PYTHONHOME', None)
+          env.pop('PYTHONPATH', None)
+          for attempt in (1, 2):
+              report = pathlib.Path(f'windows-test-{attempt}.json').resolve()
+              result = subprocess.run([str(exe), '--self-test', '--data-dir', str(data), '--report', str(report)],
+                                      env=env, cwd=env['RUNNER_TEMP'], timeout=90)
+              assert report.is_file(), 'Le binaire ne produit pas de rapport de test'
+              checks = json.loads(report.read_text(encoding='utf-8'))
+              print(json.dumps(checks, indent=2))
+              assert result.returncode == 0 and checks['ok'] and checks['frozen'] and checks['tkinter'], checks
+              if attempt == 2:
+                  assert checks['profile_from_previous_process'], 'Correspondances perdues au redémarrage'
+      - name: Préparer le package ZIP et son empreinte
+        shell: python
+        run: |
+          import hashlib, pathlib, shutil
+          package = pathlib.Path('dist/SEMIN-Marketplace')
+          shutil.copy2('GUIDE-WINDOWS-11.md', package / 'GUIDE-WINDOWS-11.txt')
+          archive = pathlib.Path(shutil.make_archive('SEMIN-Marketplace-Windows-11', 'zip', 'dist', 'SEMIN-Marketplace'))
+          pathlib.Path('SHA256.txt').write_text(hashlib.sha256(archive.read_bytes()).hexdigest() + '  ' + archive.name + '\n')
+      - name: Publier le téléchargement Windows
+        uses: actions/upload-artifact@v4
+        with:
+          name: SEMIN-Marketplace-Windows-11
+          path: |
+            SEMIN-Marketplace-Windows-11.zip
+            SHA256.txt
+            windows-test-1.json
+            windows-test-2.json
+          if-no-files-found: error
+          retention-days: 90

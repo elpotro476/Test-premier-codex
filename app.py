@@ -8,12 +8,14 @@ import argparse
 import json
 import secrets
 import threading
+import sys
+from runtime_paths import resource_root, user_data_dir
 from engine import inspect, workbook, columns, read_catalog, suggest, check, export
 
-ROOT = Path(__file__).resolve().parent
+ROOT = resource_root()
 SESSIONS = {}
 LOCK = threading.RLock()
-PROFILES = ROOT / '.local' / 'mappings.json'
+PROFILES = (user_data_dir() if getattr(sys, 'frozen', False) else ROOT / '.local') / 'mappings.json'
 
 def profiles():
     if PROFILES.exists():
@@ -125,7 +127,7 @@ class Handler(BaseHTTPRequestHandler):
                     name = str(payload['name']).strip()
                     if not name or len(name) > 100: raise ValueError('Nom de marketplace requis (100 caractères maximum).')
                     saved = profiles(); saved[name] = payload['profile']
-                    PROFILES.parent.mkdir(exist_ok=True)
+                    PROFILES.parent.mkdir(parents=True, exist_ok=True)
                     tmp = PROFILES.with_suffix('.tmp'); tmp.write_text(json.dumps(saved, ensure_ascii=False, indent=2), encoding='utf-8'); tmp.replace(PROFILES)
                     self.send({'profiles': saved}); return
                 if self.path not in ('/api/check', '/api/export'): self.send({'error':'Route introuvable'},status=404); return

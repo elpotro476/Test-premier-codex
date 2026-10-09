@@ -2,3 +2,7 @@
 __pycache__/
 .local/
 *.log
+
+build/
+dist/
+*.spec
