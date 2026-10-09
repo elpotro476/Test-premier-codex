@@ -17,6 +17,7 @@ window.CatalogueStore = (() => {
       const tx=db.transaction('workspace','readwrite'),store=tx.objectStore('workspace');let saved,error;
       const req=store.get('catalogue');
       req.onsuccess=()=>{
+        try{if(req.result)CatalogueModel.validateSnapshot(req.result);}catch(e){error=new Error('Le stockage existant est invalide. Aucun remplacement automatique n’est autorisé.');tx.abort();return;}
         const current=req.result?.revision||0;
         if(current!==expectedRevision){error=new Error('Le catalogue a été modifié dans un autre onglet. Actualisez les données puis recommencez.');tx.abort();return;}
         saved={...safe,revision:current+1};store.put(saved,'catalogue');

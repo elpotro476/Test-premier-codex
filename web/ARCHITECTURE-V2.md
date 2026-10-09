@@ -29,6 +29,7 @@ Pour un futur serveur sécurisé, le dépôt IndexedDB pourra être remplacé de
 - Attributs extensibles, nombres vérifiés, informations manquantes et EAN invalides signalés. SKU, désignation et marque sont les exigences initiales **du catalogue maître prototype**, pas des exigences officielles de marketplace.
 - Préparation manuelle : À compléter, À contrôler, Prêt à exporter, Exporté. Une fiche invalide ne peut pas être marquée prête/exportée depuis l’éditeur. Ces statuts ne remplacent pas les contrôles marketplace V1 et ne prétendent pas certifier un import officiel.
 - Sauvegarde JSON versionnée de tout le catalogue, validation avant restauration, aperçu des comptes et confirmation explicite du remplacement. Les correspondances V1 disposent de leur sauvegarde séparée et ne sont jamais effacées par une restauration du maître.
+- Le stockage existant est validé avant toute écriture : un catalogue illisible ou endommagé ne peut pas être remplacé silencieusement, et l’interface refuse une sauvegarde vide lorsque le chargement a échoué.
 - Révision vérifiée dans la transaction : une modification concurrente d’un autre onglet provoque une erreur et demande une actualisation, au lieu d’écraser la modification.
 - Tableau de bord limité au catalogue : références, complétude, statuts manuels et dernières opérations. Le menu Marketplaces annonce le prochain lot ; Correspondances et Exports ouvrent le parcours V1.
 
@@ -42,7 +43,7 @@ Les URLs d’images et documents sont consultables comme texte dans la fiche. Au
 
 ## Tests et démonstration
 
-Les 5 tests V1 demeurent exécutés. Les tests du catalogue couvrent les imports, reimports et effacements confirmés, doublons, édition, rechargement IndexedDB, nouveaux attributs, sauvegarde/restauration, sauvegarde invalide, conflits entre onglets et écran tactile. Les tests ne contiennent que des données fictives et sont isolés dans des profils temporaires de navigateur.
+Les 5 tests V1 demeurent exécutés. Les tests du catalogue couvrent les imports, reimports et effacements confirmés, doublons, édition, rechargement IndexedDB, nouveaux attributs, sauvegarde/restauration, sauvegarde invalide, conflits entre onglets, protection du stockage endommagé, zéros initiaux et écran tactile. Le total de ce lot est de 13 tests navigateur (5 V1 et 8 V2). Les tests ne contiennent que des données fictives et sont isolés dans des profils temporaires de navigateur.
 
 ```sh
 node web/build.mjs

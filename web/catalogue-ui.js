@@ -2,6 +2,7 @@
 (() => {
   const M=CatalogueModel,repo=CatalogueStore;
   let data=M.empty(),handle=null,importSource=null,plan=null,restoreCandidate=null,editingId=null,editorRevision=null,restoreRevision=null,fileGeneration=0;
+  let storageReady=false;
   const selected=new Set(),mapping={};let duplicateIndex=M.index(data),planPage=0,planSelected=new Set();
   const labels={add:'Ajout',update:'Modification',unchanged:'Identique',conflict:'Conflit — bloqué'};
   function announce(message,error=false){notify(message,error);}
@@ -15,7 +16,7 @@
   document.querySelectorAll('[data-open-catalogue]').forEach(n=>n.addEventListener('click',()=>nav('catalogue')));
   $('demo').addEventListener('click',()=>nav('exports'),true);
   function actionMaster(id,fn){$(id).addEventListener('click',async()=>{const button=$(id);button.disabled=true;try{await fn();}catch(error){announce(error.message,true);if(id==='master-editor-save')$('master-editor-message').textContent=error.message;}finally{button.disabled=id==='master-restore'&&!$('master-restore-consent').checked;}});}
-  async function commit(next,revision=data.revision){data=await repo.save(next,revision);render();}
+  async function commit(next,revision=data.revision){if(!storageReady)throw new Error('Le catalogue local n’a pas pu être chargé. Actualisez les données avant tout enregistrement.');data=await repo.save(next,revision);render();}
   function filtered(){const query=M.normalize($('master-search').value),family=$('master-family').value,status=$('master-status').value,complete=$('master-completeness').value;
     return data.products.filter(p=>(!query||['sku','ean','designation','family'].some(k=>M.normalize(p.values[k]).includes(query)))&&(!family||p.values.family===family)&&(!status||p.status===status)&&(!complete||(M.issues(p,data,duplicateIndex).length===0)===(complete==='complete')));
   }
@@ -98,12 +99,12 @@
   actionMaster('master-demo',async()=>{await chooseFile(BrowserExcel.demoFile('catalogue-demo.xlsx'));$('master-header').value=1;readColumns();previewImport();announce('Exemple fictif prêt à importer : cochez les lignes à enregistrer. Aucune donnée existante n’est remplacée automatiquement.');});
   actionMaster('master-apply',async()=>{if(!plan)throw new Error('Prévisualisez les modifications.');const rows=[...planSelected];const resolved={...plan.mapping};await commit(M.applyImport(data,plan,rows),plan.baseRevision);for(const c of importSource.source)mapping[c.id]=data.attributes.some(a=>a.id===resolved[c.id])?resolved[c.id]:(resolved[c.id]?'__new__':'');clearPlan();renderImportColumns();announce('Import confirmé et enregistré dans IndexedDB sur cet appareil.');});
   actionMaster('master-cancel',()=>{clearPlan();announce('Prévisualisation annulée. Aucune donnée modifiée.');});
-  actionMaster('master-refresh',async()=>{data=await repo.read();clearPlan();render();announce('Catalogue local actualisé.');});
+  actionMaster('master-refresh',async()=>{storageReady=false;data=await repo.read();storageReady=true;clearPlan();render();announce('Catalogue local actualisé.');});
   for(const id of ['master-search','master-family','master-completeness','master-status'])$(id).addEventListener(id==='master-search'?'input':'change',renderList);
   actionMaster('master-select',()=>{filtered().forEach(p=>selected.add(p.id));renderList();});
   actionMaster('master-deselect',()=>{selected.clear();renderList();});
   actionMaster('attribute-add',async()=>{await commit(M.addAttribute(data,$('attribute-name').value,$('attribute-type').value,$('attribute-required').checked));$('attribute-name').value='';clearPlan();announce('Attribut ajouté. Il est disponible dans les fiches et les prochains imports.');});
-  actionMaster('master-backup',()=>{downloadLocal(new Blob([JSON.stringify(M.backup(data),null,2)],{type:'application/json'}),'semin-catalogue-maitre.json');announce('Sauvegarde préparée pour téléchargement. Conservez-la hors de GitHub.');});
+  actionMaster('master-backup',()=>{if(!storageReady)throw new Error('Le catalogue local n’a pas pu être chargé ; sauvegarde annulée.');downloadLocal(new Blob([JSON.stringify(M.backup(data),null,2)],{type:'application/json'}),'semin-catalogue-maitre.json');announce('Sauvegarde préparée pour téléchargement. Conservez-la hors de GitHub.');});
   $('master-restore-file').addEventListener('change',async event=>{const file=event.target.files[0];if(!file)return;
     restoreCandidate=null;$('master-restore-preview').hidden=true;$('master-restore-consent').checked=false;$('master-restore').disabled=true;
     try{if(file.size>20*1024*1024)throw new Error('Sauvegarde limitée à 20 Mo.');const parsed=JSON.parse(await file.text());const candidate=M.restore(data,parsed);restoreCandidate=parsed;restoreRevision=data.revision;
@@ -116,5 +117,5 @@
   actionMaster('master-restore-cancel',()=>{restoreCandidate=null;$('master-restore-preview').hidden=true;});
   M.STATUSES.forEach(status=>{$('master-status').append(new Option(status,status));$('master-editor-status').append(new Option(status,status));});
   nav('dashboard');
-  repo.read().then(saved=>{data=saved;render();}).catch(error=>announce(error.message+' Les fonctions Excel V1 restent accessibles dans Exports.',true));
+  repo.read().then(saved=>{data=saved;storageReady=true;render();}).catch(error=>announce(error.message+' Les fonctions Excel V1 restent accessibles dans Exports.',true));
 })();
