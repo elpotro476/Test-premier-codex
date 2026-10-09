@@ -61,7 +61,33 @@ window.OneBase = (() => {
     ["packaging", "Conditionnement", ["conditionnement", "emballage"]],
     ["capacity", "Contenance", ["contenance", "volume", "capacite"]],
     ["coverage", "Rendement", ["rendement", "pouvoir couvrant"]],
-    ["weight", "Poids", ["poids", "poids kg"]],
+    ["weight", "Poids (kg)", ["poids", "poids kg"]],
+    [
+      "units",
+      "Nombre d’unités",
+      ["nombre d unites", "nombre d unite", "nombre de pieces", "unites"],
+    ],
+    [
+      "packagingType",
+      "Type de conditionnement",
+      ["type de conditionnement", "type d emballage"],
+    ],
+    ["consumption", "Consommation", ["consommation"]],
+    [
+      "application",
+      "Application",
+      ["application", "mise en oeuvre", "mode d application"],
+    ],
+    [
+      "filmThickness",
+      "Épaisseur du film",
+      ["epaisseur du film", "epaisseur d application", "epaisseur"],
+    ],
+    [
+      "fireReaction",
+      "Réaction au feu",
+      ["reaction au feu", "classement au feu"],
+    ],
     ["price", "Prix", ["prix", "prix ttc"]],
     ["stock", "Stock", ["stock", "quantite disponible"]],
     ["shortDescription", "Descriptif", ["descriptif", "description courte"]],
@@ -73,8 +99,12 @@ window.OneBase = (() => {
       "Précautions d’emploi",
       ["precaution d emploi", "precautions d emploi"],
     ],
-    ["vocClass", "COV (valeur source)", ["cov"]],
-    ["density", "Masse volumique", ["masse volumique"]],
+    [
+      "vocClass",
+      "COV (valeur source)",
+      ["cov", "classement cov", "classe cov"],
+    ],
+    ["density", "Densité / masse volumique", ["masse volumique", "densite"]],
     ["dryExtract", "Extrait sec", ["extrait sec"]],
     ["gloss", "Brillant spéculaire", ["brillant speculaire"]],
     [
@@ -102,7 +132,8 @@ window.OneBase = (() => {
       throw Error("Texte OneBase limité à 200 000 caractères.");
     const candidates = Object.fromEntries(fields.map((f) => [f.id, []])),
       unclassified = [],
-      warnings = [];
+      warnings = [],
+      encountered = new Set();
     function add(id, value, evidence) {
       value = value.trim();
       if (value) candidates[id].push({ value, evidence });
@@ -121,28 +152,144 @@ window.OneBase = (() => {
       "reglementaire",
       "infos techniques",
     ]);
+    // Recognise headings independently of their presentation. The untouched raw
+    // text remains the authoritative source; this tokenisation is extraction only.
+    const aliases = [
+      ...fields.flatMap((f) => f.aliases),
+      ...sections,
+      "logo marque",
+      "fiche de securite",
+      "sous titre 1",
+      "sec",
+      ...Array.from({ length: 5 }, (_, i) => `les produits ${i + 1}`),
+    ];
+    const accents = {
+      a: "[aàâä]",
+      c: "[cç]",
+      e: "[eéèêë]",
+      i: "[iîï]",
+      o: "[oôö]",
+      u: "[uùûü]",
+    };
+    const labelPattern = aliases
+      .sort((a, b) => b.length - a.length)
+      .map((a) =>
+        a
+          .split(" ")
+          .map((w) => [...w].map((c) => accents[c] || c).join(""))
+          .join("[\\s’'+-]+"),
+      )
+      .join("|");
+    // Explicit colons and marked headings are reliable even on a single line.
+    // Unmarked words inside prose are never treated as implicit new headings.
+    let tokenText = raw.replace(/\*{1,2}([^*\n]{1,90})\*{1,2}/g, "\n$1:\n");
+    tokenText = tokenText.replace(
+      new RegExp(`(^|[\\s])(${labelPattern})[ \t]*[:：=]`, "giu"),
+      "$1\n$2:",
+    );
+    const lines = tokenText.split(/\r\n?|\n/);
+    const prefixLabel = new RegExp(`^(${labelPattern})[ \t]+(.+)$`, "iu");
+    const numericFields = new Set([
+      "drying",
+      "recoat",
+      "consumption",
+      "filmThickness",
+      "storage",
+      "storageMonths",
+      "density",
+      "dryExtract",
+      "weight",
+      "capacity",
+      "coverage",
+      "units",
+    ]);
     let first = true;
-    for (const original of raw.split(/\r\n?|\n/)) {
-      const line = original
-        .trim()
-        .replace(/^\*+|\*+$/g, "")
-        .trim();
-      if (!line) {
-        continue;
+    for (let index = 0; index < lines.length; index++) {
+      let original = lines[index];
+      let line = original.trim();
+      if (!line) continue;
+      // A label itself may wrap across two or three lines, e.g. Temps de / séchage.
+      for (
+        let span = 3;
+        !/[:：=]/.test(line) && !aliases.includes(norm(line)) && span >= 2;
+        span--
+      ) {
+        // A colon terminates the heading: never absorb the following rubric.
+        if (lines.slice(index, index + span - 1).some((v) => /[:：=]/.test(v)))
+          continue;
+        const joined = lines
+          .slice(index, index + span)
+          .map((v) => v.trim())
+          .join(" ");
+        const label = joined.split(/[:：=]/, 1)[0].trim();
+        if (aliases.includes(norm(label))) {
+          original = lines.slice(index, index + span).join("\n");
+          line = joined;
+          index += span - 1;
+          break;
+        }
       }
-      const labelled = /^([^:：=]{1,90})\s*[:：=]\s*(.*)$/.exec(line);
+      let labelled = /^([^:：=]{1,90})\s*[:：=]\s*(.*)$/.exec(line);
+      if (!labelled && !aliases.includes(norm(line))) {
+        const prefix = prefixLabel.exec(line);
+        const candidate =
+          prefix && fields.find((f) => f.aliases.includes(norm(prefix[1])));
+        if (
+          candidate &&
+          candidate.id !== active &&
+          ((numericFields.has(candidate.id) && /^\d/.test(prefix[2])) ||
+            [
+              "sku",
+              "ean",
+              "onebaseRef",
+              "packaging",
+              "vocClass",
+              "fireReaction",
+            ].includes(candidate.id) ||
+            (candidate.id === "application" &&
+              /^(manuelle?|airless)/i.test(prefix[2])))
+        )
+          labelled = prefix;
+      }
       const label = labelled ? labelled[1] : line;
       let field = fields.find((f) => f.aliases.includes(norm(label)));
       if (/^les produits [1-5]$/.test(norm(label)))
         field = fields.find((f) => f.id === "arguments");
+      // Sec is a sub-label of the drying block, not another independent field.
+      const applicationDetail = [
+        "buse",
+        "pression",
+        "dilution",
+        "materiel",
+        "airless",
+        "manuelle",
+        "application manuelle",
+        "application airless",
+        "nettoyage du materiel",
+      ];
+      if (
+        (norm(label) === "sec" && active === "drying") ||
+        (active === "application" &&
+          labelled &&
+          applicationDetail.includes(norm(label)))
+      ) {
+        block.push(line);
+        continue;
+      }
       if (field) {
         flush();
         active = field.id;
+        encountered.add(field.id);
         if (labelled && labelled[2]) block.push(labelled[2]);
         first = false;
         continue;
       }
-      if (sections.has(norm(line)) || /^\*.*\*$/.test(original.trim())) {
+      if (
+        sections.has(norm(line)) ||
+        aliases.includes(norm(label)) ||
+        labelled ||
+        /^\*.*\*$/.test(original.trim())
+      ) {
         flush();
         unclassified.push(original);
         first = false;
@@ -157,20 +304,14 @@ window.OneBase = (() => {
         first = false;
         continue;
       }
-      if (
-        first &&
-        !labelled &&
-        line.length < 250 &&
-        !/https?:|\[image\]/i.test(line)
-      ) {
+      if (first && line.length < 250 && !/https?:|\[image\]/i.test(line)) {
         add("designation", line, original);
         first = false;
         continue;
       }
       first = false;
-      if (active) {
-        block.push(line);
-      } else unclassified.push(original);
+      if (active) block.push(line);
+      else unclassified.push(original);
     }
     flush();
     // Conservative extraction of explicitly written paint characteristics from the original text.
@@ -236,6 +377,72 @@ window.OneBase = (() => {
     )
       warnings.push(
         "Incohérence source : catégorie Enduit pour une peinture. Choisir une catégorie Castorama adaptée.",
+      );
+    // Identifiers must be single explicit values, never the next heading or a
+    // OneBase ID masquerading as a commercial reference.
+    const identifierRules = {
+      sku: (v) =>
+        /^[\p{L}\p{N}][\p{L}\p{N}._/+&-]{0,79}$/u.test(v) &&
+        !/^\d{9}-\d{5}$/.test(v) &&
+        !aliases.includes(norm(v)),
+      onebaseRef: (v) => /^\d{9}-\d{5}$/.test(v),
+      ean: (v) => /^\d{13}$/.test(v),
+    };
+    for (const [id, valid] of Object.entries(identifierRules)) {
+      if (extracted[id] && !valid(extracted[id])) {
+        warnings.push(
+          fields.find((f) => f.id === id).label +
+            " : valeur non identifiable ou ambiguë, champ laissé vide. Consulter la source originale.",
+        );
+        extracted[id] = "";
+      }
+    }
+    if (extracted.packaging) {
+      // Only an unambiguous, explicit single package is split. Plural options
+      // and ranges retain their source text and never imply a selected variant.
+      const match =
+        /^(\d+)\s+(seaux?|sacs?|pots?|cartons?|bidons?)\s+(?:de\s+)?(\d+(?:[.,]\d+)?)\s*kg[.]?$/iu.exec(
+          extracted.packaging,
+        );
+      if (match) {
+        const derived = {
+          units: match[1],
+          packagingType: match[2],
+          weight: match[3],
+        };
+        for (const [id, value] of Object.entries(derived)) {
+          if (extracted[id] && norm(extracted[id]) !== norm(value)) {
+            extracted[id] = "";
+            warnings.push(
+              fields.find((f) => f.id === id).label +
+                " : conflit avec le conditionnement, à vérifier.",
+            );
+          } else if (!evidence[id].length) extracted[id] = value;
+          evidence[id].push(extracted.packaging);
+        }
+      } else if (
+        !extracted.units ||
+        !extracted.packagingType ||
+        !extracted.weight
+      ) {
+        warnings.push(
+          "Conditionnement : nombre d’unités, type ou poids non identifiables sans ambiguïté ; compléter uniquement depuis la source.",
+        );
+      }
+    }
+    for (const id of encountered)
+      if (!extracted[id])
+        warnings.push(
+          fields.find((f) => f.id === id).label +
+            " : rubrique vide ou ambiguë, aucune valeur inventée.",
+        );
+    if (!extracted.ean)
+      warnings.push(
+        "EAN non identifié : champ laissé vide, aucune valeur inventée.",
+      );
+    if (unclassified.length)
+      warnings.push(
+        "Passages ou rubriques non classés : consulter le texte original conservé intégralement.",
       );
     if (!extracted.sku)
       warnings.push(

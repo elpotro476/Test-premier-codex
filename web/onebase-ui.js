@@ -89,6 +89,8 @@
           input = el(
             [
               "technical",
+              "application",
+              "preparation",
               "arguments",
               "shortDescription",
               "precautions",

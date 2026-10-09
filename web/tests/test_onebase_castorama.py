@@ -127,4 +127,78 @@ class OneBaseCastoramaTests(unittest.TestCase):
         path=Path(self.temp.name)/'demo-fictif.xlsx';event.value.save_as(path);self.assertIn('FICTIF',load_workbook(path)['Instructions']['A1'].value)
         self.upload(path);self.check();self.assertFalse(self.page.locator('#cast-export').is_disabled());w=load_workbook(self.download());self.assertEqual(w['Data']['A2'].value,'FICTIF-EXISTANT');self.assertEqual(w['Data']['A3'].value,'FICTIF-OB-001');self.assertEqual(self.requests,[self.url])
 
+    def test_irregular_onebase_sections_are_separate_and_complete(self):
+        # Anonymised version of the user's 2-in-1 technical case. No real ID,
+        # commercial reference or product catalogue is published in this fixture.
+        raw="""ENDUIT FICTIF 2 EN 1 G&L
+Code produit: 000000860-00001
+Référence article
+Logo marque
+[image](https://example.invalid/logo)
+Temps de
+séchage
+6 à 12 h
+Consommation: 800 g à 1,2 kg/m² par couche Application: Manuelle ou Airless
+Appliquer une couche sur un support préparé.
+Utiliser le matériel compatible et respecter les instructions sources.
+Épaisseur du film: 0 à 4 mm Stockage: 18 mois Densité: 1,73
+Extrait sec: 0,71 Classement COV: A+ Réaction au feu: A2-s1,d0
+Conditionnement: 1 seau de 25 kg"""
+        self.analyse(raw)
+        expected={'onebaseRef':'000000860-00001','sku':'','ean':'','drying':'6 à 12 h',
+          'consumption':'800 g à 1,2 kg/m² par couche',
+          'application':'Manuelle ou Airless\nAppliquer une couche sur un support préparé.\nUtiliser le matériel compatible et respecter les instructions sources.',
+          'filmThickness':'0 à 4 mm','storage':'18 mois','density':'1,73','dryExtract':'0,71',
+          'vocClass':'A+','fireReaction':'A2-s1,d0','units':'1','packagingType':'seau','weight':'25',
+          'packaging':'1 seau de 25 kg'}
+        for field,value in expected.items():self.assertEqual(self.source(field).input_value(),value,field)
+        self.assertIn('SKU',self.page.locator('#ob-warnings').text_content());self.assertIn('EAN',self.page.locator('#ob-warnings').text_content())
+        self.page.locator('#ob-preview').tap();self.page.wait_for_function("() => document.querySelector('#notice').className==='error'")
+        self.assertEqual(self.page.evaluate('CatalogueStore.read().then(d=>d.products.length)'),0)
+        self.source('sku').fill('FICTIF-2EN1');self.page.locator('#ob-preview').tap();self.page.wait_for_selector('#ob-confirm-panel:not([hidden])')
+        self.assertEqual(self.page.evaluate('CatalogueStore.read().then(d=>d.products.length)'),0)
+        self.page.locator('#ob-consent').check();self.page.locator('#ob-confirm').tap();self.page.wait_for_selector('#ob-confirm-panel',state='hidden')
+        saved=self.page.evaluate('CatalogueStore.read()')['products'][0]
+        self.assertEqual(saved['dossier']['source']['raw'],raw)
+        for field,value in expected.items():self.assertEqual(saved['dossier']['source']['extracted'][field],value,field)
+        self.assertEqual(saved['values']['sku'],'FICTIF-2EN1');self.assertEqual(saved['values']['ean'],'')
+        self.page.reload();self.nav('onebase');self.page.locator('#ob-existing').select_option(saved['id'])
+        self.assertEqual(self.source('consumption').input_value(),expected['consumption']);self.assertEqual(self.page.locator('#ob-raw').input_value(),raw)
+        self.assertEqual(self.requests,[self.url,self.url])
+
+    def test_onebase_marked_inline_labels_unknown_sections_and_empty_identifiers(self):
+        raw='FICTIF\r\n*Code produit* 000000860-00001 *Référence article* *Logo marque*\r\n*Temps de séchage* 6 à 12 h *Consommation* 800 g à 1,2 kg/m² par couche *Application* Manuelle ou Airless\r\nInstructions complètes conservées.\r\n*Rubrique inconnue* Texte non classé.\r\n*Densité* 1,73 *Extrait sec* 0,71 *Classement COV* A+ *Réaction au feu* A2-s1,d0'
+        parsed=self.page.evaluate('(raw) => OneBase.parse(raw)',raw);e=parsed['extracted']
+        self.assertEqual(e['onebaseRef'],'000000860-00001');self.assertEqual(e['sku'],'');self.assertEqual(e['ean'],'')
+        self.assertEqual(e['consumption'],'800 g à 1,2 kg/m² par couche');self.assertEqual(e['application'],'Manuelle ou Airless\nInstructions complètes conservées.')
+        self.assertEqual(e['density'],'1,73');self.assertEqual(e['dryExtract'],'0,71');self.assertEqual(e['vocClass'],'A+');self.assertEqual(e['fireReaction'],'A2-s1,d0')
+        self.assertEqual(parsed['raw'],raw);self.assertIn('Texte non classé.',[v.strip() for v in parsed['unclassified']]);self.assertTrue(parsed['warnings'])
+
+    def test_missing_and_ambiguous_values_never_become_commercial_identifiers(self):
+        for raw in ['FICTIF\nCode produit: 000000860-00001\nSKU: Logo marque\nEAN: Logo marque',
+                    'FICTIF\nRéférence: 000000860-00001\nEAN: 000000860-00001',
+                    'FICTIF\nSKU\nLogo marque\nConditionnement: Seaux de 4 et 15 L']:
+            parsed=self.page.evaluate('(raw) => OneBase.parse(raw)',raw)
+            for field in ['sku','ean','consumption','application','filmThickness','density','dryExtract','fireReaction','units','packagingType','weight']:
+                self.assertEqual(parsed['extracted'][field],'',field)
+            self.assertTrue(parsed['warnings']);self.assertEqual(parsed['raw'],raw)
+        parsed=self.page.evaluate("OneBase.parse('FICTIF\\nDensité: 1,73\\nDensité: 1,80\\nConditionnement: 1 seau de 25 kg\\nPoids: 30')")
+        self.assertEqual(parsed['extracted']['density'],'');self.assertEqual(parsed['extracted']['weight'],'');self.assertTrue(parsed['warnings'])
+
+    def test_parser_upgrade_does_not_migrate_or_change_saved_products(self):
+        self.product();before=self.page.evaluate('CatalogueStore.read()')
+        self.page.reload();self.analyse('FICTIF NOUVEAU\nCode produit: 000000860-00001\nDensité: 1,73\nConditionnement: 1 seau de 25 kg')
+        self.assertEqual(self.page.evaluate('CatalogueStore.read()'),before)
+        self.source('sku').fill('NOUVEAU-FICTIF');self.page.locator('#ob-preview').tap();self.page.wait_for_selector('#ob-confirm-panel:not([hidden])')
+        self.assertEqual(self.page.evaluate('CatalogueStore.read()'),before)
+
+    def test_labels_with_inline_values_without_colons_and_application_details(self):
+        raw='FICTIF\nCode produit 000000860-00001\nTemps de séchage 6 à 12 h\nConsommation 800 g à 1,2 kg/m² par couche\nApplication manuelle ou Airless\nBuse : instructions fictives complètes\nPression : consulter la source\nÉpaisseur du film 0 à 4 mm\nStockage 18 mois\nDensité 1,73\nExtrait sec 0,71\nClassement COV A+\nRéaction au feu A2-s1,d0\nConditionnement 1 seau de 25 kg'
+        parsed=self.page.evaluate('(raw) => OneBase.parse(raw)',raw);e=parsed['extracted']
+        self.assertEqual(e['onebaseRef'],'000000860-00001');self.assertEqual(e['drying'],'6 à 12 h');self.assertEqual(e['consumption'],'800 g à 1,2 kg/m² par couche')
+        self.assertEqual(e['application'],'manuelle ou Airless\nBuse : instructions fictives complètes\nPression : consulter la source')
+        self.assertEqual(e['filmThickness'],'0 à 4 mm');self.assertEqual(e['storage'],'18 mois');self.assertEqual(e['density'],'1,73');self.assertEqual(e['dryExtract'],'0,71');self.assertEqual(e['vocClass'],'A+');self.assertEqual(e['fireReaction'],'A2-s1,d0');self.assertEqual(e['weight'],'25')
+        wrapped=self.page.evaluate('(raw) => OneBase.parse(raw)', 'FICTIF\nTemps de\nséchage: 6 à 12 h\nStockage: 18 mois\nExtrait\nsec: 0,71\nDensité: 1,73')['extracted']
+        self.assertEqual(wrapped['drying'],'6 à 12 h');self.assertEqual(wrapped['storage'],'18 mois');self.assertEqual(wrapped['dryExtract'],'0,71');self.assertEqual(wrapped['density'],'1,73')
+
 if __name__=='__main__':unittest.main()
