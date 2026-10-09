@@ -20,8 +20,8 @@ jobs:
     runs-on: windows-latest
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: '3.12'
           architecture: x64
@@ -43,7 +43,7 @@ jobs:
           data = pathlib.Path(os.environ['RUNNER_TEMP']) / 'semin-self-test'
           env = dict(os.environ)
           # Remove Python and other tools from the executable process search path.
-          env['PATH'] = os.path.join(env['SystemRoot'], 'System32')
+          env['PATH'] = os.path.join(os.environ['SystemRoot'], 'System32')
           env.pop('PYTHONHOME', None)
           env.pop('PYTHONPATH', None)
           for attempt in (1, 2):
@@ -53,6 +53,8 @@ jobs:
               assert report.is_file(), 'Le binaire ne produit pas de rapport de test'
               checks = json.loads(report.read_text(encoding='utf-8'))
               print(json.dumps(checks, indent=2))
+              with open(os.environ['GITHUB_STEP_SUMMARY'], 'a', encoding='utf-8') as summary:
+                  summary.write(f'### Test du binaire — lancement {attempt}\n```json\n' + json.dumps(checks, indent=2) + '\n```\n')
               assert result.returncode == 0 and checks['ok'] and checks['frozen'] and checks['tkinter'], checks
               if attempt == 2:
                   assert checks['profile_from_previous_process'], 'Correspondances perdues au redémarrage'
