@@ -72,6 +72,7 @@ Avec des comptes et données fictifs :
 - Deux appareils : ouvrir la même fiche, modifier sur l'un ; modification depuis l'autre refusée jusqu'à actualisation. Vérifier également la révocation de rôle pendant une session.
 - Archiver/restaurer : confirmation requise, données/identifiants conservés ; parent et variantes archivés/restaurés dans le bon ordre.
 - Déconnexion / expiration : catalogue et jetons effacés de l'interface. Recharger nécessite une connexion. Vérifier les logs Auth et les erreurs RPC sans publier de captures contenant des secrets.
+- La révocation d'une session Auth ne garantit pas l'invalidation immédiate d'un JWT d'accès existant. Tester la durée des JWT. Pour retirer immédiatement l'accès professionnel d'un compte, retirer ses lignes `memberships` dans SQL Editor administratif, après vérification qu'un autre administrateur reste présent ; une suspension Auth seule ne doit pas être présumée suffisante. Le retrait complet des accès n'est pas un écran livré dans ce lot.
 - Réseau : uniquement l'hôte Supabase configuré, aucune télémétrie ni chargement d'images distantes. La V3 transmet les fiches au serveur, ce que V2 ne fait pas.
 - Windows et Lenovo Chrome : ergonomie réelle, interruptions réseau, changement d'espace et session, fermeture/réouverture. Tester la V2 séparément ; son stockage local reste intact.
 

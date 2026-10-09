@@ -55,6 +55,8 @@ RLS active sur toutes les tables exposées. Aucune permission pour `anon`, aucun
 
 Les RPC de produit et l'audit sont transactionnels. Les modifications concurrentes sont refusées ; les champs absents d'un patch sont conservés. Archivage et restauration nécessitent une révision ; les fiches archivées sont en lecture seule. Les références famille/variante ont des clés étrangères par espace. Tests SQL réels avec JWT simulés pour les rôles, plus tests de contrat HTTP ; l'authentification Supabase hébergée reste à vérifier après configuration.
 
+La déconnexion efface la session de l'interface et demande la révocation des jetons de rafraîchissement. Un JWT d'accès déjà émis peut rester valide jusqu'à son expiration : ne pas promettre son invalidation immédiate après déconnexion ou suspension Auth. Les rôles sont relus côté serveur à chaque commande. Pour retirer immédiatement tout accès aux fiches, l'administrateur de base peut retirer les appartenances de cet utilisateur, en préservant un autre administrateur ; les données déjà consultées ne peuvent pas être retirées d'un appareil. La durée des JWT et la révocation des comptes sont à valider avec la DSI.
+
 GitHub Pages peut héberger une interface publique, mais jamais une base ni des sauvegardes. Sa sécurité ne dépend pas de cacher l'URL : elle repose sur Auth et PostgreSQL. Projet HTTPS fixé par le build et CSP `connect-src` limitée à cet hôte, aucune URL d'image distante chargée. Pas de données dans les paramètres d'URL, télémétrie ou cache applicatif. Auth et RPC utilisent `credentials: 'omit'` et aucune journalisation des jetons. Toute session centrale nécessite Internet ; aucun mode hors ligne central ni synchronisation implicite.
 
 ## Services, coûts et configurations
