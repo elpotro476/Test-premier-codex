@@ -1,18 +1,9 @@
 # Publication initiale autorisée explicitement par le propriétaire le 2026-10-09.
-# Le push déclenche le déploiement uniquement si ce workflow est modifié.
-name: Publier la version navigateur (accord requis)
+# Le déploiement se lance manuellement après activation de Pages dans les paramètres.
+name: Publier la version navigateur
 
 on:
-  push:
-    branches: [main]
-    paths: ['.github/workflows/browser-pages.yml']
   workflow_dispatch:
-    inputs:
-      publish_approved:
-        description: "J’autorise la publication de l’interface statique publique, sans fichiers commerciaux"
-        required: true
-        default: false
-        type: boolean
 
 permissions:
   contents: read
@@ -25,7 +16,6 @@ concurrency:
 
 jobs:
   publish:
-    if: github.event_name == 'push' || inputs.publish_approved == true
     runs-on: ubuntu-latest
     environment:
       name: github-pages
@@ -56,5 +46,22 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4
 
+      - name: Vérifier la page HTTPS effectivement publiée
+        env:
+          PAGE_URL: ${{ steps.deployment.outputs.page_url }}
+        run: |
+          curl --fail --silent --show-error --location --retry 6 --retry-delay 10 --retry-all-errors --max-time 30 "$PAGE_URL" -o /tmp/semin-published.html
+          cmp _site/index.html /tmp/semin-published.html
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Installer les outils de vérification uniquement sur le runner
+        run: |
+          python -m pip install -r requirements.txt playwright==1.62.0
+          python -m playwright install --with-deps chromium
+      - name: Tester le parcours tactile sur le véritable site HTTPS
+        env:
+          SEMIN_WEB_TEST_URL: ${{ steps.deployment.outputs.page_url }}
+        run: python -m unittest discover -s web/tests -v
       - name: Confirmer le lien publié
         run: echo 'URL déployée — ${{ steps.deployment.outputs.page_url }}' >> "$GITHUB_STEP_SUMMARY"

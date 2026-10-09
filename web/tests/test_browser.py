@@ -28,7 +28,7 @@ class BrowserTests(unittest.TestCase):
         cls.temp = tempfile.TemporaryDirectory()
         cls.server = ThreadingHTTPServer(('127.0.0.1', 0), partial(QuietHandler, directory=str(WEB)))
         cls.thread = threading.Thread(target=cls.server.serve_forever, daemon=True); cls.thread.start()
-        cls.url = f'http://127.0.0.1:{cls.server.server_port}/SEMIN-Marketplace.html'
+        cls.url = os.environ.get('SEMIN_WEB_TEST_URL') or f'http://127.0.0.1:{cls.server.server_port}/SEMIN-Marketplace.html'
         cls.playwright = sync_playwright().start()
         args = {'headless': True}
         if os.environ.get('SEMIN_TEST_CHROMIUM'):

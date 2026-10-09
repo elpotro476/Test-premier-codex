@@ -95,8 +95,10 @@ python -m unittest discover -s web/tests -v
 JSZip 3.10.1 est embarqué localement sous licence MIT (voir `vendor/LICENSE-JSZip.txt`).
 
 Pour publier **après accord explicite** du propriétaire : dans Settings → Pages du dépôt,
-choisir Source → GitHub Actions. Ensuite, ouvrir Actions → « Publier la version navigateur
-(accord requis) », Run workflow et cocher l’autorisation. Ce workflow est manuel uniquement ;
+choisir Source → GitHub Actions. Ensuite, ouvrir Actions → « Publier la version navigateur », puis Run workflow. L’accord de publication
+a été donné par le propriétaire le 9 octobre 2026 ; aucune nouvelle confirmation en chat n’est nécessaire. Ce workflow est manuel uniquement ;
 aucun push de code n’héberge automatiquement l’application. Il publie seulement le HTML
 applicatif et la licence, jamais les fichiers Excel, les profils ou les tests. L’URL effective
 est fournie par le résultat du déploiement GitHub, à vérifier avant de la partager.
+
+Le workflow vérifie aussi que la page HTTPS servie est identique à la page auditée et exécute les tests tactiles directement sur ce site avec les seuls exemples fictifs.
