@@ -1,0 +1,46 @@
+# Manual only: no site is deployed when code is pushed.
+name: Publier la version navigateur (accord requis)
+
+on:
+  workflow_dispatch:
+    inputs:
+      publish_approved:
+        description: "J’autorise la publication de l’interface statique publique, sans fichiers commerciaux"
+        required: true
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: semin-browser-pages
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: inputs.publish_approved == true
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node web/build.mjs
+      - name: Préparer uniquement l’interface autonome
+        run: |
+          mkdir -p _site
+          cp web/SEMIN-Marketplace.html _site/index.html
+          cp web/vendor/LICENSE-JSZip.txt _site/LICENSE-JSZip.txt
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - name: Publier après accord explicite
+        id: deployment
+        uses: actions/deploy-pages@v4
