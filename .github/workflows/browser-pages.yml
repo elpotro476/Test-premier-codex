@@ -4,6 +4,9 @@ name: Publier la version navigateur
 
 on:
   workflow_dispatch:
+  push:
+    tags:
+      - 'semin-pages-approved-*'
 
 permissions:
   contents: read
