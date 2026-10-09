@@ -5,8 +5,8 @@ name: Publier la version navigateur
 on:
   workflow_dispatch:
   push:
-    tags:
-      - 'semin-pages-approved-*'
+    branches: [main]
+    paths: ['.github/pages-release.json']
 
 permissions:
   contents: read
