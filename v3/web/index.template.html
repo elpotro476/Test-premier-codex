@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src __CONNECT__; img-src data:; base-uri 'none'; form-action 'none'; object-src 'none'"
+    />
+    <meta name="referrer" content="no-referrer" />
+    <title>SEMIN Marketplace Studio — V3.1</title>
+    <!-- STYLES -->
+  </head>
+  <body>
+    <header>
+      <div><strong>SEMIN</strong><span>Marketplace Studio · V3.1</span></div>
+      <div id="session" hidden>
+        <span id="identity"></span><button id="logout">Se déconnecter</button>
+      </div>
+    </header>
+    <main>
+      <p class="banner">
+        Prototype V3.1 distinct de V2. Aucune donnée réelle avant validation
+        DSI. La version V2 publiée reste disponible séparément.
+      </p>
+      <p id="message" role="status" aria-live="polite"></p>
+      <section id="login-panel" class="card">
+        <h1>Catalogue central</h1>
+        <p>
+          Une connexion est obligatoire pour accéder aux données
+          professionnelles. Les fiches V3 sont transmises par HTTPS au projet
+          Supabase configuré, puis conservées dans sa base PostgreSQL.
+        </p>
+        <p id="configuration"></p>
+        <form id="login-form">
+          <label
+            >Adresse email<input
+              id="email"
+              type="email"
+              autocomplete="username"
+              required
+              maxlength="254" /></label
+          ><label
+            >Mot de passe<input
+              id="password"
+              type="password"
+              autocomplete="current-password"
+              required
+              maxlength="256" /></label
+          ><button id="login" type="submit">Se connecter</button>
+        </form>
+        <p>
+          Un administrateur doit vous inviter. La création et la récupération
+          des comptes se font dans Supabase pour ce lot.
+        </p>
+        <hr />
+        <button id="demo" class="secondary">
+          Essayer avec des données fictives
+        </button>
+        <p>
+          La démonstration reste en mémoire et disparaît à la fermeture. Elle ne
+          se connecte à aucun serveur.
+        </p>
+      </section>
+      <section id="workspace" hidden>
+        <div class="card toolbar">
+          <label>Espace de travail<select id="space"></select></label
+          ><span id="role"></span><button id="refresh">Actualiser</button>
+        </div>
+        <nav aria-label="Navigation V3">
+          <button data-view="catalogue">Catalogue</button
+          ><button data-view="history">Historique</button
+          ><button data-view="members">Utilisateurs</button>
+        </nav>
+        <section id="catalogue" class="card">
+          <div class="toolbar">
+            <h1>Catalogue central</h1>
+            <button id="create">Créer une fiche</button>
+          </div>
+          <div class="toolbar">
+            <label
+              >Rechercher SKU, EAN ou désignation<input
+                id="search"
+                type="search"
+                maxlength="100" /></label
+            ><label
+              >Afficher<select id="archive-filter">
+                <option value="active">Fiches actives</option>
+                <option value="archived">Fiches archivées</option>
+              </select></label
+            ><button id="search-button">Rechercher</button>
+          </div>
+          <p id="count"></p>
+          <div id="products" class="table-scroll"></div>
+          <div class="toolbar">
+            <button id="previous">Page précédente</button
+            ><button id="next">Page suivante</button>
+          </div>
+          <p>
+            Une fiche par variante ou conditionnement ; EAN facultatif. «
+            Préparation terminée » ne certifie pas la conformité à une
+            marketplace.
+          </p>
+        </section>
+        <section id="history" class="card" hidden>
+          <h1>Historique des modifications</h1>
+          <p>
+            25 événements récents de l’espace courant ; données avant/après
+            conservées dans PostgreSQL.
+          </p>
+          <div id="events" class="table-scroll"></div>
+        </section>
+        <section id="members" class="card" hidden>
+          <h1>Utilisateurs et rôles</h1>
+          <p>
+            Créer ou inviter le compte dans Supabase Auth, puis copier son UUID.
+            Seul un administrateur peut attribuer les droits. La dernière
+            personne administratrice ne peut pas être rétrogradée.
+          </p>
+          <div id="member-list" class="table-scroll"></div>
+          <form id="member-form">
+            <label
+              >UUID du compte<input
+                id="member-id"
+                required
+                pattern="[0-9a-fA-F-]{36}" /></label
+            ><label
+              >Rôle<select id="member-role">
+                <option value="reader">Lecteur</option>
+                <option value="editor">Éditeur</option>
+                <option value="admin">Administrateur</option>
+              </select></label
+            ><label class="check"
+              ><input id="member-consent" type="checkbox" required />Je confirme
+              l’attribution de ce rôle à ce compte.</label
+            ><button type="submit">Enregistrer le rôle</button>
+          </form>
+        </section>
+      </section>
+    </main>
+    <dialog id="editor">
+      <form id="product-form">
+        <div class="toolbar">
+          <h2 id="editor-title">Fiche produit</h2>
+          <button id="close-editor" type="button" class="secondary">
+            Fermer
+          </button>
+        </div>
+        <p id="editor-message" role="alert"></p>
+        <div id="fields" class="grid"></div>
+        <div class="grid">
+          <label
+            >Famille / sous-famille<select id="family">
+              <option value="">Non renseignée</option>
+            </select></label
+          ><label
+            >UUID du produit parent (variante, facultatif)<input
+              id="variant"
+              maxlength="36" /></label
+          ><label
+            >Préparation<select id="status">
+              <option value="draft">À compléter</option>
+              <option value="review">À contrôler</option>
+              <option value="ready">Préparation terminée</option>
+            </select></label
+          >
+        </div>
+        <p id="revision"></p>
+        <div class="toolbar">
+          <button id="save" type="submit">Enregistrer</button
+          ><button id="archive" type="button" class="secondary">
+            Archiver
+          </button>
+        </div>
+      </form>
+    </dialog>
+    <dialog id="confirm">
+      <h2 id="confirm-title">Confirmer l’archivage</h2>
+      <p>
+        La fiche sera conservée et son identifiant restera réservé. Cette
+        opération peut être annulée par une restauration.
+      </p>
+      <div class="toolbar">
+        <button id="confirm-archive">Confirmer</button
+        ><button id="cancel-archive" class="secondary">Annuler</button>
+      </div>
+    </dialog>
+    <footer>
+      V3.1 · Données centrales après authentification · Sauvegardes administrées
+      séparément
+    </footer>
+    <!-- SCRIPTS -->
+  </body>
+</html>

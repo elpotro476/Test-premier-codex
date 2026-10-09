@@ -2,6 +2,10 @@
 
 Prototype local en français pour remplir des templates Excel à partir d’un catalogue. Aucun appel à une API externe, aucune donnée confidentielle et aucun remplissage inventé. Les fichiers de démonstration sont explicitement fictifs.
 
+## V3.1 — Prototype central séparé
+
+[Le lot V3.1](v3/README.md) prépare PostgreSQL / Supabase, Auth, rôles et CRUD du catalogue central, sans modifier V1/V2 ni le site publié. [Architecture et limites](v3/ARCHITECTURE.md), [connexion manuelle à Supabase](v3/GUIDE-SUPABASE.md). Aucun service cloud ni abonnement créé. Contrairement à V1/V2, une V3 configurée transmet les fiches au projet Supabase choisi ; validation DSI requise avant données réelles. Le workflow V3 teste et prépare une démonstration fictive sans déployer Pages.
+
 ## V2 — Premier lot catalogue maître (à valider avant déploiement)
 
 Le catalogue maître local IndexedDB est ajouté à la version navigateur, avec fiches modifiables, attributs extensibles, reimports prévisualisés, détection de doublons et sauvegardes JSON. Le parcours V1 et le projet Windows sont conservés. Voir [l’architecture V2 et son périmètre](web/ARCHITECTURE-V2.md). Les autres modules marketplace seront développés par lots ; aucune mise à jour Pages n’est déployée sans validation de cette version.
