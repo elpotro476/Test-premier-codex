@@ -142,6 +142,7 @@
   function showForm(product = null) {
     editId = product?.id || null;
     parsed = null;
+    $("ob-variant-panel").hidden = true;
     clearPlan();
     $("ob-raw").value = product?.dossier?.source.raw || "";
     fields(product?.values, product?.dossier?.source.evidence);
@@ -371,6 +372,9 @@
   });
   action("ob-analyse", () => {
     parsed = OneBase.parse($("ob-raw").value);
+    $("ob-variant-panel").hidden = !parsed.variants.length;
+    $("ob-variant").replaceChildren(new Option("Choisir une variante", ""), ...parsed.variants.map(v => new Option(v.sku + " · " + v.ean + " · " + v.designation + " · " + v.packaging, v.sku)));
+    $("ob-variant").value = parsed.extracted.sku;
     fields(parsed.extracted, parsed.evidence);
     $("ob-form").hidden = false;
     $("ob-warnings").textContent = parsed.warnings.join("\n");
@@ -379,6 +383,12 @@
     announce(
       "Extraction locale terminée. Vérifiez les références, les passages sources et les ambiguïtés.",
     );
+  });
+  $("ob-variant").addEventListener("change", () => {
+    parsed = OneBase.parse($("ob-raw").value, $("ob-variant").value);
+    fields(parsed.extracted, parsed.evidence);
+    $("ob-warnings").textContent = parsed.warnings.join("\n");
+    clearPlan();
   });
   action("ob-demo", () => {
     showForm();

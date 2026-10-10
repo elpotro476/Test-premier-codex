@@ -361,7 +361,7 @@ window.CastoramaExcel = (() => {
           ),
           category = categoryCol ? String(values[categoryCol.id] || "") : "";
         if (
-          /\d+\s*(?:et|ou|\/)\s*\d+\s*L\b/i.test(p.values.packaging || "") &&
+          /\d+\s*(?:et|ou|\/)\s*\d+\s*(?:L|kg)\b/i.test(p.values.packaging || "") &&
           !p.dossier?.variantConfirmed
         )
           add(

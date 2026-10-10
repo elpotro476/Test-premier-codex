@@ -45,7 +45,7 @@ aside{overflow-y:auto}.aside-note{position:static;margin-top:24px}.storage-detai
 </section>
 <section id="studio-onebase" class="studio-view" hidden>
 <section class="card"><div class="section-head"><div><h2>Nouveau produit — OneBase</h2><p>Collez le texte brut. Extraction locale par règles, sans IA ni connexion à OneBase.</p></div><button id="ob-demo" class="secondary">Exemple OneBase fictif</button></div><div class="toolbar"><button id="ob-new" class="secondary">Nouvelle fiche</button><label>Fiche existante<select id="ob-existing"></select></label></div><p id="ob-editing"></p><label>Texte OneBase original<textarea id="ob-raw" maxlength="200000" rows="12" placeholder="Collez ici le texte OneBase, sans retaper les champs…"></textarea></label><button id="ob-analyse">Analyser le texte OneBase</button><p id="ob-warnings" class="source-evidence conflict"></p><details><summary>Passages non associés à un champ</summary><p id="ob-unclassified" class="source-evidence"></p></details></section>
-<div id="ob-form" hidden><section class="card"><h2>1. Données sources — vérification et corrections</h2><p>Le texte original et les valeurs extraites restent conservés. Les corrections ci-dessous alimentent le catalogue maître ; aucune information manquante n’est inventée.</p><div id="ob-source-fields" class="editor-grid"></div></section><section class="card"><div class="section-head"><div><h2>2. Enrichissement commun</h2><p>Titre, HTML et cinq arguments. Le contenu préparé reprend uniquement les faits renseignés ; relisez chaque proposition.</p></div><button id="ob-suggest" class="secondary">Préparer le contenu depuis les sources</button></div><div id="ob-enrichment" class="editor-grid"></div><p>HTML autorisé : p, br, ul, ol, li, strong, em, b et i, sans attribut ni lien distant.</p></section><section class="card"><h2>3. Contenu spécifique Castorama</h2><p>Sans personnalisation, le contenu commun sera utilisé. Une personnalisation vide signifie laisser ce champ vide pour Castorama.</p><div id="ob-castorama" class="editor-grid"></div></section><section class="card"><button id="ob-preview">Prévisualiser l’enregistrement</button><div id="ob-confirm-panel" hidden><h3 id="ob-confirm-title"></h3><div id="ob-changes" class="table-wrap"></div><label class="required-label"><input id="ob-consent" type="checkbox">Je confirme les changements affichés, y compris les éventuels effacements.</label><button id="ob-confirm" disabled>Confirmer et enregistrer la fiche</button></div></section></div></section>
+<div id="ob-form" hidden><section class="card"><h2>1. Données sources — vérification et corrections</h2><p>Le texte original et les valeurs extraites restent conservés. Les corrections ci-dessous alimentent le catalogue maître ; aucune information manquante n’est inventée.</p><label id="ob-variant-panel" hidden>Variante SKU / EAN du tableau<select id="ob-variant"></select></label><div id="ob-source-fields" class="editor-grid"></div></section><section class="card"><div class="section-head"><div><h2>2. Enrichissement commun</h2><p>Titre, HTML et cinq arguments. Le contenu préparé reprend uniquement les faits renseignés ; relisez chaque proposition.</p></div><button id="ob-suggest" class="secondary">Préparer le contenu depuis les sources</button></div><div id="ob-enrichment" class="editor-grid"></div><p>HTML autorisé : p, br, ul, ol, li, strong, em, b et i, sans attribut ni lien distant.</p></section><section class="card"><h2>3. Contenu spécifique Castorama</h2><p>Sans personnalisation, le contenu commun sera utilisé. Une personnalisation vide signifie laisser ce champ vide pour Castorama.</p><div id="ob-castorama" class="editor-grid"></div></section><section class="card"><button id="ob-preview">Prévisualiser l’enregistrement</button><div id="ob-confirm-panel" hidden><h3 id="ob-confirm-title"></h3><div id="ob-changes" class="table-wrap"></div><label class="required-label"><input id="ob-consent" type="checkbox">Je confirme les changements affichés, y compris les éventuels effacements.</label><button id="ob-confirm" disabled>Confirmer et enregistrer la fiche</button></div></section></div></section>
 <section id="studio-castorama" class="studio-view" hidden><section class="card"><div class="section-head"><h2>Castorama — Template et correspondances</h2><button id="cast-demo-template" class="secondary">Télécharger un template fictif</button></div><p>Le template peut déjà contenir des produits. Ils seront conservés ; l’export utilise une zone vierge vérifiée. Aucune donnée des anciennes lignes n’est copiée vers une nouvelle fiche.</p><label>Produit du catalogue maître<select id="cast-product"></select></label><label class="drop"><input id="cast-file" type="file" accept=".xlsx"><strong>Importer le template Castorama .xlsx</strong><span id="cast-file-name">Choisir le fichier — traitement dans Chrome uniquement</span></label><div id="cast-settings" hidden><div class="settings"><label>Feuille produits<select id="cast-sheet"></select></label><label>En-têtes · ligne<input id="cast-header" type="number" min="1" value="1"></label><label>Destination · ligne<input id="cast-start" type="number" min="2" value="2"></label></div><button id="cast-analyse">Identifier les colonnes du template</button></div></section><div id="cast-prepared" hidden><section class="card"><h2>Mapping et valeurs spécifiques</h2><p id="cast-template-note"></p><p>« Saisie Castorama » conserve une valeur pour ce produit et ce format de template : catégorie, contenance choisie en ml, prix, stock, EAN, etc. Confirmez la variante exacte avant de renseigner la contenance. Un ancien produit du template ne fournit aucune valeur par défaut.</p><div class="toolbar"><label>Profil Castorama<select id="cast-profile"></select></label><label>Nom du mapping<input id="cast-profile-name" value="Castorama" maxlength="100"></label><button id="cast-save-profile" class="secondary">Enregistrer le mapping Castorama</button><button id="cast-backup-profiles" class="secondary">Sauvegarder les mappings Castorama</button><label class="restore-button">Importer des mappings<input id="cast-import-profiles" type="file" accept=".json"></label></div><div id="cast-mapping" class="table-wrap cast-mapping"></div><label class="required-label"><input id="cast-values-consent" type="checkbox">Je confirme l’enregistrement des saisies Castorama pour ce produit, après vérification de sa variante.</label><button id="cast-save-values">Enregistrer les valeurs Castorama dans la fiche</button></section><section class="card"><div class="section-head"><h2>Contrôle avant export</h2><button id="cast-check" class="secondary">Contrôler Castorama</button></div><p id="cast-review-message" class="review-note"></p><div id="cast-errors" class="table-wrap conflict"></div><div id="cast-review" class="table-wrap"></div><div class="action-row"><p>Les règles non évaluables bloquent l’export. Vérifiez le fichier avant import sur Castorama.</p><label><input id="cast-export-consent" type="checkbox">J’ai relu les valeurs contrôlées et je valide cet export.</label><button id="cast-export" disabled>Exporter la copie Excel Castorama</button></div></section></div></section>
 <section id="studio-chatgpt" class="studio-view" hidden><section class="card"><h2>Préparer pour ChatGPT · V3.2</h2><p>L’application ne contacte jamais ChatGPT. Copier reste local ; coller volontairement dans ChatGPT transmettra ce contenu au service choisi. Vérifiez que ces informations peuvent être partagées.</p><div class="toolbar"><label>Produit OneBase<select id="gpt-product"></select></label><label>Marketplace<select id="gpt-market"><option>Amazon</option><option>Castorama</option><option>ManoMano</option></select></label><button id="gpt-prepare">Préparer pour ChatGPT</button><button id="gpt-copy" disabled>Copier la consigne</button></div><label>Consigne complète<textarea id="gpt-prompt" rows="12" readonly></textarea></label></section><section class="card"><h2>Importer la réponse ChatGPT</h2><p>Collez uniquement le JSON demandé. Aucune information OneBase ni aucun contenu V3.1 ne sera remplacé. Une nouvelle version est conservée pour cette marketplace.</p><label>Réponse JSON<textarea id="gpt-json" rows="12" maxlength="200000"></textarea></label><button id="gpt-preview">Prévisualiser la réponse JSON</button><p id="gpt-errors" class="conflict"></p><div id="gpt-preview-panel" hidden><h3>Contenu proposé — à comparer aux sources</h3><div id="gpt-fields"></div><p id="gpt-missing"></p><label><input id="gpt-consent" type="checkbox">J’ai vérifié les faits dans OneBase, le titre, le HTML, les cinq arguments, les mots-clés et les FAQ. Je valide cette nouvelle version.</label><button id="gpt-save" disabled>Valider et enregistrer cette version</button></div><h3>Contenus conservés pour cette marketplace</h3><div id="gpt-history"></div></section></section>
 <section id="studio-parameters" class="studio-view" hidden><section class="card"><h2>Stockage local de cet appareil</h2><p>Le catalogue dépend de l’adresse et du profil Chrome. Aucune synchronisation entre appareils. L’ouverture de cette version protège la base contre les écritures des anciens fichiers HTML sur la même origine, sans modifier les fiches existantes.</p><pre id="storage-details" class="storage-details">Lecture du stockage…</pre><button id="storage-refresh" class="secondary">Actualiser le diagnostic</button></section>
@@ -594,6 +594,8 @@ window.OneBase = (() => {
       "Désignation",
       ["designation", "nom produit", "produit", "nom commercial"],
     ],
+    ["settingTime", "Temps de prise", ["temps de prise", "prise"]],
+    ["genericPackaging", "Conditionnements génériques", ["conditionnements generiques"]],
     ["family", "Famille", ["famille", "categorie"]],
     [
       "technical",
@@ -687,7 +689,7 @@ window.OneBase = (() => {
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, " ")
       .trim();
-  function parse(raw) {
+  function parse(raw, selectedSku = "") {
     if (typeof raw !== "string" || !raw.trim())
       throw Error("Collez le texte OneBase avant de l’analyser.");
     if (raw.length > 200000)
@@ -744,15 +746,76 @@ window.OneBase = (() => {
       .join("|");
     // Explicit colons and marked headings are reliable even on a single line.
     // Unmarked words inside prose are never treated as implicit new headings.
-    let tokenText = raw.replace(/\*{1,2}([^*\n]{1,90})\*{1,2}/g, "\n$1:\n");
+    // Tables are isolated before rubric parsing: a row must never become part
+    // of the preceding technical paragraph. Only explicit column labels count.
+    const variants = [], tableLines = new Set(), tableHeaders = new Set();
+    const sourceLines = raw.split(/\r\n?|\n/);
+    let headers = null;
+    const columnId = (v) => {
+      const n = norm(v);
+      if (["ean", "ean13", "ean 13", "gtin"].includes(n)) return "ean";
+      if (["sku", "reference article", "ref article", "code article", "reference commerciale"].includes(n)) return "sku";
+      if (["designation", "libelle", "nom produit"].includes(n)) return "designation";
+      if (["conditionnement", "emballage", "poids", "contenance"].includes(n)) return "packaging";
+      return "";
+    };
+    for (let i = 0; i < sourceLines.length; i++) {
+      const line = sourceLines[i];
+      const cells = line.trim().replace(/^\||\|$/g, "").split(/\t|\s*;\s*|\s*\|\s*| {2,}/);
+      // Browser copying can turn a table into one cell per line.
+      if (cells.length === 1 && columnId(cells[0]) && !headers) {
+        const vertical = [];
+        let end = i;
+        while (end < sourceLines.length && columnId(sourceLines[end].trim())) {
+          vertical.push(columnId(sourceLines[end].trim())); end++;
+        }
+        if (vertical.includes("sku") && vertical.includes("ean")) {
+          headers = vertical;
+          tableHeaders.add(i);
+          for (let j = i; j < end; j++) tableLines.add(j);
+          i = end - 1; continue;
+        }
+      }
+      let labels = cells.map(columnId);
+      if (cells.length === 1) {
+        const headerPattern = /désignation|designation|ean(?: ?13)?|sku|référence article|reference article|code article|conditionnement/giu;
+        const tokens = [...line.matchAll(headerPattern)];
+        if (tokens.length && !line.replace(headerPattern, "").trim()) labels = tokens.map(m => columnId(m[0]));
+      }
+      if (labels.includes("sku") && labels.includes("ean")) {
+        headers = labels; tableLines.add(i); tableHeaders.add(i); continue;
+      }
+      if (!headers) continue;
+      if (/^[- |:]+$/.test(line)) { tableLines.add(i); continue; }
+      let last = i;
+      if (cells.length === 1 && headers.slice(0, 3).join(",") === "designation,ean,sku") {
+        const spaced = /^(.+?)\s+(\d{13})\s+(\S+)(?:\s+(.+))?$/.exec(line.trim());
+        if (spaced) cells.splice(0, cells.length, ...spaced.slice(1).map(v => v || ""));
+      }
+      if (cells.length === 1 && headers.length > 1) {
+        const vertical = sourceLines.slice(i, i + headers.length).map(v => v.trim());
+        if (vertical.length === headers.length) { cells.splice(0, cells.length, ...vertical); last = i + headers.length - 1; }
+      }
+      const row = Object.fromEntries(headers.map((id, j) => [id, cells[j]?.trim() || ""]));
+      if (!/^[\p{L}\p{N}][\p{L}\p{N}._/+&-]{0,79}$/u.test(row.sku || "") || /^\d{9}-\d{5}$/.test(row.sku || "") || !/^\d{13}$/.test(row.ean || "")) {
+        if (line.trim()) headers = null;
+        continue;
+      }
+      variants.push({sku: row.sku, ean: row.ean, designation: row.designation || "", packaging: row.packaging || "", evidence: sourceLines.slice(i, last + 1).join("\n")});
+      for (let j = i; j <= last; j++) tableLines.add(j);
+      i = last;
+    }
+    const rubricText = sourceLines.map((line, i) => tableHeaders.has(i) ? "Tableau de variantes:" : tableLines.has(i) ? "" : line).join("\n");
+    let tokenText = rubricText.replace(/\*{1,2}([^*\n]{1,90})\*{1,2}/g, "\n$1:\n");
     tokenText = tokenText.replace(
-      new RegExp(`(^|[\\s])(${labelPattern})[ \t]*[:：=]`, "giu"),
-      "$1\n$2:",
+      new RegExp(`(${labelPattern})[ \t]*[:：=]`, "giu"),
+      "\n$1:",
     );
     const lines = tokenText.split(/\r\n?|\n/);
     const prefixLabel = new RegExp(`^(${labelPattern})[ \t]+(.+)$`, "iu");
     const numericFields = new Set([
       "drying",
+      "settingTime",
       "recoat",
       "consumption",
       "filmThickness",
@@ -918,6 +981,29 @@ window.OneBase = (() => {
       } else extracted[field.id] = entries[0]?.value || "";
       evidence[field.id] = entries.map((e) => e.evidence);
     }
+    extracted.genericPackaging = extracted.genericPackaging || extracted.packaging;
+    evidence.genericPackaging = evidence.genericPackaging.length ? evidence.genericPackaging : [...evidence.packaging];
+    if (variants.length) {
+      const choice = selectedSku || extracted.sku;
+      const matches = variants.filter(v => v.sku === choice);
+      const selected = choice ? (matches.length === 1 ? matches[0] : null) : (variants.length === 1 ? variants[0] : null);
+      // Explicit identifiers in a rubric must agree with the selected table row.
+      if (selected && (!extracted.ean || extracted.ean === selected.ean)) {
+        for (const id of ["sku", "ean", "designation", "packaging"]) {
+          if (selected[id]) { extracted[id] = selected[id]; evidence[id] = [selected.evidence]; }
+        }
+        if (!selected.packaging) {
+          const packageMatch = /(?:sac|seau|pot|bidon|carton)s?\s+(?:de\s+)?\d+(?:[.,]\d+)?\s*(?:kg|l)\b/iu.exec(selected.designation);
+          if (packageMatch) { extracted.packaging = packageMatch[0]; evidence.packaging = [selected.evidence]; }
+          else extracted.packaging = "";
+        }
+      } else {
+        for (const id of ["sku", "ean", "packaging", "weight", "capacity", "units", "packagingType"]) {
+          extracted[id] = ""; evidence[id] = variants.map(v => v.evidence);
+        }
+        warnings.push("Tableau SKU/EAN : plusieurs variantes ou références contradictoires. Choisissez et vérifiez une ligne ; aucune variante inventée.");
+      }
+    }
     if (extracted.brand) {
       const m = /^Marque\s+(.+?)\s*-\s*(.+)$/i.exec(extracted.brand);
       if (m && norm(m[1]) === norm(m[2])) extracted.brand = m[2];
@@ -928,7 +1014,7 @@ window.OneBase = (() => {
     }
     if (
       extracted.packaging &&
-      /\d+\s*(?:et|ou|\/)\s*\d+\s*L\b/i.test(extracted.packaging)
+      /\d+\s*(?:et|ou|\/)\s*\d+\s*(?:L|kg)\b/i.test(extracted.packaging)
     )
       warnings.push(
         "Plusieurs contenances dans la source : confirmer le conditionnement associé au SKU, aucune contenance choisie automatiquement.",
@@ -963,12 +1049,12 @@ window.OneBase = (() => {
       // Only an unambiguous, explicit single package is split. Plural options
       // and ranges retain their source text and never imply a selected variant.
       const match =
-        /^(\d+)\s+(seaux?|sacs?|pots?|cartons?|bidons?)\s+(?:de\s+)?(\d+(?:[.,]\d+)?)\s*kg[.]?$/iu.exec(
+        /^(?:(\d+)\s+)?(seaux?|sacs?|pots?|cartons?|bidons?)\s+(?:de\s+)?(\d+(?:[.,]\d+)?)\s*kg[.]?$/iu.exec(
           extracted.packaging,
         );
       if (match) {
         const derived = {
-          units: match[1],
+          ...(match[1] ? { units: match[1] } : {}),
           packagingType: match[2],
           weight: match[3],
         };
@@ -982,6 +1068,7 @@ window.OneBase = (() => {
           } else if (!evidence[id].length) extracted[id] = value;
           evidence[id].push(extracted.packaging);
         }
+        if (!extracted.units) warnings.push("Nombre d’unités absent du conditionnement : champ laissé vide, aucune quantité inventée.");
       } else if (
         !extracted.units ||
         !extracted.packagingType ||
@@ -1014,7 +1101,7 @@ window.OneBase = (() => {
       warnings.push(
         "Désignation non identifiée : à renseigner depuis la source.",
       );
-    return { raw, extracted, evidence, warnings, unclassified };
+    return { raw, extracted, evidence, warnings, unclassified, variants };
   }
   const escape = (s) =>
     String(s)
@@ -1783,7 +1870,7 @@ window.CastoramaExcel = (() => {
           ),
           category = categoryCol ? String(values[categoryCol.id] || "") : "";
         if (
-          /\d+\s*(?:et|ou|\/)\s*\d+\s*L\b/i.test(p.values.packaging || "") &&
+          /\d+\s*(?:et|ou|\/)\s*\d+\s*(?:L|kg)\b/i.test(p.values.packaging || "") &&
           !p.dossier?.variantConfirmed
         )
           add(
@@ -3526,6 +3613,7 @@ $('restore-profiles').addEventListener('change',async event=>{const file=event.t
   function showForm(product = null) {
     editId = product?.id || null;
     parsed = null;
+    $("ob-variant-panel").hidden = true;
     clearPlan();
     $("ob-raw").value = product?.dossier?.source.raw || "";
     fields(product?.values, product?.dossier?.source.evidence);
@@ -3755,6 +3843,9 @@ $('restore-profiles').addEventListener('change',async event=>{const file=event.t
   });
   action("ob-analyse", () => {
     parsed = OneBase.parse($("ob-raw").value);
+    $("ob-variant-panel").hidden = !parsed.variants.length;
+    $("ob-variant").replaceChildren(new Option("Choisir une variante", ""), ...parsed.variants.map(v => new Option(v.sku + " · " + v.ean + " · " + v.designation + " · " + v.packaging, v.sku)));
+    $("ob-variant").value = parsed.extracted.sku;
     fields(parsed.extracted, parsed.evidence);
     $("ob-form").hidden = false;
     $("ob-warnings").textContent = parsed.warnings.join("\n");
@@ -3763,6 +3854,12 @@ $('restore-profiles').addEventListener('change',async event=>{const file=event.t
     announce(
       "Extraction locale terminée. Vérifiez les références, les passages sources et les ambiguïtés.",
     );
+  });
+  $("ob-variant").addEventListener("change", () => {
+    parsed = OneBase.parse($("ob-raw").value, $("ob-variant").value);
+    fields(parsed.extracted, parsed.evidence);
+    $("ob-warnings").textContent = parsed.warnings.join("\n");
+    clearPlan();
   });
   action("ob-demo", () => {
     showForm();

@@ -69,3 +69,16 @@ L'extraction est déterministe et dépend des libellés : les ambiguïtés sont 
 ## Stockage protégé et restauration V3.2
 
 La nouvelle version conserve la base et bloque les écritures des anciens fichiers sur la même origine. La restauration du catalogue fonctionne désormais par fusion sans écrasement, avec prévisualisation. Le bouton **Paramètres · Sauvegardes** est accessible dans l’en-tête sur tablette. Voir `GUIDE-STOCKAGE-V3.2.md` pour les différences entre adresses/profils Chrome et la récupération des données.
+
+## Extraction des rubriques collées et tableaux de variantes
+
+Les rubriques explicitement marquées par des deux-points ou des astérisques sont séparées même sans espace entre le contenu et le libellé suivant. Le temps de prise dispose maintenant de son propre champ. Un passage sans délimitation identifiable reste à vérifier dans le texte original.
+
+Les tableaux comportant des en-têtes **Désignation, EAN, SKU / Référence article / Code article** sont reconnus avec tabulations, points-virgules, barres verticales ou plusieurs espaces. La copie verticale (une cellule par ligne) est également reconnue. Les lignes doivent fournir des identifiants explicites valides ; un tableau ambigu reste à vérifier manuellement.
+
+- Une seule ligne identifiable préremplit le SKU et l’EAN ; plusieurs lignes demandent de choisir une **Variante SKU / EAN du tableau**.
+- Les **Conditionnements génériques** restent séparés du conditionnement de la variante. Le conditionnement sélectionné provient de sa colonne, ou d’une mention explicite dans la désignation de sa ligne.
+- **Sac de 5 kg** donne type **sac** et poids **5**, mais ne suppose pas un nombre d’unités. **1 sac de 5 kg** fournit aussi le nombre **1**.
+- **Voir le passage source** permet de vérifier chaque valeur proposée. Le texte original complet est conservé lors de l’enregistrement confirmé.
+
+Changer de variante réinitialise les champs du formulaire depuis la source ; effectuer cette sélection avant vos corrections manuelles. Aucun produit existant n’est modifié par l’analyse ou la sélection seule. Prévisualiser les changements puis confirmer explicitement pour enregistrer. Les contenus enrichis, les réponses ChatGPT et les sauvegardes JSON restent disponibles.
