@@ -69,3 +69,7 @@ class VariantTests(unittest.TestCase):
         result=self.page.evaluate('(raw) => OneBase.parse(raw)',TEXT.rsplit('\n',1)[0].replace('\t',' '))
         self.assertEqual(result['extracted']['sku'],'FICTIF-CE-005')
         self.assertEqual(result['extracted']['weight'],'5')
+    def test_label_suffix_inside_prose_is_not_a_rubric(self):
+        result=self.page.evaluate('(raw) => OneBase.parse(raw)','PRODUIT FICTIF\nComposition: carbonate, surprise: donnée littérale\nSKU: FICTIF-001')
+        self.assertEqual(result['extracted']['composition'],'carbonate, surprise: donnée littérale')
+        self.assertEqual(result['extracted']['settingTime'],'')

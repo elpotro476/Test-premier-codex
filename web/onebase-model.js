@@ -247,7 +247,12 @@ window.OneBase = (() => {
     let tokenText = rubricText.replace(/\*{1,2}([^*\n]{1,90})\*{1,2}/g, "\n$1:\n");
     tokenText = tokenText.replace(
       new RegExp(`(${labelPattern})[ \t]*[:：=]`, "giu"),
-      "\n$1:",
+      (match, label, offset, text) => {
+        // A lower-case suffix inside a word (e.g. « surprise: ») is not
+        // a rubric. Glued headings must retain an identifiable capital.
+        if (offset && /[\p{L}\p{N}]/u.test(text[offset - 1]) && label[0] === label[0].toLowerCase()) return match;
+        return "\n" + label + ":";
+      },
     );
     const lines = tokenText.split(/\r\n?|\n/);
     const prefixLabel = new RegExp(`^(${labelPattern})[ \t]+(.+)$`, "iu");
