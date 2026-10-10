@@ -32,6 +32,7 @@
   }
   function invalidate() {
     review = null;
+    $("cast-export-consent").checked = false;
     $("cast-values-consent").checked = false;
     $("cast-export").disabled = true;
     $("cast-review-message").textContent =
@@ -660,10 +661,15 @@
           required: [...required],
           signature: inspection.signature,
         };
-    $("cast-export").disabled = !review;
+    $("cast-export-consent").checked = false;
+    $("cast-export").disabled = true;
+  });
+  $("cast-export-consent").addEventListener("change", () => {
+    $("cast-export").disabled = !review || !$("cast-export-consent").checked;
   });
   action("cast-export", async () => {
-    if (!review) throw Error("Relancez le contrôle.");
+    if (!review || !$("cast-export-consent").checked)
+      throw Error("Contrôle et validation humaine obligatoires avant export.");
     const checked = review,
       t = template;
     const current = await CatalogueStore.read();

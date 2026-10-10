@@ -1,3 +1,7 @@
+# V3.2 locale — SEO / GEO avec échange manuel ChatGPT
+
+La version navigateur prépare une consigne par marketplace et importe une réponse JSON avec prévisualisation, validation humaine et conservation des versions. Aucun appel API ni déploiement automatique. Voir [le guide V3.2](web/GUIDE-V3.2-CHATGPT.md). Les parcours V1/V2/V3.1 et le projet Windows sont conservés.
+
 # SEMIN Marketplace Template Manager
 
 Prototype local en français pour remplir des templates Excel à partir d’un catalogue. Aucun appel à une API externe, aucune donnée confidentielle et aucun remplissage inventé. Les fichiers de démonstration sont explicitement fictifs.

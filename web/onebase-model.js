@@ -618,6 +618,7 @@ window.ProductWorkflow = (() => {
           fail();
       }
     }
+    if (d.chatgpt !== undefined) ChatGPTWorkflow.validateArchive(d.chatgpt);
     return structuredClone(d);
   }
   function plan(data, parsed, values, enrichment, castorama, productId = null) {
@@ -673,6 +674,7 @@ window.ProductWorkflow = (() => {
           importedAt: new Date().toISOString(),
         };
     const dossier = validate({
+      ...(p?.dossier || {}),
       version: 1,
       source,
       enrichment,
@@ -749,6 +751,22 @@ window.ProductWorkflow = (() => {
         id: "master." + a.id,
         label: "Catalogue · " + a.label,
       })),
+      ...ChatGPTWorkflow.markets.flatMap((market) =>
+        [
+          "titleSeo",
+          "descriptionHtml",
+          "argument1",
+          "argument2",
+          "argument3",
+          "argument4",
+          "argument5",
+          "keywords",
+          "faqGeo",
+        ].map((field) => ({
+          id: "chatgpt." + market + "." + field,
+          label: "ChatGPT validé · " + market + " · " + field,
+        })),
+      ),
       ...enriched.map((k) => ({
         id: "content." + k,
         label:
@@ -760,6 +778,16 @@ window.ProductWorkflow = (() => {
   }
   function value(product, key) {
     const [group, field] = key.split(".");
+    if (group === "chatgpt") {
+      const content = ChatGPTWorkflow.latest(product, field),
+        attribute = key.split(".")[2];
+      if (!content || content.sku !== product.values.sku) return "";
+      if (/^argument[1-5]$/.test(attribute))
+        return content.arguments[Number(attribute.slice(-1)) - 1];
+      if (attribute === "keywords") return content.keywords.join(", ");
+      if (attribute === "faqGeo") return JSON.stringify(content.faqGeo);
+      return content[attribute] || "";
+    }
     if (group === "master") return product.values[field] ?? "";
     if (group === "content")
       return Object.hasOwn(product.dossier?.castorama || {}, field)

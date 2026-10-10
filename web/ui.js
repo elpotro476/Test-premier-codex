@@ -5,7 +5,7 @@ function el(tag, text, className) { const node = document.createElement(tag); if
 function notify(message, error = false) { $('notice').hidden = false; $('notice').textContent = message; $('notice').className = error ? 'error' : ''; }
 async function request(path, data) { return BrowserExcel.request(path, data); }
 function invalidate() {
-  $('export').disabled = true; $('stat-errors').textContent = '—';
+  $('export-consent').checked=false; $('export-consent').disabled=true; $('export').disabled = true; $('stat-errors').textContent = '—';
   $('review').replaceChildren(); $('errors').replaceChildren();
   $('review-message').textContent = 'Les données ont changé. Relancez le contrôle avant export.';
   $('review-message').className = 'review-note';
@@ -79,7 +79,7 @@ async function review(){
   $('review-message').className = result.errors.length ? 'review-note error-note' : 'review-note';
   $('errors').replaceChildren(...(result.errors.length ? [table(['Ligne catalogue','Champ','Erreur'],result.errors.map(e=>[e.row,e.column,e.message]))] : []));
   $('review').replaceChildren(table(['Ligne catalogue',...state.prepared.target.map(c=>c.label)],result.rows.slice(0,200).map(r=>[r.id,...state.prepared.target.map(c=>r.values[c.id])])));
-  $('export').disabled=Boolean(result.errors.length);
+  $('export-consent').checked=false; $('export-consent').disabled=Boolean(result.errors.length); $('export').disabled=true;
 }
 function action(id,fn){$(id).addEventListener('click',async()=>{const button=$(id);button.disabled=true;let failed=false;try{await fn();}catch(e){failed=true;notify(e.message,true);if(id==='export')invalidate();}finally{button.disabled=id==='export'&&failed;}});}
 for(const role of ['catalog','template']){
@@ -103,7 +103,8 @@ action('select-none',()=>{state.selected.clear();renderProducts();invalidate();}
 action('check',review);
 action('save-profile',async()=>{const data=await request('/api/profile',{name:$('marketplace').value,profile:{signature:signature(),mapping:state.mapping,required:[...state.required]}});state.profiles=data.profiles;renderProfiles();notify('Correspondances enregistrées localement pour cette marketplace.');});
 $('profiles').addEventListener('change',()=>{const name=$('profiles').value;if(!name)return;const profile=state.profiles[name];if(profile.signature!==signature()){notify('Ce profil ne correspond pas aux colonnes de ces fichiers. Créez ou enregistrez un profil adapté.',true);return;}state.mapping={...profile.mapping};state.required=new Set(profile.required);$('marketplace').value=name;renderMapping();invalidate();notify('Correspondances enregistrées appliquées.');});
-action('export',async()=>{const blob=await request('/api/export',payload());const url=URL.createObjectURL(blob);const a=el('a');a.href=url;a.download='semin-produits.xlsx';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);notify('Fichier Excel généré. Vérifiez-le avant importation sur votre marketplace.');});
+$('export-consent').addEventListener('change',()=>{$('export').disabled=!$('export-consent').checked||$('export-consent').disabled;});
+action('export',async()=>{if(!$('export-consent').checked||$('export-consent').disabled)throw Error('Validation humaine obligatoire avant export.');const blob=await request('/api/export',payload());const url=URL.createObjectURL(blob);const a=el('a');a.href=url;a.download='semin-produits.xlsx';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);notify('Fichier Excel généré. Vérifiez-le avant importation sur votre marketplace.');});
 try { state.profiles=BrowserExcel.profiles();renderProfiles(); } catch(error){ notify(error.message,true); }
 function downloadLocal(blob,name){const url=URL.createObjectURL(blob);const a=el('a');a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),3000);}
 action('backup-profiles',()=>{downloadLocal(new Blob([JSON.stringify(BrowserExcel.profiles(),null,2)],{type:'application/json'}),'semin-correspondances.json');notify('Sauvegarde des correspondances téléchargée. Aucun produit n’est inclus.');});

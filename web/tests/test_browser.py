@@ -56,7 +56,9 @@ class BrowserTests(unittest.TestCase):
         self.page.get_by_role('checkbox', name='Sélectionner la ligne 4', exact=True).uncheck()
         self.page.get_by_role('button', name='Contrôler les données').tap()
         self.page.wait_for_selector('#stat-errors:text-is("0")')
+        self.page.locator('#export-consent').check()
     def download(self):
+        self.page.locator('#export-consent').check()
         with self.page.expect_download() as event:
             self.page.get_by_role('button', name='Exporter le fichier Excel').tap()
         path = Path(self.temp.name) / 'browser-export.xlsx'; event.value.save_as(path)
@@ -150,7 +152,7 @@ class BrowserTests(unittest.TestCase):
             self.page.get_by_role('button', name='Analyser les fichiers').tap()
             self.page.wait_for_selector('#stat-products:text-is("3")')
             self.page.locator('#search').fill('DEMO-001'); self.page.get_by_role('button', name='Sélectionner les résultats').tap()
-            self.page.get_by_role('button', name='Contrôler les données').tap(); self.page.wait_for_selector('#stat-errors:text-is("0")')
+            self.page.get_by_role('button', name='Contrôler les données').tap(); self.page.wait_for_selector('#stat-errors:text-is("0")'); self.page.locator('#export-consent').check()
             self.page.get_by_role('button', name='Exporter le fichier Excel').tap()
             self.page.wait_for_selector('#notice.error')
             message = self.page.locator('#notice').inner_text()

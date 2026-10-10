@@ -38,7 +38,7 @@ Une nouvelle lecture est nécessaire après actualisation : ni le template origi
 
 ## Tests et audit
 
-La suite comprend 13 tests V1/V2 existants et 17 tests OneBase/Castorama : extraction multiline/ambiguïtés, champs absents, quatre arguments sans cinquième inventé, source intacte, enrichissements indépendants, persistance, mise à jour confirmée, révision obsolète, sauvegardes V2/dossier invalide, template rempli et grande feuille de référence, contraintes/métadonnées requises, mappings sans valeurs produits, valeurs spécifiques, cellules occupées/fusionnées, règles non évaluables, HTML dangereux, tactile et exemple autonome téléchargeable. Les cinq tests de correction ajoutés couvrent les rubriques irrégulières, le conditionnement décomposé, les sous-instructions d’application, les identifiants absents ou parasites et l’absence de modification des fiches sauvegardées avant confirmation. Tous les textes et classeurs de cette suite sont synthétiques.
+La couverture V3.1 comprend 13 tests V1/V2 existants et 17 tests OneBase/Castorama : extraction multiline/ambiguïtés, champs absents, quatre arguments sans cinquième inventé, source intacte, enrichissements indépendants, persistance, mise à jour confirmée, révision obsolète, sauvegardes V2/dossier invalide, template rempli et grande feuille de référence, contraintes/métadonnées requises, mappings sans valeurs produits, valeurs spécifiques, cellules occupées/fusionnées, règles non évaluables, HTML dangereux, tactile et exemple autonome téléchargeable. Les cinq tests de correction ajoutés couvrent les rubriques irrégulières, le conditionnement décomposé, les sous-instructions d’application, les identifiants absents ou parasites et l’absence de modification des fiches sauvegardées avant confirmation. Tous les textes et classeurs de cette suite sont synthétiques.
 
 Une vérification privée supplémentaire utilise le fichier transmis par l'utilisateur, hors du dépôt : 3 onglets et 141 colonnes lus, listes de référence au-delà de 20 000 lignes prises en charge ; ajout d'une ligne entièrement fictive vérifié. Les lignes originales et validations restent identiques, et seul `xl/worksheets/sheet1.xml` diffère dans l'archive. Aucun fichier ou valeur commerciale de cette vérification n'est ajouté aux fixtures publiques ou au package.
 
@@ -50,3 +50,7 @@ SEMIN_TEST_CHROMIUM=/usr/bin/chromium python3 -m unittest discover -s web/tests 
 ```
 
 Audit avant publication du code : HTML autoportant avec `connect-src 'none'`, scripts sans appel réseau, démos exclusivement fictives, fichiers utilisateur en dehors de Git, pas de secret ajouté. Voir le [guide utilisateur](GUIDE-ONEBASE-CASTORAMA.md). Une publication future et une recette physique Lenovo restent distinctes de ces tests locaux.
+
+## Extension V3.2 manuelle
+
+`chatgpt-model.js` prépare les consignes, valide le JSON et ajoute les versions marketplace dans `dossier.chatgpt`. `chatgpt-ui.js` propose une copie locale, la prévisualisation et une confirmation obligatoire. Le champ optionnel reste compatible avec les sauvegardes précédentes et les modifications OneBase conservent ces archives. Sept tests supplémentaires couvrent la copie et les trois marketplaces, la validation stricte, les révisions, les historiques, les sauvegardes, le mapping Excel et la confirmation humaine avant export. Aucun client API ni clé n’est ajouté.

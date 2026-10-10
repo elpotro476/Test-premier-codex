@@ -78,6 +78,7 @@ class OneBaseCastoramaTests(unittest.TestCase):
         self.nav('castorama');self.page.locator('#cast-file').set_input_files(path);self.page.wait_for_selector('#cast-file-name:text-is("'+path.name+'")');self.page.locator('#cast-analyse').tap();self.page.wait_for_selector('#cast-prepared:not([hidden])')
     def check(self):
         self.page.locator('#cast-check').tap();self.page.wait_for_function("() => document.querySelector('#cast-review-message').textContent.includes('Contrôle réussi') || document.querySelector('#cast-review-message').textContent.includes('erreur(s)')")
+        if "Contrôle réussi" in self.page.locator("#cast-review-message").text_content():self.page.locator("#cast-export-consent").check()
     def download(self):
         with self.page.expect_download() as e:self.page.locator('#cast-export').tap()
         path=Path(self.temp.name)/'export-fictif.xlsx';e.value.save_as(path);return path

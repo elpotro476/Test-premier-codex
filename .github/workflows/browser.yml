@@ -36,6 +36,7 @@ jobs:
           with ZipFile('SEMIN-Marketplace-Navigateur.zip', 'w', ZIP_DEFLATED) as archive:
               archive.write('web/SEMIN-Marketplace.html', 'SEMIN-Marketplace.html')
               archive.write('web/GUIDE-ANDROID-WINDOWS.md', 'GUIDE-ANDROID-WINDOWS.txt')
+              archive.write('web/GUIDE-V3.2-CHATGPT.md', 'GUIDE-V3.2-CHATGPT.txt')
               archive.write('web/GUIDE-ONEBASE-CASTORAMA.md', 'GUIDE-ONEBASE-CASTORAMA.txt')
               archive.write('web/ARCHITECTURE-ONEBASE-CASTORAMA.md', 'ARCHITECTURE-ONEBASE-CASTORAMA.txt')
               archive.write('web/vendor/LICENSE-JSZip.txt', 'LICENSE-JSZip.txt')
