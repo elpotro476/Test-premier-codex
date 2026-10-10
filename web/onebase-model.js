@@ -888,6 +888,8 @@ window.ProductWorkflow = (() => {
     return "";
   }
   function guess(label, data) {
+    const visual = window.Visuals?.guess(label);
+    if (visual && data.attributes.some(a => a.id === visual)) return "master." + visual;
     const n = OneBase.norm(label.replace(/\*/g, ""));
     const argument =
       /(?:argument(?:s)?(?: marketing| commercial| commerciaux)?|bullet point|avantage|puces avantages marketing)\s*([1-5])$/.exec(

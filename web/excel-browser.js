@@ -143,7 +143,7 @@ window.BrowserExcel = (() => {
     if(!rows.length)throw new Error('Le catalogue ne contient aucun produit.');return rows;
   }
   function suggest(source,target){
-    const mapping={};for(const col of target){let matches=source.filter(s=>normalized(s.label)===normalized(col.label));if(!matches.length&&col.kind)matches=source.filter(s=>s.kind===col.kind);mapping[col.id]=matches.length===1?matches[0].id:'';}return mapping;
+    const mapping={};for(const col of target){let matches=source.filter(s=>normalized(s.label)===normalized(col.label));if(!matches.length&&window.Visuals?.guess(col.label))matches=source.filter(s=>Visuals.guess(s.label)===Visuals.guess(col.label));if(!matches.length&&col.kind)matches=source.filter(s=>s.kind===col.kind);mapping[col.id]=matches.length===1?matches[0].id:'';}return mapping;
   }
   function check(payload){
     if(!prepared)throw new Error('Analysez les fichiers avant de continuer.');
@@ -166,6 +166,7 @@ window.BrowserExcel = (() => {
       if(v!==null&&v!==''&&['sku','ean'].includes(col.kind)){
         const key=col.id+':'+String(v);if(seen.has(key))message=`Identifiant dupliqué (ligne ${seen.get(key)})`;else seen.set(key,row.id);
       }
+      if(v!==null&&(window.Visuals?.guess(col.label)||window.Visuals?.guess(prepared.source.find(c=>c.id===mapping[col.id])?.label||''))&&Visuals.issue(String(v)))message=Visuals.issue(String(v));
       values[col.id]=v;if(message)errors.push({row:row.id,column:col.label,message});
     }rows.push({id:row.id,values});}
     return {rows,errors,count:rows.length};

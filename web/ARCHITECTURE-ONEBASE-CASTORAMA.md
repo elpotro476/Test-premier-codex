@@ -49,7 +49,7 @@ node web/build.mjs
 SEMIN_TEST_CHROMIUM=/usr/bin/chromium python3 -m unittest discover -s web/tests -v
 ```
 
-Audit avant publication du code : HTML autoportant avec `connect-src 'none'`, scripts sans appel réseau, démos exclusivement fictives, fichiers utilisateur en dehors de Git, pas de secret ajouté. Voir le [guide utilisateur](GUIDE-ONEBASE-CASTORAMA.md). Une publication future et une recette physique Lenovo restent distinctes de ces tests locaux.
+Audit avant publication du code : HTML autoportant avec `connect-src 'none'`, scripts sans appel API, aperçus d’images HTTP/HTTPS seulement sur action explicite dans le module Visuels, démos exclusivement fictives, fichiers utilisateur en dehors de Git, pas de secret ajouté. Voir le [guide utilisateur](GUIDE-ONEBASE-CASTORAMA.md). Une publication future et une recette physique Lenovo restent distinctes de ces tests locaux.
 
 ## Extension V3.2 manuelle
 

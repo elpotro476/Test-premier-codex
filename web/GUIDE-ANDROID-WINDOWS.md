@@ -55,7 +55,7 @@ Les profils sont sauvegardés dans le stockage local de Chrome pour cette page e
 
 ## Confidentialité
 
-Le moteur Excel s’exécute uniquement dans Chrome. Il n’envoie ni fichiers, ni valeurs produits, ni correspondances à une API. Le document applique `connect-src 'none'`, interdisant les connexions réseau des scripts. Aucun script tiers, publicité, télémétrie ou CDN n’est chargé.
+Le moteur Excel s’exécute uniquement dans Chrome. Il n’envoie ni fichiers, ni valeurs produits, ni correspondances à une API. Le document applique `connect-src 'none'`, interdisant les connexions réseau des scripts. Aucun script tiers, publicité, télémétrie ou CDN n’est chargé. Les aperçus du module **Visuels · URL** contactent uniquement le serveur de l’image choisie, à votre demande : voir le [guide des visuels](GUIDE-VISUELS-URL.md).
 
 Avec un hébergement, le serveur reçoit uniquement la requête qui télécharge l’interface (et les informations habituelles de connexion). Le traitement des catalogues ne lui est pas transmis. L’hébergement ne doit servir que les fichiers applicatifs et les exemples fictifs : **ne mettez aucun catalogue, template commercial ou profil utilisateur dans GitHub**.
 

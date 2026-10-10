@@ -35,6 +35,7 @@ jobs:
           from zipfile import ZipFile, ZIP_DEFLATED
           with ZipFile('SEMIN-Marketplace-Navigateur.zip', 'w', ZIP_DEFLATED) as archive:
               archive.write('web/SEMIN-Marketplace.html', 'SEMIN-Marketplace.html')
+              archive.write('web/GUIDE-VISUELS-URL.md', 'GUIDE-VISUELS-URL.txt')
               archive.write('web/GUIDE-ANDROID-WINDOWS.md', 'GUIDE-ANDROID-WINDOWS.txt')
               archive.write('web/GUIDE-STOCKAGE-V3.2.md', 'GUIDE-STOCKAGE-V3.2.txt')
               archive.write('web/GUIDE-V3.2-CHATGPT.md', 'GUIDE-V3.2-CHATGPT.txt')

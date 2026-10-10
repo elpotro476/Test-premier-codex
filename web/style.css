@@ -20,3 +20,5 @@ nav .nav{width:100%;text-align:left;background:transparent;white-space:normal;fo
 
 /* Settings remain reachable in tablet portrait and landscape. */
 aside{overflow-y:auto}.aside-note{position:static;margin-top:24px}.storage-details{white-space:pre-wrap;overflow-wrap:anywhere;font:inherit}header{flex-wrap:wrap}#open-settings{min-height:48px}
+
+.visual-preview{width:100%;max-height:220px;object-fit:contain}.visual-status{overflow-wrap:anywhere}#visual-reuse{min-height:140px}

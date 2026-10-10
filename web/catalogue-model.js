@@ -117,6 +117,8 @@ window.CatalogueModel = (() => {
     return result;
   }
   function guess(label, attributes) {
+    const visual = window.Visuals?.guess(label);
+    if (visual && attributes.some(a => a.id === visual)) return visual;
     const n = normalize(label);
     const match = attributes.filter((a) => normalize(a.label) === n);
     if (match.length === 1) return match[0].id;

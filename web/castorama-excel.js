@@ -268,6 +268,7 @@ window.CastoramaExcel = (() => {
                 "Cellule fusionnée dans la zone de destination.",
               );
           }
+          if (v && (window.Visuals?.guess(col.label) || key.startsWith("master.visual_")) && Visuals.issue(String(v))) add(row, col.label, Visuals.issue(String(v)));
           const rules = validations(s, c, row),
             columnRules = validations(s, c, null).filter(
               (v) =>
