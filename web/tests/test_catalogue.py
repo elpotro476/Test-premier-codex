@@ -85,12 +85,12 @@ class CatalogueTests(unittest.TestCase):
         path=Path(self.temp.name)/'catalogue-backup.json';event.value.save_as(path)
         backup=json.loads(path.read_text());self.assertEqual(len(backup['catalogue']['products']),3)
         self.assertIn('Attribut technique fictif',[a['label'] for a in backup['catalogue']['attributes']])
-        # Edits after the backup must not be overwritten until the replacement is explicitly confirmed.
+        # Fusion must preserve edits after the backup, even after confirmation.
         self.catalogue();self.edit('DEMO-001');self.page.get_by_label('Attribut technique fictif',exact=True).fill('43');self.page.locator('#master-editor-save').tap();self.page.wait_for_selector('#master-editor',state='hidden')
         self.page.locator('[data-studio-view="parameters"]').tap();self.page.locator('#master-restore-file').set_input_files(path)
         self.page.wait_for_selector('#master-restore-preview:not([hidden])');self.assertTrue(self.page.locator('#master-restore').is_disabled())
-        self.page.locator('#master-restore-consent').check();self.page.locator('#master-restore').tap();self.page.wait_for_selector('#notice:text-is("Sauvegarde restaurée localement.")')
-        self.catalogue();self.edit('DEMO-001');self.assertEqual(self.page.get_by_label('Attribut technique fictif',exact=True).input_value(),'42');self.page.locator('#master-editor-close').tap()
+        self.page.locator('#master-restore-consent').check();self.page.locator('#master-restore').tap();self.page.wait_for_selector('#notice:text-is("Sauvegarde fusionnée localement, sans écrasement.")')
+        self.catalogue();self.edit('DEMO-001');self.assertEqual(self.page.get_by_label('Attribut technique fictif',exact=True).input_value(),'43');self.page.locator('#master-editor-close').tap()
         invalid=Path(self.temp.name)/'invalid-backup.json';invalid.write_text('{"format":"SEMIN-MASTER-CATALOGUE","version":1,"catalogue":{}}')
         self.page.locator('[data-studio-view="parameters"]').tap();self.page.locator('#master-restore-file').set_input_files(invalid);self.page.wait_for_selector('#notice.error')
         self.assertEqual(self.page.locator('#master-total').text_content(),'3')
@@ -114,11 +114,11 @@ class CatalogueTests(unittest.TestCase):
 
     def test_corrupt_existing_storage_is_not_silently_overwritten(self):
         self.demo_import()
-        self.page.evaluate("""async()=>{const db=await new Promise((resolve,reject)=>{const req=indexedDB.open('semin-marketplace-studio',1);req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);});await new Promise((resolve,reject)=>{const tx=db.transaction('workspace','readwrite');tx.objectStore('workspace').put({schemaVersion:1,revision:0,products:'corrupted-test-marker'},'catalogue');tx.oncomplete=resolve;tx.onerror=reject;});db.close();}""")
+        self.page.evaluate("""async()=>{const db=await new Promise((resolve,reject)=>{const req=indexedDB.open('semin-marketplace-studio',2);req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);});await new Promise((resolve,reject)=>{const tx=db.transaction('workspace','readwrite');tx.objectStore('workspace').put({schemaVersion:1,revision:0,products:'corrupted-test-marker'},'catalogue');tx.oncomplete=resolve;tx.onerror=reject;});db.close();}""")
         self.page.reload();self.page.wait_for_selector('#notice.error');self.catalogue()
         self.page.locator('#master-demo').tap();self.page.wait_for_selector('#master-import-plan:not([hidden])');self.page.locator('#master-apply').tap()
         self.page.wait_for_selector('#notice:text-is("Le catalogue local n’a pas pu être chargé. Actualisez les données avant tout enregistrement.")')
-        stored=self.page.evaluate("""async()=>{const db=await new Promise(resolve=>{const req=indexedDB.open('semin-marketplace-studio',1);req.onsuccess=()=>resolve(req.result);});const value=await new Promise(resolve=>{const req=db.transaction('workspace','readonly').objectStore('workspace').get('catalogue');req.onsuccess=()=>resolve(req.result);});db.close();return value;}""")
+        stored=self.page.evaluate("""async()=>{const db=await new Promise(resolve=>{const req=indexedDB.open('semin-marketplace-studio',2);req.onsuccess=()=>resolve(req.result);});const value=await new Promise(resolve=>{const req=db.transaction('workspace','readonly').objectStore('workspace').get('catalogue');req.onsuccess=()=>resolve(req.result);});db.close();return value;}""")
         self.assertEqual(stored['products'],'corrupted-test-marker')
 
     def test_mobile_master_layout_and_no_network_after_import(self):

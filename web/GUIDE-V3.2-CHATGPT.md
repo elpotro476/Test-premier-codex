@@ -53,3 +53,7 @@ python -m unittest discover -s web/tests -v
 ```
 
 Python, Playwright et Chromium sont nécessaires pour les tests de développement uniquement. Les exemples et fixtures publiés sont fictifs ; les fichiers commerciaux restent locaux.
+
+## Correctif de stockage
+
+La base protégée passe en version 2 sans réinitialisation. Les anciennes copies ne peuvent plus écrire sur cette même base. Les sauvegardes sont lues à jour et leur restauration ajoute les fiches sans écrasement, après prévisualisation. Ouvrir **Paramètres · Sauvegardes** dans l’en-tête, y compris sur Android. Voir `GUIDE-STOCKAGE-V3.2.md`.

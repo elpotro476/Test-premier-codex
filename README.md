@@ -1,3 +1,5 @@
+Le correctif de stockage V3.2 ajoute une base protégée contre les anciennes versions, des sauvegardes à jour, une restauration par fusion sans écrasement et un accès tactile direct aux Paramètres. Voir [le guide de stockage](web/GUIDE-STOCKAGE-V3.2.md).
+
 # V3.2 locale — SEO / GEO avec échange manuel ChatGPT
 
 La version navigateur prépare une consigne par marketplace et importe une réponse JSON avec prévisualisation, validation humaine et conservation des versions. Aucun appel API ni déploiement automatique. Voir [le guide V3.2](web/GUIDE-V3.2-CHATGPT.md). Les parcours V1/V2/V3.1 et le projet Windows sont conservés.
