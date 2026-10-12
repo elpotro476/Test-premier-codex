@@ -18,7 +18,7 @@ Les cas produits testés par l'équipe dans des navigateurs temporaires ne sont 
 
 ## Protection des versions
 
-Cette version ouvre la **base IndexedDB en version 2**, en conservant le magasin et toutes les données existantes. Cette version de base est distincte du schéma JSON, qui reste compatible avec les sauvegardes précédentes.
+V3.2 utilisait la base IndexedDB en version 2. Le navigateur V3.3 ouvre désormais la **base IndexedDB en version 3**, en conservant le magasin et toutes les données existantes. Cette version de base est distincte du schéma JSON, qui reste compatible avec les sauvegardes précédentes.
 
 Les anciennes V3.1/V3.2 qui demandent la base en version 1 ne peuvent plus l'ouvrir pour écrire. Une ancienne fenêtre déjà ouverte ferme sa connexion lors du changement de version ; ses enregistrements suivants échouent. Utiliser exclusivement la nouvelle application pour éditer ce catalogue. En cas de blocage, fermer les autres onglets SEMIN et rouvrir la nouvelle application ; ne pas effacer les données Chrome.
 

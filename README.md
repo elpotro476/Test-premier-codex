@@ -87,3 +87,7 @@ Le bouton de démonstration remplace les imports en cours. Les profils de corres
 ```
 
 Les tests existants couvrent le moteur Excel et le parcours HTTP, notamment les contrôles, les exports, la préservation des feuilles/styles/validations, les profils et le refus d’exports invalides. Sous Linux, remplacez le chemin Python par `.venv/bin/python`.
+
+### Import Excel optimisé V3.3
+
+Le navigateur autonome inclut le parcours de 20 colonnes, avec comparaison, confirmation et historique des contenus. Voir le [guide V3.3](web/GUIDE-IMPORT-EXCEL-V3.3.md). Conditionnement commercial, contenu du lot et poids total restent distincts ; PVC ne fournit aucun prix par défaut. Les exemples publics sont fictifs.

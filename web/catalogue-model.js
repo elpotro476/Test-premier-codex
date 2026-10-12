@@ -377,6 +377,7 @@ window.CatalogueModel = (() => {
         if (!attrIds.has(k) || typeof v !== "string" || v.length > 100000)
           fail();
     }
+    for (const p of data.products) if (p.optimizedExcel !== undefined) OptimizedExcel.validateArchive(p.optimizedExcel);
     for (const p of data.products)
       if (p.dossier !== undefined) ProductWorkflow.validate(p.dossier);
     if (

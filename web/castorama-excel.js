@@ -280,6 +280,7 @@ window.CastoramaExcel = (() => {
               col.label,
               "Destination hors de la plage de validation originale.",
             );
+          if (key.startsWith("excel.condition") && ![...rules, ...columnRules].some(r => r.getAttribute("type") === "list")) add(row,col.label,"État : codes techniques non vérifiables dans ce template. Vérifiez le code officiel et confirmez une saisie spécifique au canal ; aucun code n’est inventé.");
           for (const validation of rules) {
             const type = validation.getAttribute("type") || "none",
               blank = v === "" || v === null;

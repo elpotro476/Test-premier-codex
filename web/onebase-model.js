@@ -843,6 +843,7 @@ window.ProductWorkflow = (() => {
         id: "master." + a.id,
         label: "Catalogue · " + a.label,
       })),
+      ...(window.OptimizedExcel ? OptimizedExcel.destinations() : []),
       ...ChatGPTWorkflow.markets.flatMap((market) =>
         [
           "titleSeo",
@@ -880,6 +881,7 @@ window.ProductWorkflow = (() => {
       if (attribute === "faqGeo") return JSON.stringify(content.faqGeo);
       return content[attribute] || "";
     }
+    if (group === "excel") return OptimizedExcel.value(product, field);
     if (group === "master") return product.values[field] ?? "";
     if (group === "content")
       return Object.hasOwn(product.dossier?.castorama || {}, field)
@@ -887,7 +889,10 @@ window.ProductWorkflow = (() => {
         : product.dossier?.enrichment?.[field] || "";
     return "";
   }
-  function guess(label, data) {
+  function guess(label, data, channel = "Castorama") {
+    if (data.products.some(p => p.optimizedExcel?.length) && ["etat", "etat article", "etat de l article", "condition", "item condition", "condition type"].includes(OneBase.norm(label))) return "excel.condition" + channel;
+    const optimized = window.OptimizedExcel?.guess(label);
+    if (optimized && data.products.some(p => p.optimizedExcel?.length)) return optimized;
     const visual = window.Visuals?.guess(label);
     if (visual && data.attributes.some(a => a.id === visual)) return "master." + visual;
     const n = OneBase.norm(label.replace(/\*/g, ""));

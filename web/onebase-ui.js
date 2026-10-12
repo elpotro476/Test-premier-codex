@@ -321,6 +321,7 @@
         !name.trim() ||
         name.length > 100 ||
         !profile ||
+        (profile.channel !== undefined && !["Castorama","ADEO","Amazon"].includes(profile.channel)) ||
         typeof profile.signature !== "string" ||
         profile.signature.length > 30000 ||
         !profile.mapping ||
@@ -333,7 +334,7 @@
             typeof v !== "string" ||
             (v !== "" &&
               v !== "manual" &&
-              !/^(master\.[A-Za-z0-9_-]+|content\.(title|html|argument[1-5]))$/.test(
+              !/^(master\.[A-Za-z0-9_-]+|content\.(title|html|argument[1-5])|excel\.(title|html|argument[1-5]|pvc|weightSource|commercialPackaging|countryOrigin|conditionCastorama|conditionADEO|conditionAmazon)|chatgpt\.(Amazon|Castorama|ManoMano)\.(titleSeo|descriptionHtml|argument[1-5]|keywords|faqGeo))$/.test(
                 v,
               )),
         ) ||
@@ -503,15 +504,19 @@
     invalidate();
     if (inspection) renderMapping();
   });
+  $("cast-channel").addEventListener("change", () => { inspection = null; $("cast-prepared").hidden = true; $("cast-profile-name").value = $("cast-channel").value; invalidate(); });
   action("cast-analyse", () => {
     if (!template) throw Error("Importez un template .xlsx.");
     const set = settings();
     inspection = template.inspect(set.sheet, set.header);
+    if ($("cast-channel").value !== "Castorama") inspection.signature = JSON.stringify({channel:$("cast-channel").value,template:inspection.signature});
     $("cast-start").value = inspection.startRow;
     for (const k of Object.keys(mapping)) delete mapping[k];
     required.clear();
+    const active = data.products.find(p => p.id === $("cast-product").value);
+    const mappingData = active ? { ...data, products: [active] } : data;
     inspection.target.forEach((c) => {
-      mapping[c.id] = W.guess(c.label, data);
+      mapping[c.id] = W.guess(c.label, mappingData, $("cast-channel").value);
       if (c.required) required.add(c.id);
     });
     renderMapping();
@@ -557,6 +562,7 @@
     const next = {
       ...profiles(),
       [name]: {
+        channel: $("cast-channel").value,
         signature: inspection.signature,
         mapping: { ...mapping },
         required: [...required],
@@ -571,6 +577,7 @@
     try {
       const p = profiles()[$("cast-profile").value];
       if (!p) return;
+      if ((p.channel || "Castorama") !== $("cast-channel").value) throw Error("Ce mapping appartient à un autre canal marketplace.");
       if (!inspection || p.signature !== inspection.signature)
         throw Error(
           "Ce mapping ne correspond pas aux colonnes et à la feuille du template.",

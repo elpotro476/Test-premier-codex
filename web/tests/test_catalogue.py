@@ -114,11 +114,11 @@ class CatalogueTests(unittest.TestCase):
 
     def test_corrupt_existing_storage_is_not_silently_overwritten(self):
         self.demo_import()
-        self.page.evaluate("""async()=>{const db=await new Promise((resolve,reject)=>{const req=indexedDB.open('semin-marketplace-studio',2);req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);});await new Promise((resolve,reject)=>{const tx=db.transaction('workspace','readwrite');tx.objectStore('workspace').put({schemaVersion:1,revision:0,products:'corrupted-test-marker'},'catalogue');tx.oncomplete=resolve;tx.onerror=reject;});db.close();}""")
+        self.page.evaluate("""async()=>{const db=await new Promise((resolve,reject)=>{const req=indexedDB.open('semin-marketplace-studio');req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);});await new Promise((resolve,reject)=>{const tx=db.transaction('workspace','readwrite');tx.objectStore('workspace').put({schemaVersion:1,revision:0,products:'corrupted-test-marker'},'catalogue');tx.oncomplete=resolve;tx.onerror=reject;});db.close();}""")
         self.page.reload();self.page.wait_for_selector('#notice.error');self.catalogue()
         self.page.locator('#master-demo').tap();self.page.wait_for_selector('#master-import-plan:not([hidden])');self.page.locator('#master-apply').tap()
         self.page.wait_for_selector('#notice:text-is("Le catalogue local n’a pas pu être chargé. Actualisez les données avant tout enregistrement.")')
-        stored=self.page.evaluate("""async()=>{const db=await new Promise(resolve=>{const req=indexedDB.open('semin-marketplace-studio',2);req.onsuccess=()=>resolve(req.result);});const value=await new Promise(resolve=>{const req=db.transaction('workspace','readonly').objectStore('workspace').get('catalogue');req.onsuccess=()=>resolve(req.result);});db.close();return value;}""")
+        stored=self.page.evaluate("""async()=>{const db=await new Promise(resolve=>{const req=indexedDB.open('semin-marketplace-studio');req.onsuccess=()=>resolve(req.result);});const value=await new Promise(resolve=>{const req=db.transaction('workspace','readonly').objectStore('workspace').get('catalogue');req.onsuccess=()=>resolve(req.result);});db.close();return value;}""")
         self.assertEqual(stored['products'],'corrupted-test-marker')
 
     def test_mobile_master_layout_and_no_network_after_import(self):

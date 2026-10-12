@@ -13,7 +13,7 @@ window.CatalogueStore = (() => {
         );
         return;
       }
-      const request = indexedDB.open("semin-marketplace-studio", 2);
+      const request = indexedDB.open("semin-marketplace-studio", 3);
       request.onupgradeneeded = () => {
         if (!request.result.objectStoreNames.contains("workspace"))
           request.result.createObjectStore("workspace");

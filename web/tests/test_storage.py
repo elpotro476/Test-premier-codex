@@ -19,7 +19,7 @@ class StorageTests(unittest.TestCase):
         self.assertEqual(self.page.evaluate('CatalogueStore.read().then(d=>d.products.length)'),0)
         for size in [{'width':412,'height':915},{'width':1280,'height':720}]:
             self.page.set_viewport_size(size);self.page.locator('#open-settings').tap();self.page.wait_for_selector('#studio-parameters:not([hidden])')
-            self.page.wait_for_function("() => document.querySelector('#storage-details').textContent.includes('version 2')")
+            self.page.wait_for_function("() => document.querySelector('#storage-details').textContent.includes('version 3')")
             self.assertIn('Produits enregistrés : 0',self.page.locator('#storage-details').text_content())
             self.assertFalse(self.page.evaluate('document.documentElement.scrollWidth>innerWidth'))
         self.page.reload();self.assertEqual(self.page.evaluate('CatalogueStore.read().then(d=>d.products.length)'),0)
@@ -55,7 +55,7 @@ class StorageTests(unittest.TestCase):
         seeded=p.evaluate('async()=>{const d=CatalogueModel.empty();d.revision=7;d.products.push({id:"old-fiction",values:{sku:"OLD-FICTIVE"},status:"À compléter",updatedAt:"2026-01-01",dossier:{version:1,source:{raw:"Unmodified original fictive source",extracted:{sku:"OLD-FICTIVE"},evidence:{},importedAt:"2026-01-01"},enrichment:{},castorama:{}}});const db=await new Promise(resolve=>{const r=indexedDB.open("semin-marketplace-studio",1);r.onsuccess=()=>resolve(r.result)});await new Promise(resolve=>{const tx=db.transaction("workspace","readwrite");tx.objectStore("workspace").put(d,"catalogue");tx.oncomplete=resolve});db.close();return d}')
         p.goto(self.url);self.assertEqual(p.evaluate('CatalogueStore.read()'),seeded)
         self.assertTrue(p.evaluate('async()=>new Promise(resolve=>{const r=indexedDB.open("semin-marketplace-studio",1);r.onerror=()=>resolve(r.error.name==="VersionError");r.onsuccess=()=>{r.result.close();resolve(false)}})'))
-        self.assertEqual(p.evaluate('async()=>{const db=await new Promise(resolve=>{const r=indexedDB.open("semin-marketplace-studio",2);r.onsuccess=()=>resolve(r.result)});const value=await new Promise(resolve=>{const r=db.transaction("workspace").objectStore("workspace").get("untouched-test-marker");r.onsuccess=()=>resolve(r.result)});db.close();return value.revision}'),8)
+        self.assertEqual(p.evaluate('async()=>{const db=await new Promise(resolve=>{const r=indexedDB.open("semin-marketplace-studio",3);r.onsuccess=()=>resolve(r.result)});const value=await new Promise(resolve=>{const r=db.transaction("workspace").objectStore("workspace").get("untouched-test-marker");r.onsuccess=()=>resolve(r.result)});db.close();return value.revision}'),8)
         c.close()
     def test_full_browser_restart_persists_catalogue_and_origin_separation(self):
         profile=Path(self.temp.name)/'persistent-profile';opts={'headless':True}
